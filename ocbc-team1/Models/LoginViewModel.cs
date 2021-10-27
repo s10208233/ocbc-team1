@@ -8,9 +8,9 @@ namespace ocbc_team1.Models
 {
     public class LoginViewModel
     {
-        [Display(Name = "Email"), Required, EmailAddress]
-        public string Email { get; set; }
-        [Display(Name = "Password"), Required, DataType(DataType.Password)]
-        public string Password { get; set; }
+        [Display(Name = "AccessCode"), Required]
+        public string AccessCode { get; set; }
+        [Display(Name = "Pin"), Required, DataType(DataType.Password)]
+        public string Pin { get; set; }
     }
 }
