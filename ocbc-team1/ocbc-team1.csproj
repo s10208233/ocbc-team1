@@ -5,4 +5,9 @@
     <RootNamespace>ocbc_team1</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Dashbaord\" />
+    <Folder Include="Views\Transfer\" />
+  </ItemGroup>
+
 </Project>
