@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ocbc_team1.Models;
 using System;
@@ -26,6 +27,16 @@ namespace ocbc_team1.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        public ActionResult UserLogin(IFormCollection formData) {
+
+            //  Do Authentication Logic Here
+
+            HttpContext.Session.SetString("login", "true");
+            return RedirectToAction("Index", "Dashboard");
+        }
+
         public IActionResult Privacy()
         {
             return View();
