@@ -34,6 +34,7 @@ namespace ocbc_team1.Models
         public DateTime DateOfBirth { get; set; }
 
         [Required]
+        [RegularExpression("/^[0-9]{1,8}$", ErrorMessage = "Please enter an 8 digit phone number")]
         public int PhoneNumber { get; set; }
     }
 }
