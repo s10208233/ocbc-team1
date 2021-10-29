@@ -1,0 +1,33 @@
+﻿@model IEnumerable<ocbc_team1.Models.BankAccount>
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<head>
+    <meta charset="utf-8" />
+</head>
+
+<div class="text-center">
+    <h1 class="display-4" style="margin-bottom:50px;">Your Accounts</h1>
+</div>
+
+@{
+    @*int counter = 0;
+    <div class="AccountContainer">
+
+        @foreach (var item in Model)
+        {
+            <div class="ContentContainer">
+                <h1 class="ContainerHeader">@item.CardNumber</h1>
+                <div class="ContainerContent">Competition ID: @item.AvalibleBalance</div>
+                <div class="ContainerContent">Start Date: @item.TotalBalance</div>
+                <div> </div>
+            </div>
+            counter += 1;
+        }
+        @if (counter == 0)
+        {
+            <span style="color:red">No active accounts</span>
+        }
+    </div>*@
+}

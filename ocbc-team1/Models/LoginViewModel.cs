@@ -8,7 +8,7 @@ namespace ocbc_team1.Models
 {
     public class LoginViewModel
     {
-        [Display(Name = "AccessCode"), Required]
+        [Display(Name = "Access Code"), Required]
         public string AccessCode { get; set; }
         [Display(Name = "Pin"), Required, DataType(DataType.Password)]
         public string Pin { get; set; }
