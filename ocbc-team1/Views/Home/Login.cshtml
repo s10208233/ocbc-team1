@@ -2,15 +2,15 @@
 @{
 }
 
-<div class="mx-auto col-4 p-1 shadow p-3 mb-5 bg-white rounded" style="width:fit-content()">
-    <h2> Online Banking </h2>
+<div class="mx-auto col-5 shadow mb-5 bg-white rounded" style="padding: 1.45rem; padding-bottom: 0px;">
+    <h2 style= "margin-top: 30px; margin-left:12px; margin-bottom:20px"> Online Banking </h2>
     <form method="post" asp-action="Login" class="mx-auto">
-        <fieldset class="FormContent">
+        <fieldset class="FormContent" style= "width: 430px;">
             <div class="col login-field" style="padding-left:0px;">
                 <div class="form-group row" style="display: inline; margin-left: 0px;">
                     <label asp-for="AccessCode"
-                           class="col-sm-3 col-form-label"></label>
-                    <div class="col-sm-9 col-md-5">
+                           class="col-sm-4 col-form-label"></label>
+                    <div class="col-sm-12">
                         <input asp-for="AccessCode" class="form-control" />
                         <span asp-validation-for="AccessCode"
                               class="text-danger"></span>
@@ -19,20 +19,22 @@
                 <div class="form-group row" style="display:inline; margin-left:0px;">
                     <label asp-for="Pin"
                            class="col-sm-3 col-form-label"></label>
-                    <div class="col-sm-9 col-md-5">
+                    <div class="col-sm-12">
                         <input asp-for="Pin" class="form-control" />
                         <span asp-validation-for="Pin"
                               class="text-danger"></span>
                     </div>
                 </div>
             </div>
-            <div class="form-group row">
+            <div class="form-group row" style="justify-content: right; padding-right:29px; margin-top:10px; margin-bottom:30px">
                 <div class="col-sm-9 col-md-5">
-                    <input type="submit" value="Login" class="btn btn-primary" style="float:right; width:120px; height:auto;" />
+                    <input type="submit" value="Login" class="btn btn-primary" style="float:right; width:130px; height:46px;" />
                 </div>
                 <span style="color:red;">@TempData["Message"]</span>
             </div>
         </fieldset>
     </form>
-    <p>Don't have an account? <a href="">Sign up</a></p>
+    <div class="form-group row" style="margin-left:-24px; width:464px; background-color:gainsboro; padding-left:38px; height: 70px; padding-top:15px; align-content:center">
+        <p>Don't have an account? <a href="">Sign up</a></p>
+    </div>    
 </div>
