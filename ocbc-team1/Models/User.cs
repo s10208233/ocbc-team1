@@ -35,5 +35,12 @@ namespace ocbc_team1.Models
 
         [Required]
         public int PhoneNumber { get; set; }
+
+        public List<BankAccount> AccountsList { get; set; }
+
+        public User()
+        {
+            AccountsList = new List<BankAccount>();
+        }
     }
 }

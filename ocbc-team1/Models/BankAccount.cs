@@ -9,7 +9,7 @@ namespace ocbc_team1.Models
     public class BankAccount
     {
         [Required]
-        public int UserID { get; set; }
+        public int AccountID { get; set; }
 
         [StringLength(50, ErrorMessage = "Name cannot exceed 50 characters")]
         [Required]
@@ -17,6 +17,12 @@ namespace ocbc_team1.Models
 
         [Required]
         public int CardNumber { get; set; }
+
+        [Required]
+        public double AmountRemaining { get; set; }
+
+        [Required]
+        public double AmountAvaliable { get; set; }
 
         [Required]
         public DateTime CreationDate { get; set; }
