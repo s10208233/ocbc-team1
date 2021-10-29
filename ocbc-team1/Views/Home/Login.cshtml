@@ -1,43 +1,43 @@
 ﻿@model ocbc_team1.Models.LoginViewModel
 @{
-    <form method="post" asp-action="Login">
-        <fieldset class="FormContent">
-            <h2 style="padding-left:15px;"> Online Banking </h2>
-            <div class="col login-field" style="padding-left:0px;">
-                <div class="form-group row" style="display: inline; margin-left: 0px;">
-                    <label asp-for="AccessCode"
-                           class="col-sm-3 col-form-label"></label>
-                    <div class="col-sm-9 col-md-5">
-                        <input asp-for="AccessCode" class="form-control" />
-                        <span asp-validation-for="AccessCode"
-                              class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="form-group row" style="display:inline; margin-left:0px;">
-                    <label asp-for="Pin"
-                           class="col-sm-3 col-form-label"></label>
-                    <div class="col-sm-9 col-md-5">
-                        <input asp-for="Pin" class="form-control" />
-                        <span asp-validation-for="Pin"
-                              class="text-danger"></span>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group row">
-                <div class="col-sm-9 col-md-5">
-                    <a asp-controller="User" asp-action="Index">Login</a>
-                    <input type="submit" value="Login" class="btn btn-primary" style="float: right; width: 120px; height: auto; background-color: red; border-color: red" />
-                </div>
-                <span style="color:red;">@TempData["Message"]</span>
-            </div>
-            <div class="form-group row">
-                <p>
-                    Don't have an account? <a href="">
-                        Sign up
-                    </a>
-                </p>
-            </div>
-        </fieldset>
-    </form>
 }
 
+<hr />
+<form method="post" asp-action="Login">
+    <fieldset class="FormContent">
+        <h2 style="padding-left:15px;"> Online Banking </h2>
+        <div class="col login-field" style="padding-left:0px;">
+            <div class="form-group row" style="display: inline; margin-left: 0px;">
+                <label asp-for="AccessCode"
+                       class="col-sm-3 col-form-label"></label>
+                <div class="col-sm-9 col-md-5">
+                    <input asp-for="AccessCode" class="form-control" />
+                    <span asp-validation-for="AccessCode"
+                          class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row" style="display:inline; margin-left:0px;">
+                <label asp-for="Pin"
+                       class="col-sm-3 col-form-label"></label>
+                <div class="col-sm-9 col-md-5">
+                    <input asp-for="Pin" class="form-control" />
+                    <span asp-validation-for="Pin"
+                          class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-9 col-md-5">
+                <input type="submit" value="Login" class="btn btn-primary" style="float:right; width:120px; height:auto;" />
+            </div>
+            <span style="color:red;">@TempData["Message"]</span>
+        </div>
+        <div class="form-group row">
+            <p>
+                Don't have an account? <a href="">
+                    Sign up
+                </a>
+            </p>
+        </div>
+    </fieldset>
+</form>
