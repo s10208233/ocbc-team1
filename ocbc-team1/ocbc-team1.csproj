@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Dashbaord\" />
     <Folder Include="Views\Transfer\" />
   </ItemGroup>
 
