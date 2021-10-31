@@ -17,6 +17,7 @@ namespace ocbc_team1.Controllers
         public IActionResult UserLogout()
         {
             HttpContext.Session.Remove("login");
+            HttpContext.Session.Remove("fullname");
             return RedirectToAction("Index", "Home");
         }
     }

@@ -34,6 +34,7 @@ namespace ocbc_team1.Controllers
             //  Do Authentication Logic Here
 
             HttpContext.Session.SetString("login", "true");
+            HttpContext.Session.SetString("fullname", "<First Name> <Last Name>");
             return RedirectToAction("Index", "Dashboard");
         }
 
