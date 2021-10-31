@@ -14,11 +14,10 @@ namespace ocbc_team1.Controllers
             return View();
         }
 
-        [HttpPost]
-        public IActionResult Logout()
+        public IActionResult UserLogout()
         {
-            HttpContext.Session.SetString("login", null);
-            return RedirectToAction("Home", "Index");
+            HttpContext.Session.Remove("login");
+            return RedirectToAction("Index", "Home");
         }
     }
 }
