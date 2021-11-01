@@ -9,33 +9,38 @@ namespace ocbc_team1.Models
     public class User
     {
         [Required]
-        public int UserID { get; set; }
+        [StringLength(50, ErrorMessage = "Exceeded 50 characters")]
+        [RegularExpression("^[a-zA-Z]+$", ErrorMessage = "Please enter alphabets only")]
+        public string FirstName { get; set; }
 
-        [StringLength(50, ErrorMessage = "Name cannot exceed 50 characters")]
         [Required]
-        public string Name { get; set; }
+        [StringLength(50, ErrorMessage = "Exceeded 50 characters")]
+        [RegularExpression("^[a-zA-Z]+$", ErrorMessage = "Please enter alphabets only")]
+        public string LastName { get; set; }
 
-        [StringLength(6)]
         [Required]
+        [MaxLength(8), MinLength(8)]
+        [RegularExpression("^[0-9]{8}$", ErrorMessage = "Please enter the last 8 digits of your card")]
         public string AccessCode { get; set; }
 
-        [StringLength(6)]
         [Required]
+        [MaxLength(6), MinLength(6)]
+        [RegularExpression("^[0-9]{6}$", ErrorMessage = "Please enter your 6 digit PIN")]
         public string BankPIN { get; set; }
 
         [StringLength(9)]
         [Required]
-        public string IC { get; set; }
+        [RegularExpression("^(S|T|F|G)[0-9]{7}[A-Z]{1}$", ErrorMessage = "Please enter your a valid IC format")]
 
-        [Required]
-        public string Nationality { get; set; }
+        public string IC { get; set; }
 
         [Required]
         public DateTime DateOfBirth { get; set; }
 
         [Required]
-        [RegularExpression("/^[0-9]{1,8}$", ErrorMessage = "Please enter an 8 digit phone number")]
-        public int PhoneNumber { get; set; }
+        [MaxLength(8), MinLength(8)]
+        [RegularExpression("^[0-9]{8}$", ErrorMessage = "Please enter an 8 digit phone number")]
+        public string PhoneNumber { get; set; }
 
         public List<BankAccount> AccountsList { get; set; }
 

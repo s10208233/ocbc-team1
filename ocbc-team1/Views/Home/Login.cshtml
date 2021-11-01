@@ -11,7 +11,7 @@
                     <label asp-for="AccessCode"
                            class="col-form-label"></label>
                     <div>
-                        <input asp-for="AccessCode" class="form-control" />
+                        <input asp-for="AccessCode" class="form-control rounded-0" />
                         <span asp-validation-for="AccessCode"
                               class="text-danger"></span>
                     </div>
@@ -20,7 +20,7 @@
                     <label asp-for="Pin"
                            class="col-form-label"></label>
                     <div>
-                        <input asp-for="Pin" class="form-control" />
+                        <input type="password" asp-for="Pin" class="form-control rounded-0" />
                         <span asp-validation-for="Pin"
                               class="text-danger"></span>
                     </div>
@@ -29,10 +29,10 @@
             <div class="form-group row float-right">
                 <span style="color:red;">@TempData["Message"]</span>
                 <div>
-                    <input type="submit" value="Login" class="btn text-white px-5 mr-3" style="background-color:red;"/>
+                    <input type="submit" value="Login" class="btn text-white px-5 mr-3  rounded-0" style="background-color:red;"/>
                 </div>
             </div>
         </fieldset>
     </form>
-        <p class="p-4 bg-light">Don't have an account? <a href="">Sign up</a></p>
+        <p class="p-4" style="background-color:lightgray;">Don't have an account? <a href="~/Home/Signup">Sign up</a></p>
 </div>

@@ -27,6 +27,10 @@ namespace ocbc_team1.Controllers
         {
             return View();
         }
+        public IActionResult Signup()
+        {
+            return View();
+        }
 
         [HttpPost]
         public ActionResult UserLogin(IFormCollection formData) {
