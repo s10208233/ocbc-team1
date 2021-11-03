@@ -6,8 +6,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Dashbaord\" />
-    <Folder Include="Views\Transfer\" />
+    <Compile Remove="Views\Dashbaord\**" />
+    <Compile Remove="Views\Transfer\**" />
+    <Content Remove="Views\Dashbaord\**" />
+    <Content Remove="Views\Transfer\**" />
+    <EmbeddedResource Remove="Views\Dashbaord\**" />
+    <EmbeddedResource Remove="Views\Transfer\**" />
+    <None Remove="Views\Dashbaord\**" />
+    <None Remove="Views\Transfer\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
   </ItemGroup>
 
 </Project>

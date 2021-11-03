@@ -5,29 +5,40 @@
 
 <head>
     <meta charset="utf-8" />
+    <link rel="stylesheet" href="~/css/Dashboard.css">
 </head>
 
 <div class="text-center">
-    <h1 class="display-4" style="margin-bottom:50px;">Your Accounts</h1>
+    <h1 class="display-4" style="margin-bottom: 50px; width: 100%; height: auto;">Your Accounts</h1>
 </div>
 
 @{
     @*int counter = 0;
+        <div class="AccountContainer">
+
+            @foreach (var item in Model)
+            {
+                <div class="ContentContainer">
+                    <h1 class="ContainerHeader">Savings Account- @item.CardNumber</h1>
+                    <div class="ContainerContent">Account Balance: @item.AvalibleBalance</div>
+                    <div class="ContainerContent">Total Balancee: @item.TotalBalance</div>
+                    <div> </div>
+                </div>
+                counter += 1;
+            }
+            @if (counter == 0)
+            {
+                <span style="color:red">No active accounts</span>
+            }
+        </div>*@
+
     <div class="AccountContainer">
 
-        @foreach (var item in Model)
-        {
             <div class="ContentContainer">
-                <h1 class="ContainerHeader">@item.CardNumber</h1>
-                <div class="ContainerContent">Competition ID: @item.AvalibleBalance</div>
-                <div class="ContainerContent">Start Date: @item.TotalBalance</div>
+                <h1 class="ContainerHeader">Savings Acount- </h1>
+                <div class="ContainerContent">Competition ID: </div>
+                <div class="ContainerContent">Start Date: </div>
                 <div> </div>
             </div>
-            counter += 1;
-        }
-        @if (counter == 0)
-        {
-            <span style="color:red">No active accounts</span>
-        }
-    </div>*@
+    </div>
 }
