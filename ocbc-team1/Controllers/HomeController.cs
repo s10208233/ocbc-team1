@@ -21,10 +21,12 @@ namespace ocbc_team1.Controllers
 
         public IActionResult Index()
         {
+            
             return View();
         }
         public IActionResult Login()
         {
+            HttpContext.Session.Clear();
             return View();
         }
         public IActionResult Signup()
