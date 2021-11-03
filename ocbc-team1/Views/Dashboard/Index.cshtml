@@ -1,6 +1,44 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<ocbc_team1.Models.BankAccount>
 @{
+    ViewData["Title"] = "Dashboard";
 }
-dashboard
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="~/css/Dashboard.css">
+</head>
+
+<div class="text-center">
+    <h1 class="display-4" style="margin-bottom: 50px; width: 100%; height: auto;">Your Accounts</h1>
+</div>
+
+@{
+    @*int counter = 0;
+        <div class="AccountContainer">
+
+            @foreach (var item in Model)
+            {
+                <div class="ContentContainer">
+                    <h1 class="ContainerHeader">Savings Account- @item.CardNumber</h1>
+                    <div class="ContainerContent">Account Balance: @item.AvalibleBalance</div>
+                    <div class="ContainerContent">Total Balancee: @item.TotalBalance</div>
+                    <div> </div>
+                </div>
+                counter += 1;
+            }
+            @if (counter == 0)
+            {
+                <span style="color:red">No active accounts</span>
+            }
+        </div>*@
+
+    <div class="AccountContainer">
+
+        <div class="ContentContainer">
+            <h1 class="ContainerHeader">Savings Acount- </h1>
+            <div class="ContainerContent">Account Balance: </div>
+            <div class="ContainerContent">Total Balance: </div>
+            <div> </div>
+        </div>
+    </div>
+}
