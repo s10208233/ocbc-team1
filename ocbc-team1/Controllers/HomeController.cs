@@ -16,7 +16,9 @@ namespace ocbc_team1.Controllers
 {
     public class HomeController : Controller
     {
+        private SignupDAL signupContext = new SignupDAL();
         private LoginDAL loginContext = new LoginDAL();
+
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
@@ -45,14 +47,13 @@ namespace ocbc_team1.Controllers
             if(ModelState.IsValid)
             {
                 LoginDAL loginContext = new LoginDAL();
-                List<TestUser> userList = loginContext.LoginList();
-                foreach (TestUser user in userList)
+                List<User> userList = loginContext.retrieveUserList();
+                foreach (User user in userList)
                 {
                     if (loginVM.AccessCode == user.AccessCode && loginVM.Pin == user.BankPIN)
                     {
                         HttpContext.Session.SetString("login", "true");
-                        string userName = user.FirstName + " " + user.LastName;
-                        HttpContext.Session.SetString("fullname", userName);
+                        HttpContext.Session.SetString("fullname", string.Format("{0} {1}", user.FirstName, user.LastName));
                         return RedirectToAction("Index", "Dashboard");
                     }
                 }
@@ -69,91 +70,39 @@ namespace ocbc_team1.Controllers
         }
 
         [HttpPost]
-        public IActionResult Signup(SignUpModel user)
+        public IActionResult Signup(SignUpViewModel userinput)
         {
             if (ModelState.IsValid)
             {
-                //check if it stores
-                var CardNumber = user.CardNumber;
-
-                //Redirect user to Competitor/Index view
-                HttpContext.Session.SetString("email", user.Email);
-                string userName = user.FirstName + " " + user.LastName;
-                HttpContext.Session.SetString("fullname", userName);
-                int accessCode = CreateAccessCode();
-                sendAccessCode(accessCode);
-                return RedirectToAction("Login");
+                List<Card> validcardlist = signupContext.retrieveShortCardList(signupContext.retrieveCardList());
+                List<User> existinguserlist = loginContext.retrieveUserList();
+                foreach (Card c in validcardlist)
+                {
+                    if (c.CardNumber == userinput.CardNumber && c.CardPIN == userinput.BankPIN)
+                    {
+                        foreach (User u in existinguserlist)
+                        {
+                            if (u.CardNumber == userinput.CardNumber ||
+                                u.BankPIN == userinput.BankPIN ||
+                                u.Email == userinput.Email ||
+                                u.IC == userinput.IC
+                                ) {TempData["Message"] = "The information you have entered is not valid or unique."; return View(userinput); }
+                        }
+                        signupContext.completeUserSignUp(userinput);
+                        TempData["SignupSuccessMessage"] = "We've sent your access code to your email address, check your inbox.";
+                        return RedirectToAction("Login");
+                    }
+                }
+                TempData["Message"] = "The card number you have entered is invalid.";
+                return View(userinput);
             }
             else
             {
                 //Input validation fails, return to the Create view
                 //to display error message
-                return View(user);
+                return View(userinput);
             }
 
-        }
-        public int CreateAccessCode()
-        {
-            Random rnd = new Random();
-            int value = rnd.Next(100000, 999999);
-            return CheckAccessCode(value);
-            
-        }
-        public int CheckAccessCode(int value)
-        {
-            List<TestUser> userList = loginContext.LoginList();
-            int nAccessCode = 0;
-            foreach (TestUser user in userList)
-            {
-                if (value == Convert.ToInt32(user.AccessCode))
-                {
-                    Random rnd = new Random();
-                    nAccessCode = rnd.Next(100000, 999999);
-                    CheckAccessCode(nAccessCode);                    
-                }
-                else
-                {
-                    nAccessCode = value;
-                }
-            }
-            return nAccessCode;
-        }
-        public void sendAccessCode(int value)
-        {
-            MimeMessage message = new MimeMessage();
-            message.From.Add(new MailboxAddress("OCBC Team 1", "ocbcteam1@gmail.com"));
-            string rEmail = HttpContext.Session.GetString("email");
-            string rName = HttpContext.Session.GetString("fullname");
-            message.To.Add(MailboxAddress.Parse(rEmail));
-            message.Subject = "OCBC Account Access Code";
-            message.Body = new TextPart("html")
-            {
-                Text = "Welcome " + rName + "<br>Thank You For Signing Up at OCBC Bank." +
-                "<br>Here is Your Access Code" +
-                "<br>You will need this code to Log In" +
-                "<br>Access Code: " + Convert.ToString(value)
-
-            };
-            string emailAddress = "ocbcteam1@gmail.com";
-            string password = "ocbcteam1";
-            SmtpClient client = new SmtpClient();
-            try
-            {
-                client.Connect("smtp.gmail.com", 465, true);
-                client.Authenticate(emailAddress, password);
-                client.Send(message);
-
-                Console.WriteLine("Email Sent!.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            finally
-            {
-                client.Disconnect(true);
-                client.Dispose();
-            }
         }
         public IActionResult Privacy()
         {

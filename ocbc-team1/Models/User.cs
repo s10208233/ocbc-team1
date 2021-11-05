@@ -10,7 +10,6 @@ namespace ocbc_team1.Models
     {
         [Required]
         [MaxLength(6), MinLength(6)]
-        [RegularExpression("^[0-9]{6}$", ErrorMessage = "Please enter your 6 Access Code")]
         public string AccessCode { get; set; }
 
         [Required]
@@ -51,11 +50,6 @@ namespace ocbc_team1.Models
         [RegularExpression("^[0-9]{8}$", ErrorMessage = "Please enter an 8 digit phone number")]
         public string PhoneNumber { get; set; }
 
-        public List<BankAccount> AccountsList { get; set; }
-
-        public User()
-        {
-            AccountsList = new List<BankAccount>();
-        }
+        public string AccountsList { get; set; }
     }
 }

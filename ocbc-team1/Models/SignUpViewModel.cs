@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ocbc_team1.Models
 {
-    public class SignUpModel
+    public class SignUpViewModel
     {
         [Required]
         [RegularExpression(@"[\w-]+@([\w-]+\.)+[\w-]+", ErrorMessage = "Please enter your email address")]

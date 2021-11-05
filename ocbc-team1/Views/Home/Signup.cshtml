@@ -1,4 +1,4 @@
-﻿@model ocbc_team1.Models.User
+﻿@model ocbc_team1.Models.SignUpViewModel
 
 @{
     ViewData["Title"] = "Signup";
@@ -55,6 +55,7 @@
             <input asp-for="PhoneNumber" class="form-control rounded-0" />
             <span asp-validation-for="PhoneNumber" class="text-danger"></span>
         </div>
+        <span style="color:red;">@TempData["Message"]</span>
         <div class="form-group p-4 text-center">
             <input type="submit" value="Sign Up" class="btn text-white px-5" style="background-color:red; border-radius:0px" />
         </div>
