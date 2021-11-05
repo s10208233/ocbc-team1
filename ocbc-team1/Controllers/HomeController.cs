@@ -66,8 +66,7 @@ namespace ocbc_team1.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Signup(User user)
+        public IActionResult Signup(SignUpModel user)
         {
             if (ModelState.IsValid)
             {
@@ -75,6 +74,7 @@ namespace ocbc_team1.Controllers
                 var CardNumber = user.CardNumber;
 
                 //Redirect user to Competitor/Index view
+                CreateAccessCode();
                 return RedirectToAction("Login");
             }
             else
@@ -84,6 +84,32 @@ namespace ocbc_team1.Controllers
                 return View(user);
             }
 
+        }
+        public int CreateAccessCode()
+        {
+            Random rnd = new Random();
+            int value = rnd.Next(100000, 999999);
+            return CheckAccessCode(value);
+            
+        }
+        public int CheckAccessCode(int value)
+        {
+            List<TestUser> userList = loginContext.LoginList();
+            int nAccessCode = 0;
+            foreach (TestUser user in userList)
+            {
+                if (value == Convert.ToInt32(user.AccessCode))
+                {
+                    Random rnd = new Random();
+                    nAccessCode = rnd.Next(100000, 999999);
+                    CheckAccessCode(nAccessCode);                    
+                }
+                else
+                {
+                    nAccessCode = value;
+                }
+            }
+            return nAccessCode;
         }
         public IActionResult Privacy()
         {
