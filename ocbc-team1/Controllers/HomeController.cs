@@ -6,6 +6,9 @@ using ocbc_team1.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using MailKit.Net.Smtp;
+using MailKit;
+using MimeKit;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -74,7 +77,11 @@ namespace ocbc_team1.Controllers
                 var CardNumber = user.CardNumber;
 
                 //Redirect user to Competitor/Index view
-                CreateAccessCode();
+                HttpContext.Session.SetString("email", user.Email);
+                string userName = user.FirstName + " " + user.LastName;
+                HttpContext.Session.SetString("fullname", userName);
+                int accessCode = CreateAccessCode();
+                sendAccessCode(accessCode);
                 return RedirectToAction("Login");
             }
             else
@@ -110,6 +117,43 @@ namespace ocbc_team1.Controllers
                 }
             }
             return nAccessCode;
+        }
+        public void sendAccessCode(int value)
+        {
+            MimeMessage message = new MimeMessage();
+            message.From.Add(new MailboxAddress("OCBC Team 1", "ocbcteam1@gmail.com"));
+            string rEmail = HttpContext.Session.GetString("email");
+            string rName = HttpContext.Session.GetString("fullname");
+            message.To.Add(MailboxAddress.Parse(rEmail));
+            message.Subject = "OCBC Account Access Code";
+            message.Body = new TextPart("html")
+            {
+                Text = "Welcome " + rName + "<br>Thank You For Signing Up at OCBC Bank." +
+                "<br>Here is Your Access Code" +
+                "<br>You will need this code to Log In" +
+                "<br>Access Code: " + Convert.ToString(value)
+
+            };
+            string emailAddress = "ocbcteam1@gmail.com";
+            string password = "ocbcteam1";
+            SmtpClient client = new SmtpClient();
+            try
+            {
+                client.Connect("smtp.gmail.com", 465, true);
+                client.Authenticate(emailAddress, password);
+                client.Send(message);
+
+                Console.WriteLine("Email Sent!.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                client.Disconnect(true);
+                client.Dispose();
+            }
         }
         public IActionResult Privacy()
         {
