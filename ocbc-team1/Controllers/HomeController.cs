@@ -37,7 +37,7 @@ namespace ocbc_team1.Controllers
         }
 
         [HttpPost]
-        public ActionResult UserLogin(LoginViewModel loginVM) 
+        public IActionResult Login(LoginViewModel loginVM) 
         {
             if(ModelState.IsValid)
             {
@@ -48,7 +48,7 @@ namespace ocbc_team1.Controllers
                     if (loginVM.AccessCode == user.AccessCode && loginVM.Pin == user.BankPIN)
                     {
                         HttpContext.Session.SetString("login", "true");
-                        string userName = user.FirstName + user.LastName;
+                        string userName = user.FirstName + " " + user.LastName;
                         HttpContext.Session.SetString("fullname", userName);
                         return RedirectToAction("Index", "Dashboard");
                     }
