@@ -3,42 +3,35 @@
     ViewData["Title"] = "Dashboard";
 }
 
-<head>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="~/css/Dashboard.css">
-</head>
+<h2 class="pb-5">Your Accounts</h2>
 
-<div class="text-center">
-    <h1 class="display-4" style="margin-bottom: 50px; width: 100%; height: auto;">Your Accounts</h1>
-</div>
 
 @{
-    @*int counter = 0;
-        <div class="AccountContainer">
+    int counter = 0;
 
-            @foreach (var item in Model)
-            {
-                <div class="ContentContainer">
-                    <h1 class="ContainerHeader">Savings Account- @item.CardNumber</h1>
-                    <div class="ContainerContent">Account Balance: @item.AvalibleBalance</div>
-                    <div class="ContainerContent">Total Balancee: @item.TotalBalance</div>
-                    <div> </div>
-                </div>
-                counter += 1;
-            }
-            @if (counter == 0)
-            {
-                <span style="color:red">No active accounts</span>
-            }
-        </div>*@
+    //  Template loop, use when DAL ready.
 
-    <div class="AccountContainer">
+    @*@foreach (var item in Model)
+    {
+        <div class="container mx-auto shadow bg-white rounded p-5">
+            <h4 class="pb-4">Savings Acount - @item.CardNumber</h4>
+            <div class="row justify-content-end">
+                <div class="col-3">Account Balance - @item.AmountAvaliable</div>
+                <div class="col-3">Total Balance - @item.AmountRemaining</div>
+            </div>
+        </div>
+        counter += 1;
+    }
+    @if (counter == 0)
+    {
+        <span style="color:red">No active accounts</span>
+    }*@
 
-        <div class="ContentContainer">
-            <h1 class="ContainerHeader">Savings Acount- </h1>
-            <div class="ContainerContent">Account Balance: </div>
-            <div class="ContainerContent">Total Balance: </div>
-            <div> </div>
+    <div class="container mx-auto shadow bg-white rounded p-5">
+        <h4 class="pb-4">Savings Acount - 000-00000-0</h4>
+        <div class="row justify-content-end">
+            <div class="col-3">Account Balance - $00.00</div>
+            <div class="col-3">Total Balance - $00.00</div>
         </div>
     </div>
 }

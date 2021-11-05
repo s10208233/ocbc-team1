@@ -9,6 +9,10 @@ namespace ocbc_team1.Models
     public class User
     {
         [Required]
+        [RegularExpression(@"[\w-]+@([\w-]+\.)+[\w-]+", ErrorMessage = "Please enter your email address")]
+        public string Email { get; set; }
+
+        [Required]
         [StringLength(50, ErrorMessage = "Exceeded 50 characters")]
         [RegularExpression("^[a-zA-Z]+$", ErrorMessage = "Please enter alphabets only")]
         public string FirstName { get; set; }
@@ -21,7 +25,7 @@ namespace ocbc_team1.Models
         [Required]
         [MaxLength(8), MinLength(8)]
         [RegularExpression("^[0-9]{8}$", ErrorMessage = "Please enter the last 8 digits of your card")]
-        public string AccessCode { get; set; }
+        public string CardNumber { get; set; }
 
         [Required]
         [MaxLength(6), MinLength(6)]
