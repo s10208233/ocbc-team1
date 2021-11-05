@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using ocbc_team1.DAL;
 using ocbc_team1.Models;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace ocbc_team1.Controllers
 {
     public class HomeController : Controller
     {
+        private LoginDAL loginContext = new LoginDAL();
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
@@ -35,15 +37,54 @@ namespace ocbc_team1.Controllers
         }
 
         [HttpPost]
-        public ActionResult UserLogin(IFormCollection formData) {
-
-            //  Do Authentication Logic Here
-
-            HttpContext.Session.SetString("login", "true");
-            HttpContext.Session.SetString("fullname", "<First Name> <Last Name>");
-            return RedirectToAction("Index", "Dashboard");
+        public ActionResult UserLogin(LoginViewModel loginVM) 
+        {
+            if(ModelState.IsValid)
+            {
+                LoginDAL loginContext = new LoginDAL();
+                List<TestUser> userList = loginContext.LoginList();
+                foreach (TestUser user in userList)
+                {
+                    if (loginVM.AccessCode == user.AccessCode && loginVM.Pin == user.BankPIN)
+                    {
+                        HttpContext.Session.SetString("login", "true");
+                        string userName = user.FirstName + user.LastName;
+                        HttpContext.Session.SetString("fullname", userName);
+                        return RedirectToAction("Index", "Dashboard");
+                    }
+                }
+                TempData["Message"] = "Invalid Login Credentials!";
+                return View();
+            }
+            else
+            {
+                //Input validation fails, return to the Login view
+                //to display error message
+                return View(loginVM);
+            }
+            
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Signup(User user)
+        {
+            if (ModelState.IsValid)
+            {
+                //check if it stores
+                var CardNumber = user.CardNumber;
+
+                //Redirect user to Competitor/Index view
+                return RedirectToAction("Login");
+            }
+            else
+            {
+                //Input validation fails, return to the Create view
+                //to display error message
+                return View(user);
+            }
+
+        }
         public IActionResult Privacy()
         {
             return View();
