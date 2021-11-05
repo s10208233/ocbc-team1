@@ -9,6 +9,11 @@ namespace ocbc_team1.Models
     public class User
     {
         [Required]
+        [MaxLength(6), MinLength(6)]
+        [RegularExpression("^[0-9]{6}$", ErrorMessage = "Please enter your 6 Access Code")]
+        public string AccessCode { get; set; }
+
+        [Required]
         [RegularExpression(@"[\w-]+@([\w-]+\.)+[\w-]+", ErrorMessage = "Please enter your email address")]
         public string Email { get; set; }
 
