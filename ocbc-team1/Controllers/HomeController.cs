@@ -80,13 +80,16 @@ namespace ocbc_team1.Controllers
                 {
                     if (c.CardNumber == userinput.CardNumber && c.CardPIN == userinput.BankPIN)
                     {
-                        foreach (User u in existinguserlist)
+                        if (existinguserlist != null) 
                         {
-                            if (u.CardNumber == userinput.CardNumber ||
-                                u.BankPIN == userinput.BankPIN ||
-                                u.Email == userinput.Email ||
-                                u.IC == userinput.IC
-                                ) {TempData["Message"] = "The information you have entered is not valid or unique."; return View(userinput); }
+                            foreach (User u in existinguserlist)
+                            {
+                                if (u.CardNumber == userinput.CardNumber ||
+                                    u.BankPIN == userinput.BankPIN ||
+                                    u.Email == userinput.Email ||
+                                    u.IC == userinput.IC
+                                    ) { TempData["Message"] = "The information you have entered is not valid or unique."; return View(userinput); }
+                            }
                         }
                         signupContext.completeUserSignUp(userinput);
                         TempData["SignupSuccessMessage"] = "We've sent your access code to your email address, check your inbox.";

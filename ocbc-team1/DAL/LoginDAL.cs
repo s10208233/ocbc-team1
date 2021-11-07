@@ -34,9 +34,12 @@ namespace ocbc_team1.DAL
         public List<string> existingAccessCodeList(List<User> userlist)
         {
             List<string> accesscodelist = new List<string>();
-            foreach (User u in userlist)
+            if (userlist != null)
             {
-                accesscodelist.Add(u.AccessCode);
+                foreach (User u in userlist)
+                {
+                    accesscodelist.Add(u.AccessCode);
+                }
             }
             return accesscodelist;
         }

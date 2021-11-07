@@ -79,14 +79,17 @@ namespace ocbc_team1.DAL
                 List<BankAccount> bankaccountlist = new List<BankAccount>();
                 bankaccountlist.Add(new BankAccount()
                 {
-                    AccountNumber = rnd.Next(15,1500),
+                    AccountNumber = rnd.Next(000000000,999999999),
                     AccountType = "Savings",
                     AmountAvaliable = randombal,
                     AmountRemaining = randombal,
                     CreationDate = DateTime.Today
                 });
-                string accountListJson = JsonConvert.SerializeObject(bankaccountlist);
-
+                string accountListJson = JsonConvert.SerializeObject(bankaccountlist, Formatting.Indented);
+                if (userList == null)
+                {
+                    userList = new List<User>();
+                }
                 userList.Add(new User()
                 {
                     AccessCode = accesscode,
