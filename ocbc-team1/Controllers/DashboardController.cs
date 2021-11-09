@@ -14,6 +14,11 @@ namespace ocbc_team1.Controllers
             return View();
         }
 
+        public IActionResult TransferHistory()
+        {
+            return View();
+        }
+
         public IActionResult UserLogout()
         {
             HttpContext.Session.Remove("login");
