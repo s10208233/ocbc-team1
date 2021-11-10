@@ -13,11 +13,11 @@
 
     @foreach (var item in Model)
     {
-        <div class="container mx-auto shadow bg-white rounded p-5">
+        <div class="container mx-auto shadow bg-white rounded p-5 mb-3">
             <h4 class="pb-4">Savings Acount - @item.AccountNumber</h4>
             <div class="row justify-content-end">
-                <div class="col-3">Account Balance @item.AmountAvaliable</div>
-                <div class="col-3">Total Balance @item.AmountRemaining</div>
+                <div class="col-3">Account Balance: $@item.AmountAvaliable</div>
+                <div class="col-3">Total Balance: $@item.AmountRemaining</div>
             </div>
         </div>
         counter += 1;

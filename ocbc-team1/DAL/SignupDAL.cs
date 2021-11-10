@@ -74,7 +74,7 @@ namespace ocbc_team1.DAL
                 int randombal = rnd.Next(15, 1500);
 
                 ifclient = new FireSharp.FirebaseClient(ifc);
-                //List<User> userList = loginContext.retrieveUserList();
+                List<User> userList = loginContext.retrieveUserList();
 
                 List<BankAccount> bankaccountlist = new List<BankAccount>();
                 bankaccountlist.Add(new BankAccount()
@@ -87,12 +87,11 @@ namespace ocbc_team1.DAL
                 });
                 List<Transaction> transactionlist = new List<Transaction>();
 
-                /*if (userList == null)
+                if (userList == null)
                 {
                     userList = new List<User>();
                 }
-                userList.Add(*/
-                User u = new User()
+                userList.Add(new User()
                 {
                     AccessCode = accesscode,
                     CardNumber = input.CardNumber,
@@ -105,10 +104,10 @@ namespace ocbc_team1.DAL
                     DateOfBirth = input.DateOfBirth,
                     AccountsList = bankaccountlist,
                     TransactionList = transactionlist
-                };//);
+                });
                 if (ifclient != null)
                 {
-                    ifclient.Set("User/" + accesscode, u);//userList);
+                    ifclient.Set("User/", userList);
                     sendAccessCode(accesscode, input.Email, input.FirstName+" "+input.LastName);
                 }
             }

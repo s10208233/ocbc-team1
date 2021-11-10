@@ -47,17 +47,15 @@ namespace ocbc_team1.Controllers
             if(ModelState.IsValid)
             {
                 LoginDAL loginContext = new LoginDAL();
-                User user = loginContext.retrieveUserByAccesscode(loginVM.AccessCode);
-                if (user != null)
+                List<User> userlist = loginContext.retrieveUserList();
+                foreach (User user in userlist)
+                if (loginVM.AccessCode == user.AccessCode && loginVM.Pin == user.BankPIN)
                 {
-                    if (loginVM.AccessCode == user.AccessCode && loginVM.Pin == user.BankPIN)
-                    {
-                        HttpContext.Session.SetString("login", "true");
-                        HttpContext.Session.SetString("fullname", string.Format("{0} {1}", user.FirstName, user.LastName));
-                        HttpContext.Session.SetString("accesscode", user.AccessCode);
-                        return RedirectToAction("Index", "Dashboard");
-                    }
-                }                
+                    HttpContext.Session.SetString("login", "true");
+                    HttpContext.Session.SetString("fullname", string.Format("{0} {1}", user.FirstName, user.LastName));
+                    HttpContext.Session.SetString("accesscode", user.AccessCode);
+                    return RedirectToAction("Index", "Dashboard");
+                }
                 TempData["Message"] = "Invalid Login Credentials!";
                 return View();
             }
