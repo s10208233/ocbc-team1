@@ -17,8 +17,7 @@ namespace ocbc_team1.Controllers
     public class HomeController : Controller
     {
         private SignupDAL signupContext = new SignupDAL();
-        private LoginDAL loginContext = new LoginDAL();
-        private TransactionDAL transactionContext = new TransactionDAL();
+        private LoginDAL loginContext = new LoginDAL();      
 
         private readonly ILogger<HomeController> _logger;
 
@@ -49,14 +48,16 @@ namespace ocbc_team1.Controllers
             {
                 LoginDAL loginContext = new LoginDAL();
                 User user = loginContext.retrieveUserByAccesscode(loginVM.AccessCode);
-
-                if (loginVM.AccessCode == user.AccessCode && loginVM.Pin == user.BankPIN)
+                if (user != null)
                 {
-                    HttpContext.Session.SetString("login", "true");
-                    HttpContext.Session.SetString("fullname", string.Format("{0} {1}", user.FirstName, user.LastName));
-                    HttpContext.Session.SetString("accesscode", user.AccessCode);
-                    return RedirectToAction("Index", "Dashboard");
-                }
+                    if (loginVM.AccessCode == user.AccessCode && loginVM.Pin == user.BankPIN)
+                    {
+                        HttpContext.Session.SetString("login", "true");
+                        HttpContext.Session.SetString("fullname", string.Format("{0} {1}", user.FirstName, user.LastName));
+                        HttpContext.Session.SetString("accesscode", user.AccessCode);
+                        return RedirectToAction("Index", "Dashboard");
+                    }
+                }                
                 TempData["Message"] = "Invalid Login Credentials!";
                 return View();
             }
@@ -107,13 +108,7 @@ namespace ocbc_team1.Controllers
             }
 
         }
-
-        public ActionResult BankAccount()
-        {
-            string accesscode = HttpContext.Session.GetString("accesscode");
-            List<BankAccount> bankAccountList = transactionContext.getBankAccountList(accesscode);
-            return View(bankAccountList);
-        }
+               
 
         public IActionResult Privacy()
         {
