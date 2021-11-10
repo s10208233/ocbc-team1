@@ -9,7 +9,7 @@ namespace ocbc_team1.Controllers
 {
     public class DashboardController : Controller
     {
-        private List<string> TypeOfTransfer = new List<string> { "Using OCBC Acount Number", "Using Phone Number" };
+        private List<string> TypeOfTransfer = new List<string>{ "Using OCBC Acount Number", "Using Phone Number" };
         public IActionResult Index()
         {
             return View();
@@ -22,7 +22,7 @@ namespace ocbc_team1.Controllers
 
         public IActionResult Transfer()  
         {
-            ViewData["TypeTransfer"] = TypeOfTransfer;
+            ViewData["TransferType"] = TypeOfTransfer;
             return View();
         }
 
