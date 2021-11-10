@@ -3,7 +3,7 @@
 }
 
 <div class="mx-auto shadow bg-white rounded" style="max-width:fit-content;">
-    <form method="post" class="p-5" asp-controller="Home" asp-action="UserLogin">
+    <form method="post" class="p-5" asp-controller="Home" asp-action="Login">
         <fieldset class="FormContent">
             <h2 class="pt-3" style="min-width:350px;"> Online Banking </h2>
             <div class="col login-field p-0">
@@ -24,12 +24,15 @@
                         <span asp-validation-for="Pin"
                               class="text-danger"></span>
                     </div>
-                </div>  
+                </div>
+            </div>
+            <div class="row">
+                <span style="color:red;">@TempData["Message"]</span>
+                <span style="color:green;">@TempData["SignupSuccessMessage"]</span>
             </div>
             <div class="form-group row float-right">
-                <span style="color:red;">@TempData["Message"]</span>
                 <div>
-                    <input type="submit" value="Login" class="btn text-white px-5 mr-3  rounded-0" style="background-color:red;"/>
+                    <input type="submit" value="Login" class="btn text-white px-5 mr-3  rounded-0" style="background-color:red;" />
                 </div>
             </div>
         </fieldset>

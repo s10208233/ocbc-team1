@@ -6,12 +6,8 @@ using System.Threading.Tasks;
 
 namespace ocbc_team1.Models
 {
-    public class User
+    public class SignUpViewModel
     {
-        [Required]
-        [MaxLength(6), MinLength(6)]
-        public string AccessCode { get; set; }
-
         [Required]
         [RegularExpression(@"[\w-]+@([\w-]+\.)+[\w-]+", ErrorMessage = "Please enter your email address")]
         public string Email { get; set; }
@@ -50,9 +46,6 @@ namespace ocbc_team1.Models
         [RegularExpression("^[0-9]{8}$", ErrorMessage = "Please enter an 8 digit phone number")]
         public string PhoneNumber { get; set; }
 
-        [Required]
-        public List<BankAccount> AccountsList { get; set; }
-        [Required]
-        public List<Transaction> TransactionList { get; set; }
+        
     }
 }
