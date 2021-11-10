@@ -12,18 +12,21 @@ namespace ocbc_team1.Models
         public int TransactionID { get; set; }
 
         [Required]
-        public int SenderUserID { get; set; }
+        public int Sender_AccountNumber { get; set; }
 
         [Required]
-        public int RecipientUserID { get; set; }
+        public int Recipient_AccountNumber { get; set; }
 
         [Required]
-        public int AmountSent { get; set; }
+        public double Amount { get; set; }
 
+        [Required]
         public DateTime TimeSent { get; set;}
 
+        [Required]
         public DateTime? TimeRecieved { get; set; }
 
+        [Required]
         public string Status { get; set; }
     }
 }
