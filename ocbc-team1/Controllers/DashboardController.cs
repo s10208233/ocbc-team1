@@ -9,8 +9,20 @@ namespace ocbc_team1.Controllers
 {
     public class DashboardController : Controller
     {
+        private List<string> TypeOfTransfer = new List<string> { "Using OCBC Acount Number", "Using Nric/Fin","Using Phone Number" };
         public IActionResult Index()
         {
+            return View();
+        }
+
+        public IActionResult TransferHistory()
+        {
+            return View();
+        }
+
+        public ActionResult Transfer()  
+        {
+            ViewData["TypeTransfer"] = TypeOfTransfer;
             return View();
         }
 
