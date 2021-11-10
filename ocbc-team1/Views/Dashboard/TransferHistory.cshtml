@@ -11,7 +11,10 @@
     <h1 class="display-4" style="margin-bottom: 50px; width: 100%; height: auto;">Your Accounts</h1>
 </div>
 
+@{ int accountNo = (int)ViewData["AccountNo"];}
+
 @*@if(Model.ToList().Count > 0){*@
+    <div>@accountNo</div>
     <div class="table-responsive">
         <table id="transactionHistory" class="table-striped table-bordered">
             <thead class="thead-dark">

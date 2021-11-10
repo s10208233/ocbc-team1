@@ -11,7 +11,8 @@ namespace ocbc_team1.Controllers
 {
     public class DashboardController : Controller
     {
-        private List<string> TypeOfTransfer = new List<string> { "Using OCBC Acount Number", "Using Nric/Fin","Using Phone Number" };
+        private TransactionDAL transactionContext = new TransactionDAL();
+        private List<string> TypeOfTransfer = new List<string> { "Using OCBC Acount Number","Using Phone Number" };
         public IActionResult Index()
         {
             string accesscode = HttpContext.Session.GetString("accesscode");
@@ -19,8 +20,10 @@ namespace ocbc_team1.Controllers
             return View(bankAccountList);
         }
         
-        public IActionResult TransferHistory()
+        public IActionResult TransferHistory(int AccountNumber)
         {
+            int accNo = AccountNumber;
+            ViewData["AccountNo"] = accNo;
             return View();
         }
 
