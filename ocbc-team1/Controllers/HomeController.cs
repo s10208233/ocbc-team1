@@ -36,10 +36,8 @@ namespace ocbc_team1.Controllers
             HttpContext.Session.Clear();
             return View();
         }
-        [HttpPost]
-        public ActionResult Signup(IFormCollection formdata)
+        public IActionResult Signup()
         {
-            Console.WriteLine(new User() { FirstName=formdata});
             return View();
         }
 
