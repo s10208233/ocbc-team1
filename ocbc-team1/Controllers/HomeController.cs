@@ -17,7 +17,7 @@ namespace ocbc_team1.Controllers
     public class HomeController : Controller
     {
         private SignupDAL signupContext = new SignupDAL();
-        private LoginDAL loginContext = new LoginDAL();
+        private LoginDAL loginContext = new LoginDAL();      
 
         private readonly ILogger<HomeController> _logger;
 
@@ -106,6 +106,8 @@ namespace ocbc_team1.Controllers
             }
 
         }
+               
+
         public IActionResult Privacy()
         {
             return View();
