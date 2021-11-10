@@ -54,6 +54,7 @@ namespace ocbc_team1.Controllers
                     {
                         HttpContext.Session.SetString("login", "true");
                         HttpContext.Session.SetString("fullname", string.Format("{0} {1}", user.FirstName, user.LastName));
+                        HttpContext.Session.SetString("accesscode", user.AccessCode);
                         return RedirectToAction("Index", "Dashboard");
                     }
                 }
