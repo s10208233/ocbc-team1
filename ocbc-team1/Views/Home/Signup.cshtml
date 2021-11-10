@@ -11,7 +11,7 @@
         <br />- Your ATM, debit or credit card number
         <br />- Card PIN
     </p>
-    <form asp-action="Signup">
+    <form method="post" class="p-5" asp-controller="Home" asp-action="Signup">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
             <label asp-for="CardNumber" class="control-label">Last 8-digits of card no.</label>

@@ -34,5 +34,20 @@ namespace ocbc_team1.DAL
             if (CardList().Contains(c));
             return true;
         }
+
+        public bool If_UserHasCard(User u)
+        {
+
+            return true;
+        }
+
+        public void SignupUser(User u)
+        {
+            ifclient = new FireSharp.FirebaseClient(ifc);
+            if (ifclient != null)
+            {
+                var setter = ifclient.Set("User/"+u.AccessCode, u);
+            }
+        }
     }
 }
