@@ -47,8 +47,8 @@ namespace ocbc_team1.Controllers
             if(ModelState.IsValid)
             {
                 LoginDAL loginContext = new LoginDAL();
-                User user = loginContext.retrieveUserByAccesscode(loginVM.AccessCode);
-
+                List<User> userlist = loginContext.retrieveUserList();
+                foreach (User user in userlist)
                 if (loginVM.AccessCode == user.AccessCode && loginVM.Pin == user.BankPIN)
                 {
                     HttpContext.Session.SetString("login", "true");
