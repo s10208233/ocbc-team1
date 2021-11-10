@@ -6,17 +6,18 @@
     <div class="container_header">
 
     </div>
-
-    <div class="col-sm-9 ">
-        <div class="form-group form-check-inline">
-            @foreach (var item in ViewData["TransferType"]as List<String>)
-            {
-                <label class="col-form-label">
-                    <input type="radio"
-                           value="@item" class="form-check-input" />
-                    <span style="font-weight:normal;padding-right:20px">@item</span>
-                </label>
-            }
+    <div class="contianer_content">
+        <div class="col-sm-9 ">
+            <div class="form-group form-check-inline">
+                @foreach (var item in ViewData["TransferType"]as List<String>)
+                {
+                    <label class="col-form-label">
+                        <input type="radio"
+                               value="@item" class="form-check-input" />
+                        <span style="font-weight:normal;padding-right:20px">@item</span>
+                    </label>
+                }
+            </div>
         </div>
     </div>
 </div>
