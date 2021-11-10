@@ -18,6 +18,7 @@ namespace ocbc_team1.Controllers
     {
         private SignupDAL signupContext = new SignupDAL();
         private LoginDAL loginContext = new LoginDAL();
+        private TransactionDAL transactionContext = new TransactionDAL();
 
         private readonly ILogger<HomeController> _logger;
 
@@ -108,6 +109,14 @@ namespace ocbc_team1.Controllers
             }
 
         }
+
+        public ActionResult BankAccount()
+        {
+            string accesscode = HttpContext.Session.GetString("accesscode");
+            List<BankAccount> bankAccountList = transactionContext.getBankAccountList(accesscode);
+            return View(bankAccountList);
+        }
+
         public IActionResult Privacy()
         {
             return View();
