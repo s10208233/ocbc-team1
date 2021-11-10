@@ -50,6 +50,9 @@ namespace ocbc_team1.Models
         [RegularExpression("^[0-9]{8}$", ErrorMessage = "Please enter an 8 digit phone number")]
         public string PhoneNumber { get; set; }
 
-        public string AccountsList { get; set; }
+        [Required]
+        public List<BankAccount> AccountsList { get; set; }
+        [Required]
+        public List<Transaction> TransactionList { get; set; }
     }
 }

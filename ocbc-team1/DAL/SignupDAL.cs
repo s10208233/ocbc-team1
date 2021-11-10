@@ -85,7 +85,8 @@ namespace ocbc_team1.DAL
                     AmountRemaining = randombal,
                     CreationDate = DateTime.Today
                 });
-                string accountListJson = JsonConvert.SerializeObject(bankaccountlist, Formatting.Indented);
+                List<Transaction> transactionlist = new List<Transaction>();
+
                 if (userList == null)
                 {
                     userList = new List<User>();
@@ -101,7 +102,8 @@ namespace ocbc_team1.DAL
                     Email = input.Email,
                     PhoneNumber = input.PhoneNumber,
                     DateOfBirth = input.DateOfBirth,
-                    AccountsList = accountListJson
+                    AccountsList = bankaccountlist,
+                    TransactionList = transactionlist
                 });
                 if (ifclient != null)
                 {
@@ -145,6 +147,8 @@ namespace ocbc_team1.DAL
                     client.Dispose();
                 }
             }
+
+
         }
 
 
