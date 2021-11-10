@@ -1,0 +1,37 @@
+﻿@{
+    ViewData["Title"] = "Transfer History";
+}
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="~/css/Dashboard.css">
+</head>
+
+<div class="text-center">
+    <h1 class="display-4" style="margin-bottom: 50px; width: 100%; height: auto;">Your Accounts</h1>
+</div>
+
+@*@if(Model.ToList().Count > 0){*@
+    <div class="table-responsive">
+        <table id="transactionHistory" class="table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Date</th>
+                    <th>Transaction Status</th>
+                    <th>Recipient User ID</th>
+                    <th>Amount Sent</th>
+                    <th>Time Recieved</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>24/12/23</td>
+                    <td>Approve</td>
+                    <td>User ID</td>
+                    <td>10000</td>
+                    <td>10:10</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
