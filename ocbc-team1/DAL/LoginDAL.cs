@@ -31,17 +31,6 @@ namespace ocbc_team1.DAL
             }
             return userList;
         }
-        public User retrieveUserByAccesscode(string accesscode)
-        {
-            ifclient = new FireSharp.FirebaseClient(ifc);
-            if (ifclient != null)
-            {
-                FirebaseResponse firebaseresponse = ifclient.Get("User/" + accesscode);
-                User u = firebaseresponse.ResultAs<User>();
-                return u;
-            }
-            return null;
-        }
         public List<string> existingAccessCodeList(List<User> userlist)
         {
             List<string> accesscodelist = new List<string>();
