@@ -15,6 +15,7 @@ namespace ocbc_team1.DAL
     public class SignupDAL
     {
         private LoginDAL loginContext = new LoginDAL();
+        private TransactionDAL transactionContext = new TransactionDAL();
 
         IFirebaseConfig ifc = new FirebaseConfig()
         {
@@ -77,9 +78,16 @@ namespace ocbc_team1.DAL
                 List<User> userList = loginContext.retrieveUserList();
 
                 List<BankAccount> bankaccountlist = new List<BankAccount>();
+                int newbankaccountnumber = rnd.Next(000000000, 999999999);
+                foreach (User u in loginContext.retrieveUserList()) {
+                    foreach (BankAccount ba in u.AccountsList) {
+                        if (ba.AccountNumber == newbankaccountnumber) { newbankaccountnumber = rnd.Next(000000000, 999999999); }
+                    }
+                }
+
                 bankaccountlist.Add(new BankAccount()
                 {
-                    AccountNumber = rnd.Next(000000000,999999999),
+                    AccountNumber = newbankaccountnumber,
                     AccountType = "Savings",
                     AmountAvaliable = randombal,
                     AmountRemaining = randombal,
