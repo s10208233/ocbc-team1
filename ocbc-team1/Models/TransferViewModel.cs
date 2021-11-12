@@ -8,10 +8,6 @@ namespace ocbc_team1.Models
 {
     public class TransferViewModel
     {
-        [MaxLength(8), MinLength(8)]
-        [RegularExpression("^[0-9]{8}$", ErrorMessage = "Please enter an 8 digit phone number")]
-        public string? PhoneNumber { get; set; }
-
         [Required]
         [MaxLength(9), MinLength(9)]
         [RegularExpression("^[0-9]{9}$", ErrorMessage = "Please enter one of your account to send from")]
@@ -20,9 +16,15 @@ namespace ocbc_team1.Models
         [Required]
         [MaxLength(9), MinLength(9)]
         [RegularExpression("^[0-9]{9}$", ErrorMessage = "Please enter one of your account to send to")]
-        public string To_AccountNumber { get; set; }
+        public string? To_AccountNumber { get; set; }
+
+        [MaxLength(8), MinLength(8)]
+        [RegularExpression("^[0-9]{8}$", ErrorMessage = "Please enter an 8 digit phone number")]
+        public string? PhoneNumber { get; set; }
 
         [Required]
+        [Range(0.00,double.MaxValue, ErrorMessage = "Please enter a number larger than 0")]
+        [RegularExpression("[+]?\\d*\\.?\\d+", ErrorMessage = "Please enter a number larger than 0")]
         public double TransferAmount { get; set; }
     }
 }
