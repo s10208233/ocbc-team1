@@ -11,11 +11,13 @@ using MailKit;
 using MimeKit;
 using System.Linq;
 using System.Threading.Tasks;
+using Telegram.Bot;
 
 namespace ocbc_team1.Controllers
 {
     public class HomeController : Controller
     {
+        static TelegramBotClient Bot = new TelegramBotClient("2106855009:AAEVAKqEbNj6W7GeZoOLkgmF8XgsL7ZvG2o");
         private SignupDAL signupContext = new SignupDAL();
         private LoginDAL loginContext = new LoginDAL();      
 
@@ -41,7 +43,33 @@ namespace ocbc_team1.Controllers
             return View();
         }
 
-        [HttpPost]
+        public IActionResult OTP()
+        {
+            //if (true)
+            //{
+
+
+            //}
+            //else
+            //{
+                Random rnd = new Random();
+                string rOTP = Convert.ToString(rnd.Next(000000, 999999));
+                HttpContext.Session.SetString("otp", rOTP);
+                Bot.StartReceiving();
+                Bot.OnMessage += Bot_OnMessage;
+            //}
+            
+            return View();
+        }
+
+        private void Bot_OnMessage(object sender, Telegram.Bot.Args.MessageEventArgs e)
+        {
+            string chatid = Convert.ToString(e.Message.Chat.Id);
+            string rotp = HttpContext.Session.GetString("otp");
+            Bot.SendTextMessageAsync(chatid, "Your OTP is: " + rotp);
+        }
+
+        [HttpPost] 
         public IActionResult Login(LoginViewModel loginVM) 
         {
             if(ModelState.IsValid)
@@ -54,7 +82,7 @@ namespace ocbc_team1.Controllers
                     HttpContext.Session.SetString("login", "true");
                     HttpContext.Session.SetString("fullname", string.Format("{0} {1}", user.FirstName, user.LastName));
                     HttpContext.Session.SetString("accesscode", user.AccessCode);
-                    return RedirectToAction("Index", "Dashboard");
+                    return RedirectToAction("OTP", "Home");
                 }
                 TempData["Message"] = "Invalid Login Credentials!";
                 return View();

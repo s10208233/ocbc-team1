@@ -12,5 +12,7 @@ namespace ocbc_team1.Models
         public string AccessCode { get; set; }
         [Display(Name = "Pin"), Required, DataType(DataType.Password)]
         public string Pin { get; set; }
+
+        public string OTP { get; set; }
     }
 }
