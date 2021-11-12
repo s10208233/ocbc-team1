@@ -12,7 +12,6 @@ namespace ocbc_team1.Controllers
     public class DashboardController : Controller
     {
         private TransactionDAL transactionContext = new TransactionDAL();
-        private List<string> TypeOfTransfer = new List<string> { "Using OCBC Acount Number","Using Phone Number" };
         public IActionResult Index()
         {
             string accesscode = HttpContext.Session.GetString("accesscode");
@@ -29,8 +28,17 @@ namespace ocbc_team1.Controllers
 
         public IActionResult Transfer()  
         {
-            ViewData["TransferType"] = TypeOfTransfer;
+            ViewData["TransferType"] = new List<string> { "Using OCBC Acount Number", "Using Phone Number" };
+            ViewData["UserOwnAccountList"] = transactionContext.getBankAccountList(HttpContext.Session.GetString("accesscode"));
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult CreateTransfer(TransferViewModel tfViewModel) 
+        {
+            string s = tfViewModel.From_AccountNumber;
+
+            return RedirectToAction("Index", "Dashboard");
         }
 
         public IActionResult UserLogout()

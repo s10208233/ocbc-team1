@@ -1,4 +1,5 @@
-﻿@{
+﻿@model ocbc_team1.Models.TransferViewModel
+@{
     ViewData["Title"] = "Transfer";
 }
 
@@ -11,36 +12,55 @@
 <div class="transfer_header">
     Transactions
 </div>
+<form method="post" class="p-5" asp-controller="Dashboard" asp-action="CreateTransfer">
+    <fieldset class="FormContent">
 
-<div class="Main_container">
-    <div class="container_header">
-        1. Transfer Type
-    </div>
-    <div class="container_content">
-        <div class="radio_buttons">
-            @foreach (var item in ViewData["TransferType"]as List<String>)
-             {
-                <input type="radio" value="@item" class="form-check-input" />
-                <span style="font-weight:normal;padding-right:20px">@item</span>
-             }
+        <div class="Main_container">
+            <div class="container_header">
+                1. Transfer Type
+            </div>
+
+            <div class="container_content">
+                <div class="radio_buttons">
+                    @foreach (var item in ViewData["TransferType"] as List<String>)
+                    {
+                        <input type="radio" value="@item" class="form-check-input" />
+                        <span style="font-weight:normal;padding-right:20px">@item</span>
+                    }
+                </div>
+            </div>
         </div>
-    </div>
-</div>
 
-<div class="Main_container">
-    <div class="container_header">
-        2.Transfer From
-    </div>
-    <div class="container_content">
+        <div class="Main_container">
+            <div class="container_header">
+                2.Transfer From
+            </div>
+            <label asp-for="From_AccountNumber" class="col-form-label"></label>
 
-    </div>
-</div>
+            <div class="container_content">
+                <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" asp-for="From_AccountNumber"
+                        asp-items="@(new SelectList(ViewData["UserOwnAccountList"] as List<BankAccount>, "AccountNumber", "AccountNumber"))">
+                    <option selected>Select an account</option>
+                </select>
+                @*<select>
+                    @foreach (var accountnumber in ViewData["UserOwnAccountList"] as List<int>)
+                    {
+                        <option value="@accountnumber">@accountnumber</option>
+                    }
+                </select>*@
+            </div>
+        </div>
 
-<div class="Main_container">
-    <div class="container_header">
-        3.Transfer To
-    </div>
-    <div class="container_content">
+        <div class="Main_container">
+            <div class="container_header">
+                3.Transfer To
+            </div>
+            <div class="container_content">
 
-    </div>
-</div>
+            </div>
+        </div>
+        <div>
+            <input type="submit" value="Transfer" class="btn text-white px-5 mr-3  rounded-0" style="background-color:red;" />
+        </div>
+    </fieldset>
+</form>
