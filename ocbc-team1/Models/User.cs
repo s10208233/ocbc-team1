@@ -54,5 +54,7 @@ namespace ocbc_team1.Models
         public List<BankAccount> AccountsList { get; set; }
         [Required]
         public List<Transaction> TransactionList { get; set; }
+
+        public int? TelegramChatID { get; set; }
     }
 }
