@@ -1,0 +1,46 @@
+﻿@{
+    ViewData["Title"] = "Transfer";
+}
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/css/Transfer.css">
+</head>
+
+<div class="transfer_header">
+    Transactions
+</div>
+
+<div class="Main_container">
+    <div class="container_header">
+        1. Transfer Type
+    </div>
+    <div class="container_content">
+        <div class="radio_buttons">
+            @foreach (var item in ViewData["TransferType"]as List<String>)
+             {
+                <input type="radio" value="@item" class="form-check-input" />
+                <span style="font-weight:normal;padding-right:20px">@item</span>
+             }
+        </div>
+    </div>
+</div>
+
+<div class="Main_container">
+    <div class="container_header">
+        2.Transfer From
+    </div>
+    <div class="container_content">
+
+    </div>
+</div>
+
+<div class="Main_container">
+    <div class="container_header">
+        3.Transfer To
+    </div>
+    <div class="container_content">
+
+    </div>
+</div>
