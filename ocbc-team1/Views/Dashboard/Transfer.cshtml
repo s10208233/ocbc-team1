@@ -12,35 +12,60 @@
     Transactions
 </div>
 
-<div class="Main_container">
-    <div class="container_header">
-        1. Transfer Type
-    </div>
-    <div class="container_content">
-        <div class="radio_buttons">
-            @foreach (var item in ViewData["TransferType"]as List<String>)
-             {
-                <input type="radio" value="@item" class="form-check-input" />
-                <span style="font-weight:normal;padding-right:20px">@item</span>
-             }
+<form asp-controller="Rental" asp-action="Calculate" method="post">
+    <fieldset class="FormContent">
+        <div class="Main_container">
+            <div class="container_header">
+                1. Transfer Type
+            </div>
+            <div class="container_content">
+                <div class="radio_buttons">
+                    @foreach (var item in ViewData["TransferType"] as List<String>)
+                    {
+                        <input type="radio" value="@item" class="form-check-input" />
+                        <span style="font-weight:normal;padding-right:20px">@item</span>
+                    }
+                </div>
+            </div>
         </div>
-    </div>
-</div>
 
-<div class="Main_container">
-    <div class="container_header">
-        2.Transfer From
-    </div>
-    <div class="container_content">
+        <div class="Main_container">
+            <div class="container_header">
+                2.Transfer From
+            </div>
+            <div class="container_content">
+                    <div class="radio_buttons">
+                        @*@foreach (var item in )
+                            {
+                                <input type="radio" value="@item" class="form-check-input" />
+                                <span style="font-weight:normal;padding-right:20px">@item</span>
+                            }*@
+                    </div>
+            </div>
+        </div>
 
-    </div>
-</div>
-
-<div class="Main_container">
-    <div class="container_header">
-        3.Transfer To
-    </div>
-    <div class="container_content">
-
-    </div>
-</div>
+        <div class="Main_container">
+            <div class="container_header">
+                3.Transfer To
+            </div>
+            <div class="container_content">
+                <div class="InputContainer">
+                    <label for="fname">Bank Account Number: </label>
+                    <input type="text" id="fname" name="fname">
+                </div>
+                <div class="InputContainer">
+                    <label for="fname"> Amount: </label>
+                    <input type="text" id="fname" name="fname">
+                </div>
+                <div class="InputContainer">
+                    <label for="fname"> </label>
+                    <input type="text" id="fname" name="fname">
+                </div>
+                <div class="InputContainer">
+                    <label for="fname">First name:</label>
+                    <input type="text" id="fname" name="fname">
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</form>
