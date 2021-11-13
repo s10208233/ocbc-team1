@@ -53,6 +53,23 @@ namespace ocbc_team1.DAL
             }
             return null;
         }
+        public bool checkRecipient(TransferViewModel tfVM)
+        {
+            List<User> userslist = loginContext.retrieveUserList();
+
+            for (int i = 0; i < userslist.Count; i++)
+            {
+                for (int j = 0; j < userslist[i].AccountsList.Count; j++)
+                {
+                    if (Convert.ToString(userslist[i].AccountsList[j].AccountNumber) == tfVM.To_AccountNumber)
+                    {
+                        return true;
+                    }
+
+                }
+            }
+            return false;
+        }
 
         public void transferFunds(TransferViewModel tfVM, string accesscode)
         {
@@ -60,47 +77,46 @@ namespace ocbc_team1.DAL
             List<User> userslist = loginContext.retrieveUserList();
             if (userslist == null) { Console.WriteLine("uselist null, transfer failed"); return; }
             //  By Bank Number
-            if (true)
+
+            //  Recipient
+            for (int i = 0; i < userslist.Count; i++)
             {
-                // Sender
-                for (int i=0; i < userslist.Count; i++)
+                for (int j = 0; j < userslist[i].AccountsList.Count; j++)
                 {
-                    if (userslist[i].AccessCode == accesscode) 
+                    if (Convert.ToString(userslist[i].AccountsList[j].AccountNumber) == tfVM.To_AccountNumber)
                     {
-                        for (int j = 0; j < userslist[i].AccountsList.Count; j++)
-                        {
-                            if (Convert.ToString(userslist[i].AccountsList[j].AccountNumber) == tfVM.From_AccountNumber)
-                            {
-                                if (userslist[i].AccountsList[j].AmountAvaliable > tfVM.TransferAmount && userslist[i].AccountsList[j].AmountRemaining > tfVM.TransferAmount)
-                                {
-                                    userslist[i].AccountsList[j].AmountAvaliable -= tfVM.TransferAmount;
-                                    userslist[i].AccountsList[j].AmountRemaining -= tfVM.TransferAmount;
-                                }
-                            }
-                        }
+
+                        userslist[i].AccountsList[j].AmountAvaliable += tfVM.TransferAmount;
+                        userslist[i].AccountsList[j].AmountRemaining += tfVM.TransferAmount;
+
                     }
                 }
-                //  Recipient
-                for (int i = 0; i < userslist.Count; i++)
+            }
+             // Sender
+            for (int i=0; i < userslist.Count; i++)
+            {
+                if (userslist[i].AccessCode == accesscode) 
                 {
                     for (int j = 0; j < userslist[i].AccountsList.Count; j++)
                     {
-                        if (Convert.ToString(userslist[i].AccountsList[j].AccountNumber) == tfVM.To_AccountNumber)
+                        if (Convert.ToString(userslist[i].AccountsList[j].AccountNumber) == tfVM.From_AccountNumber)
                         {
                             if (userslist[i].AccountsList[j].AmountAvaliable > tfVM.TransferAmount && userslist[i].AccountsList[j].AmountRemaining > tfVM.TransferAmount)
                             {
-                                userslist[i].AccountsList[j].AmountAvaliable += tfVM.TransferAmount;
-                                userslist[i].AccountsList[j].AmountRemaining += tfVM.TransferAmount;
+                                userslist[i].AccountsList[j].AmountAvaliable -= tfVM.TransferAmount;
+                                userslist[i].AccountsList[j].AmountRemaining -= tfVM.TransferAmount;
                             }
                         }
                     }
                 }
             }
+            ifclient = new FireSharp.FirebaseClient(ifc);
             // update firebase
             if (ifclient != null)
             {
                 ifclient.Set("User/", userslist);
             }
         }
+
     }
 }
