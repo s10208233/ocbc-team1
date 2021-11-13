@@ -69,7 +69,7 @@
                 </div>
             </div>
         </div>
-        <div class="Main_container">
+        <span class="Main_container">
             <div class="container_header"><label asp-for="TransferAmount" class="col-form-label">4.Transfer amount</label></div>
             <div class="container_content">
                 <div>
@@ -81,9 +81,11 @@
                         <span asp-validation-for="TransferAmount" class="text-danger"></span>
                     </div>
                 </div>
-        </div>
-        <div class="mt-5">
-            <input type="submit" value="Transfer" class="btn text-white px-5 mr-3  rounded-0" style="background-color:red;" />
-        </div>
-    </fieldset>
+            </div>
+            <span class="text-danger">@TempData["ErrorMessage"]</span>
+            <span class="text-success" >@TempData["SuccessMessage"]</span>
+            <div class="mt-5">
+                <input type="submit" value="Transfer" class="btn text-white px-5 mr-3  rounded-0" style="background-color:red;" />
+            </div>
+</fieldset>
 </form>

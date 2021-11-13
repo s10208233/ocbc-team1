@@ -36,11 +36,18 @@ namespace ocbc_team1.Controllers
         [HttpPost]
         public IActionResult CreateTransfer(TransferViewModel tfViewModel) 
         {
-            string s = tfViewModel.From_AccountNumber;
-
+            //if (tfViewModel.PhoneNumber == null)
+            //{
+            //    TempData["ErrorMessage"] = "Please enter a phone number to transfer to";
+            //}
+            //if (tfViewModel.From_AccountNumber == null)
+            //{
+            //    TempData["ErrorMessage"] = "Please enter a bank account number to transfer to"; 
+            //}
+            transactionContext.transferFunds(tfViewModel, HttpContext.Session.GetString("accesscode"));
             return RedirectToAction("Index", "Dashboard");
         }
-
+        
         public IActionResult UserLogout()
         {
             HttpContext.Session.Remove("login");
