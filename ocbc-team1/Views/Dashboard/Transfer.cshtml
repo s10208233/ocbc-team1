@@ -18,13 +18,12 @@
         <div class="Main_container">
             <div class="container_header">1. Transfer Type</div>
             <div class="container_content">
-                @foreach (var item in ViewData["TransferType"] as List<String>)
-                {
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="@item">
-                        <label class="form-check-label" for="inlineRadio1">@item</label>
-                    </div>
-                }
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="0" onclick="changingOptions()" checked>
+                    <label class="form-check-label" for="inlineRadio1">Using OCBC Acount Number</label>
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="0" onclick="changingOptions2()">
+                    <label class="form-check-label" for="inlineRadio1">Using Phone Number</label>
+                </div>
             </div>
 
             @*<div class="radio_buttons">
@@ -38,7 +37,7 @@
 
         <div class="Main_container">
             <div class="container_header">
-                <label asp-for="From_AccountNumber" class="col-form-label">Select an account number to transfer from</label>
+                <label asp-for="From_AccountNumber" class="col-form-label">2. Select an account number to transfer from</label>
             </div>
             <div class="container_content">
                 <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" asp-for="From_AccountNumber"
@@ -49,7 +48,7 @@
         </div>
 
         @* BY ACCOUNT NUMBER *@
-        <div class="Main_container">
+        <div class="Main_container" id="AccountNumber">
             <div class="container_header"><label asp-for="To_AccountNumber" class="col-form-label">3.Transfer by Bank Account Number</label></div>
             <div class="container_content">
                 <div>
@@ -60,7 +59,7 @@
         </div>
 
         @* BY PHONE NUMBER *@
-        <div class="Main_container">
+        <div class="Main_container" id="PhoneNumber" style="display:none">
             <div class="container_header"><label asp-for="PhoneNumber" class="col-form-label">3.Transfer by Phone Number</label></div>
             <div class="container_content">
                 <div>
@@ -86,4 +85,5 @@
             <input type="submit" value="Transfer" class="btn text-white px-5 mr-3  rounded-0" style="background-color:red;" />
         </div>
     </fieldset>
+    <script src="~/js/Transfer.js" asp-append-version="true"></script>
 </form>
