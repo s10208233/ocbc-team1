@@ -22,6 +22,16 @@ namespace ocbc_team1.DAL
             return null;
         }
 
+        public List<int> getBankAccountIntList(string accesscode)
+        {
+            List<int> returndata = new List<int>();
+            foreach (BankAccount ba in getBankAccountList(accesscode))
+            {
+                returndata.Add(ba.AccountNumber);
+            }
+            return returndata;
+        }
+
         public List<Transaction> getTransactionList(string accesscode)
         {
             List<User> userlist = loginContext.retrieveUserList();
