@@ -9,9 +9,10 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
-.container_content {
-    
+.container_content{
+
 }
+
 .radio_buttons {
     background-color: #F5F5F5;
     padding: 20px 0px 20px 35px;
@@ -31,7 +32,11 @@
     color:black;
 }
 
+.InputContainer{
+    padding:20px;
+}
+
 a:hover{
     color:red;
-    text-decoration:none;   
+    text-decoration:none;
 }
