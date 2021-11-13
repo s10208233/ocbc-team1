@@ -48,22 +48,22 @@
         </div>
 
         @* BY ACCOUNT NUMBER *@
-        <div class="Main_container" id="AccountNumber">
+        <div class="Main_container" id="AccountNumberDiv">
             <div class="container_header"><label asp-for="To_AccountNumber" class="col-form-label">3.Transfer by Bank Account Number</label></div>
             <div class="container_content">
                 <div>
-                    <input asp-for="To_AccountNumber" class="form-control rounded-0" placeholder="Enter recipient bank account number to transfer" />
+                    <input asp-for="To_AccountNumber" class="form-control rounded-0" id="ACinput" placeholder="Enter recipient bank account number to transfer" />
                     <span asp-validation-for="To_AccountNumber" class="text-danger"></span>
                 </div>
             </div>
         </div>
 
         @* BY PHONE NUMBER *@
-        <div class="Main_container" id="PhoneNumber" style="display:none">
+        <div class="Main_container" id="PhoneNumberDiv" style="display:none">
             <div class="container_header"><label asp-for="PhoneNumber" class="col-form-label">3.Transfer by Phone Number</label></div>
             <div class="container_content">
                 <div>
-                    <input asp-for="PhoneNumber" class="form-control rounded-0" placeholder="Enter recipient phone number to transfer" />
+                    <input asp-for="PhoneNumber" class="form-control rounded-0" id="PHinput" placeholder="Enter recipient phone number to transfer" />
                     <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                 </div>
             </div>

@@ -4,8 +4,9 @@
 // Write your JavaScript code.
 
 function changingOptions() {
-    var x = document.getElementById("PhoneNumber")
-    var y = document.getElementById("AccountNumber")
+    clearInputs();
+    var x = document.getElementById("PhoneNumberDiv")
+    var y = document.getElementById("AccountNumberDiv")
     if (y.style.display = "none") {
         y.style.display = "block";
         if (x.style.display = "block") {
@@ -15,8 +16,9 @@ function changingOptions() {
 }
 
 function changingOptions2() {
-    var x = document.getElementById("PhoneNumber")
-    var y = document.getElementById("AccountNumber")
+    clearInputs();
+    var x = document.getElementById("PhoneNumberDiv")
+    var y = document.getElementById("AccountNumberDiv")
     if (x.style.display = "none") {
         x.style.display = "block";
         if (y.style.display = "block") {
@@ -24,4 +26,10 @@ function changingOptions2() {
         }
     }
     
+}
+
+function clearInputs() {
+    document.getElementById('PHinput').value = ''
+    document.getElementById('ACinput').value = ''
+
 }
