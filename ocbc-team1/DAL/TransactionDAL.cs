@@ -53,6 +53,7 @@ namespace ocbc_team1.DAL
             }
             return null;
         }
+
         public bool checkRecipient(TransferViewModel tfVM)
         {
             List<User> userslist = loginContext.retrieveUserList();
@@ -61,8 +62,8 @@ namespace ocbc_team1.DAL
             {
                 for (int j = 0; j < userslist[i].AccountsList.Count; j++)
                 {
-                    if (Convert.ToString(userslist[i].AccountsList[j].AccountNumber) == tfVM.To_AccountNumber)
-                    {
+                    if (Convert.ToString(userslist[i].AccountsList[j].AccountNumber) == tfVM.To_AccountNumber && tfVM.From_AccountNumber != tfVM.To_AccountNumber)
+                    { 
                         return true;
                     }
 
@@ -88,6 +89,29 @@ namespace ocbc_team1.DAL
 
                         userslist[i].AccountsList[j].AmountAvaliable += tfVM.TransferAmount;
                         userslist[i].AccountsList[j].AmountRemaining += tfVM.TransferAmount;
+                        if (userslist[i].TransactionList == null)
+                        {
+                            List<Transaction> transactionlist = new List<Transaction>();
+                            transactionlist.Add(new Transaction
+                            {
+                                To_AccountNumber = Convert.ToInt32(tfVM.To_AccountNumber),
+                                From_AccountNumber = Convert.ToInt32(tfVM.From_AccountNumber),
+                                Amount = tfVM.TransferAmount,
+                                TimeSent = DateTime.Now,
+                            });
+                            userslist[i].TransactionList = transactionlist;
+                        }
+                        else 
+                        {
+                            userslist[i].TransactionList.Add(new Transaction
+                            {
+                                To_AccountNumber = Convert.ToInt32(tfVM.To_AccountNumber),
+                                From_AccountNumber = Convert.ToInt32(tfVM.From_AccountNumber),
+                                Amount = tfVM.TransferAmount,
+                                TimeSent = DateTime.Now,
+                            });
+                        }
+                        
 
                     }
                 }
@@ -105,13 +129,36 @@ namespace ocbc_team1.DAL
                             {
                                 userslist[i].AccountsList[j].AmountAvaliable -= tfVM.TransferAmount;
                                 userslist[i].AccountsList[j].AmountRemaining -= tfVM.TransferAmount;
+                                if (userslist[i].TransactionList == null)
+                                {
+                                    List<Transaction> transactionlist = new List<Transaction>();
+                                    transactionlist.Add(new Transaction
+                                    {
+                                        To_AccountNumber = Convert.ToInt32(tfVM.To_AccountNumber),
+                                        From_AccountNumber = Convert.ToInt32(tfVM.From_AccountNumber),
+                                        Amount = tfVM.TransferAmount,
+                                        TimeSent = DateTime.Now,
+                                    });
+                                    userslist[i].TransactionList = transactionlist;
+                                }
+                                else  
+                                {
+                                    userslist[i].TransactionList.Add(new Transaction
+                                    {
+                                        To_AccountNumber = Convert.ToInt32(tfVM.To_AccountNumber),
+                                        From_AccountNumber = Convert.ToInt32(tfVM.From_AccountNumber),
+                                        Amount = tfVM.TransferAmount,
+                                        TimeSent = DateTime.Now,
+                                    });
+                                }
                             }
                         }
                     }
                 }
             }
-            ifclient = new FireSharp.FirebaseClient(ifc);
+
             // update firebase
+            ifclient = new FireSharp.FirebaseClient(ifc);
             if (ifclient != null)
             {
                 ifclient.Set("User/", userslist);
