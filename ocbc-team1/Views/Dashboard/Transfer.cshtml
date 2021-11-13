@@ -27,12 +27,12 @@
             </div>
 
             @*<div class="radio_buttons">
-                @foreach (var item in ViewData["TransferType"] as List<String>)
-                {
-                    <input type="radio" value="@item" class="form-check-input" />
-                    <span style="font-weight:normal;padding-right:20px">@item</span>
-                }
-            </div>*@
+                    @foreach (var item in ViewData["TransferType"] as List<String>)
+                    {
+                        <input type="radio" value="@item" class="form-check-input" />
+                        <span style="font-weight:normal;padding-right:20px">@item</span>
+                    }
+                </div>*@
         </div>
 
         <div class="Main_container">
@@ -82,9 +82,10 @@
                 </div>
             </div>
             <span class="text-danger">@TempData["ErrorMessage"]</span>
-            <span class="text-success" >@TempData["SuccessMessage"]</span>
+            <span class="text-success">@TempData["SuccessMessage"]</span>
             <div class="mt-5">
                 <input type="submit" value="Transfer" class="btn text-white px-5 mr-3  rounded-0" style="background-color:red;" />
             </div>
-</fieldset>
+    </fieldset>
 </form>
+<script src="~/js/Transfer.js" asp-append-version="true"></script>
