@@ -54,53 +54,116 @@ namespace ocbc_team1.DAL
             return null;
         }
 
+        public bool checkRecipient(TransferViewModel tfVM)
+        {
+            List<User> userslist = loginContext.retrieveUserList();
+
+            for (int i = 0; i < userslist.Count; i++)
+            {
+                for (int j = 0; j < userslist[i].AccountsList.Count; j++)
+                {
+                    if (Convert.ToString(userslist[i].AccountsList[j].AccountNumber) == tfVM.To_AccountNumber && tfVM.From_AccountNumber != tfVM.To_AccountNumber)
+                    { 
+                        return true;
+                    }
+
+                }
+            }
+            return false;
+        }
+
         public void transferFunds(TransferViewModel tfVM, string accesscode)
         {
             //if (tfVM.To_AccountNumber != null && tfVM.PhoneNumber != null) { Console.WriteLine("Two transfer type has been input, transfer canceled"); return; }
             List<User> userslist = loginContext.retrieveUserList();
             if (userslist == null) { Console.WriteLine("uselist null, transfer failed"); return; }
             //  By Bank Number
-            if (true)
+
+            //  Recipient
+            for (int i = 0; i < userslist.Count; i++)
             {
-                // Sender
-                for (int i=0; i < userslist.Count; i++)
+                for (int j = 0; j < userslist[i].AccountsList.Count; j++)
                 {
-                    if (userslist[i].AccessCode == accesscode) 
+                    if (Convert.ToString(userslist[i].AccountsList[j].AccountNumber) == tfVM.To_AccountNumber)
                     {
-                        for (int j = 0; j < userslist[i].AccountsList.Count; j++)
+
+                        userslist[i].AccountsList[j].AmountAvaliable += tfVM.TransferAmount;
+                        userslist[i].AccountsList[j].AmountRemaining += tfVM.TransferAmount;
+                        if (userslist[i].TransactionList == null)
                         {
-                            if (Convert.ToString(userslist[i].AccountsList[j].AccountNumber) == tfVM.From_AccountNumber)
+                            List<Transaction> transactionlist = new List<Transaction>();
+                            transactionlist.Add(new Transaction
                             {
-                                if (userslist[i].AccountsList[j].AmountAvaliable > tfVM.TransferAmount && userslist[i].AccountsList[j].AmountRemaining > tfVM.TransferAmount)
+                                To_AccountNumber = Convert.ToInt32(tfVM.To_AccountNumber),
+                                From_AccountNumber = Convert.ToInt32(tfVM.From_AccountNumber),
+                                Amount = tfVM.TransferAmount,
+                                TimeSent = DateTime.Now,
+                            });
+                            userslist[i].TransactionList = transactionlist;
+                        }
+                        else 
+                        {
+                            userslist[i].TransactionList.Add(new Transaction
+                            {
+                                To_AccountNumber = Convert.ToInt32(tfVM.To_AccountNumber),
+                                From_AccountNumber = Convert.ToInt32(tfVM.From_AccountNumber),
+                                Amount = tfVM.TransferAmount,
+                                TimeSent = DateTime.Now,
+                            });
+                        }
+                        
+
+                    }
+                }
+            }
+             // Sender
+            for (int i=0; i < userslist.Count; i++)
+            {
+                if (userslist[i].AccessCode == accesscode) 
+                {
+                    for (int j = 0; j < userslist[i].AccountsList.Count; j++)
+                    {
+                        if (Convert.ToString(userslist[i].AccountsList[j].AccountNumber) == tfVM.From_AccountNumber)
+                        {
+                            if (userslist[i].AccountsList[j].AmountAvaliable > tfVM.TransferAmount && userslist[i].AccountsList[j].AmountRemaining > tfVM.TransferAmount)
+                            {
+                                userslist[i].AccountsList[j].AmountAvaliable -= tfVM.TransferAmount;
+                                userslist[i].AccountsList[j].AmountRemaining -= tfVM.TransferAmount;
+                                if (userslist[i].TransactionList == null)
                                 {
-                                    userslist[i].AccountsList[j].AmountAvaliable -= tfVM.TransferAmount;
-                                    userslist[i].AccountsList[j].AmountRemaining -= tfVM.TransferAmount;
+                                    List<Transaction> transactionlist = new List<Transaction>();
+                                    transactionlist.Add(new Transaction
+                                    {
+                                        To_AccountNumber = Convert.ToInt32(tfVM.To_AccountNumber),
+                                        From_AccountNumber = Convert.ToInt32(tfVM.From_AccountNumber),
+                                        Amount = tfVM.TransferAmount,
+                                        TimeSent = DateTime.Now,
+                                    });
+                                    userslist[i].TransactionList = transactionlist;
+                                }
+                                else  
+                                {
+                                    userslist[i].TransactionList.Add(new Transaction
+                                    {
+                                        To_AccountNumber = Convert.ToInt32(tfVM.To_AccountNumber),
+                                        From_AccountNumber = Convert.ToInt32(tfVM.From_AccountNumber),
+                                        Amount = tfVM.TransferAmount,
+                                        TimeSent = DateTime.Now,
+                                    });
                                 }
                             }
                         }
                     }
                 }
-                //  Recipient
-                for (int i = 0; i < userslist.Count; i++)
-                {
-                    for (int j = 0; j < userslist[i].AccountsList.Count; j++)
-                    {
-                        if (Convert.ToString(userslist[i].AccountsList[j].AccountNumber) == tfVM.To_AccountNumber)
-                        {
-                            if (userslist[i].AccountsList[j].AmountAvaliable > tfVM.TransferAmount && userslist[i].AccountsList[j].AmountRemaining > tfVM.TransferAmount)
-                            {
-                                userslist[i].AccountsList[j].AmountAvaliable += tfVM.TransferAmount;
-                                userslist[i].AccountsList[j].AmountRemaining += tfVM.TransferAmount;
-                            }
-                        }
-                    }
-                }
             }
+
             // update firebase
+            ifclient = new FireSharp.FirebaseClient(ifc);
             if (ifclient != null)
             {
                 ifclient.Set("User/", userslist);
             }
         }
+
     }
 }

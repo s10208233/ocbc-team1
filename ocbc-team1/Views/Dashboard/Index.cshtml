@@ -13,6 +13,7 @@
     int counter = 0;
 
     //  Template loop, use when DAL ready.
+    <span class="text-success">@TempData["SuccessMessage"]</span>
 
     @foreach (var item in Model)
     {
@@ -31,4 +32,5 @@
     {
         <span style="color:red">No active accounts</span>
     }
+
 }
