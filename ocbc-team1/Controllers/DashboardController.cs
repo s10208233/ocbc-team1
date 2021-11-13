@@ -30,8 +30,14 @@ namespace ocbc_team1.Controllers
         public IActionResult Transfer()  
         {
             ViewData["TransferType"] = TypeOfTransfer;
+            ViewData["ShowTransfer"] = false;
             return View();
         }
+
+        //public ActionResult Transfer()
+        //{
+
+        //}
 
         public IActionResult UserLogout()
         {

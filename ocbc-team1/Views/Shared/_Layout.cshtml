@@ -37,8 +37,8 @@
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                                 </li>
-                            } 
-                            else { 
+                            }
+                            else {
 
                                 <li class="nav-item text-danger">Welcome @Context.Session.GetString("fullname")</li>
                             }
@@ -79,7 +79,10 @@
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- MDBootstrap Datatables  -->
+    <script type="text/javascript" src="~/js/addons/datatables.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/Table.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>
