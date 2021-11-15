@@ -9,10 +9,8 @@
     <link rel="stylesheet" href="~/css/Transfer.css">
 </head>
 
-<div class="transfer_header">
-    Transactions
-</div>
-<form method="post" class="p-5" asp-controller="Dashboard" asp-action="CreateTransfer">
+<h2 class="pb-5">Transaction</h2>
+<form method="post" class="p-5" id="TransferBoard" asp-controller="Dashboard" asp-action="CreateTransfer">
     <fieldset class="FormContent">
 
         <div class="Main_container">
@@ -40,7 +38,7 @@
                 <label asp-for="From_AccountNumber" class="col-form-label">2. Select an account number to transfer from</label>
             </div>
             <div class="container_content">
-                <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" asp-for="From_AccountNumber"
+                <select class="form-select" aria-label="Default select example" asp-for="From_AccountNumber"
                         asp-items="@(new SelectList(ViewData["UserOwnAccountList"] as List<BankAccount>, "AccountNumber", "AccountNumber"))">
                     @*<option selected>Select an account</option>*@
                 </select>
@@ -83,8 +81,8 @@
             </div>
             <span class="text-danger">@TempData["ErrorMessage"]</span>
             <span class="text-success">@TempData["SuccessMessage"]</span>
-            <div class="mt-5">
-                <input type="submit" value="Transfer" class="btn text-white px-5 mr-3  rounded-0" style="background-color:red;" />
+            <div class="mt-5" style="float:right">
+                <input type="submit" value="Transfer" class="btn text-white px-5 rounded-0" style="background-color:red; margin:0px" />
             </div>
     </fieldset>
 </form>
