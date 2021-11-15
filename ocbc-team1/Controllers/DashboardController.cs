@@ -23,7 +23,9 @@ namespace ocbc_team1.Controllers
         {
             int accNo = AccountNumber;
             ViewData["AccountNo"] = accNo;
-            return View();
+            string accesscode = HttpContext.Session.GetString("accesscode");
+            List<Transaction> transactionList = transactionContext.getTransactionList(accesscode);
+            return View(transactionList);
         }
 
         public IActionResult Transfer()  
