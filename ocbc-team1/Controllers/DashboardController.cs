@@ -21,9 +21,9 @@ namespace ocbc_team1.Controllers
         
         public IActionResult TransferHistory(int AccountNumber)
         {
-            string accesscode = HttpContext.Session.GetString("accesscode");
-            List<Transaction> transactionList = transactionContext.getTransactionList(accesscode);
-            return View(transactionList);
+            int accNo = AccountNumber;
+            ViewData["AccountNo"] = accNo;
+            return View();
         }
 
         public IActionResult Transfer()  
