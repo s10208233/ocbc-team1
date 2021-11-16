@@ -19,7 +19,10 @@ namespace ocbc_team1.Controllers
     {
         static TelegramBotClient Bot = new TelegramBotClient("2106855009:AAEVAKqEbNj6W7GeZoOLkgmF8XgsL7ZvG2o");
         private SignupDAL signupContext = new SignupDAL();
-        private LoginDAL loginContext = new LoginDAL();      
+        private LoginDAL loginContext = new LoginDAL();
+        private TelegramDAL teleContext = new TelegramDAL();
+        private string text = "";
+        private string accesscode = "";
 
         private readonly ILogger<HomeController> _logger;
 
@@ -30,7 +33,7 @@ namespace ocbc_team1.Controllers
 
         public IActionResult Index()
         {
-            
+
             return View();
         }
         public IActionResult Login()
@@ -51,23 +54,29 @@ namespace ocbc_team1.Controllers
 
             //}
             //else
-            //{
-                Random rnd = new Random();
-                string rOTP = Convert.ToString(rnd.Next(000000, 999999));
-                HttpContext.Session.SetString("otp", rOTP);
-                Bot.StartReceiving();
-                Bot.OnMessage += Bot_OnMessage;
+            //{      
+            Random rnd = new Random();
+            string rOTP = Convert.ToString(rnd.Next(000000, 999999));
+            text = "Your OTP is: " + rOTP;
+            Bot.StartReceiving();
+            Bot.OnMessage += Bot_OnMessage;
+            accesscode = HttpContext.Session.GetString("accesscode");
             //}
-            
+
             return View();
         }
+        public async Task sendMessage(string destID, string text)
+        {            
+            await Bot.SendTextMessageAsync(destID, text);
 
+        }
+                
         private void Bot_OnMessage(object sender, Telegram.Bot.Args.MessageEventArgs e)
         {
             string chatid = Convert.ToString(e.Message.Chat.Id);
-            string rotp = HttpContext.Session.GetString("otp");
-            Bot.SendTextMessageAsync(chatid, "Your OTP is: " + rotp);
-        }
+            sendMessage(chatid, text);
+            teleContext.setTelegramChatId(accesscode, Convert.ToInt32(chatid));
+        }       
 
         [HttpPost] 
         public IActionResult Login(LoginViewModel loginVM) 
