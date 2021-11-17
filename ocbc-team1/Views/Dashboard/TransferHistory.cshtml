@@ -13,9 +13,13 @@
 
 <h2 class="pb-5">Transfer History</h2>
 
-@{ 
+@{
     int accountNo = (int)ViewData["AccountNo"];
- }     
+}
+@if (Model == null)
+{
+    <div style="color:red;"> You have not made any Transaction </div>
+}
 
 <table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
     <thead>
@@ -38,14 +42,20 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @if (Model != null)
         {
-            <tr>
-                <th>@item.From_AccountNumber</th>
-                <th>@item.To_AccountNumber</th>
-                <th>@item.Amount</th>
-                <th>@item.TimeSent</th>
-            </tr>
+            @foreach (var item in Model)
+            {
+                @if (item.From_AccountNumber == accountNo)
+                {
+                    <tr>
+                        <th>@item.From_AccountNumber</th>
+                        <th>@item.To_AccountNumber</th>
+                        <th>@item.Amount</th>
+                        <th>@item.TimeSent</th>
+                    </tr>
+                }
+            }
         }
     </tbody>
 </table>
