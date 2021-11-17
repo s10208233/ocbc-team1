@@ -10,44 +10,52 @@
     <!-- MDBootstrap Datatables  -->
     <link href="~/css/addons/datatables.min.css" rel="stylesheet">
 </head>
+<div style="padding-top:100px; padding-bottom:100px; min-height:1200px;
+            background-image:url('/images/white-brick.jpg');
+            background-position:top;
+            background-size:cover;
+            background-repeat: no-repeat;
+            ">
+    <div style="max-width:900px; margin:auto;" class="p-3">
+        <h2 class="pb-5">Transfer History</h2>
 
-<h2 class="pb-5">Transfer History</h2>
-
-@{ 
-    int accountNo = (int)ViewData["AccountNo"];
- }     
-
-<table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
-    <thead>
-        <tr>
-            <th class="th-sm">
-                From_AccountNumber
-
-            </th>
-            <th class="th-sm">
-                To_AccountNumber
-
-            </th>
-            <th class="th-sm">
-                Amount
-
-            </th>
-            <th class="th-sm">
-                TimeSent
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <th>@item.From_AccountNumber</th>
-                <th>@item.To_AccountNumber</th>
-                <th>@item.Amount</th>
-                <th>@item.TimeSent</th>
-            </tr>
+        @{
+            int accountNo = (int)ViewData["AccountNo"];
         }
-    </tbody>
-</table>
+        <div class="bg-light p-5">
+            <table id="dtBasicExample" class="table table-striped table-bordered table-sm shadow" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th class="th-sm">
+                            From
 
-<script src="~/js/Table.js" asp-append-version="true"></script>
+                        </th>
+                        <th class="th-sm">
+                            To
+
+                        </th>
+                        <th class="th-sm">
+                            Amount
+
+                        </th>
+                        <th class="th-sm">
+                            Timestamp
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <th>@item.From_AccountNumber</th>
+                            <th>@item.To_AccountNumber</th>
+                            <th>@item.Amount</th>
+                            <th>@item.TimeSent</th>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <script src="~/js/Table.js" asp-append-version="true"></script>
+    </div>
+</div>

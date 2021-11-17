@@ -1,31 +1,37 @@
 ﻿@model ocbc_team1.Models.OTPViewModel
 @{
 }
-
-<div class="mx-auto shadow bg-white rounded" style="max-width:fit-content;">
-    <form method="post" class="p-5" asp-controller="Home" asp-action="OTP">
-        <fieldset class="FormContent">
-            <h2 class="pt-3" style="min-width:350px;"> Online Banking </h2>
-            <div class="col login-field p-0">
-                <div class="form-group row" style="display: inline; margin-left: 0px;">
-                    <label asp-for="OTP"
-                           class="col-form-label"></label>
-                    <div>
-                        <input asp-for="OTP" class="form-control rounded-0" />
-                        <span asp-validation-for="OTP"
-                              class="text-danger"></span>
+<div style="padding-top:100px; min-height: 1000px;
+            background-image:url('/images/ocbc-bg.jpg');
+            background-position:top;
+            background-size:cover;
+            background-repeat: no-repeat;
+            ">
+    <div class="mx-auto shadow bg-white rounded" style="max-width:fit-content;">
+        <form method="post" class="p-5" asp-controller="Home" asp-action="OTP">
+            <fieldset class="FormContent">
+                <h2 class="pt-3" style="min-width:350px;"> Online Banking </h2>
+                <div class="col login-field p-0">
+                    <div class="form-group row" style="display: inline; margin-left: 0px;">
+                        <label asp-for="OTP"
+                               class="col-form-label"></label>
+                        <div>
+                            <input asp-for="OTP" class="form-control rounded-0" />
+                            <span asp-validation-for="OTP"
+                                  class="text-danger"></span>
+                        </div>
                     </div>
-                </div>                
-            </div>
-            <div class="row">
-                <span style="color:red;">@TempData["Message"]</span>
-            </div>
-            <div class="form-group row float-right">
-                <div>
-                    <input type="submit" value="Login" class="btn text-white px-5 mr-3  rounded-0" style="background-color:red;" />
                 </div>
-            </div>
-        </fieldset>
-    </form>
-    <p class="p-4" style="background-color:lightgray;">First Time? Get Set up with the bot here. <a href="https://t.me/OCBC_TEAM1_BOT" target="_blank">OTP</a></p>
+                <div class="row">
+                    <span style="color:red;">@TempData["Message"]</span>
+                </div>
+                <div class="form-group row float-right">
+                    <div>
+                        <input type="submit" value="Login" class="btn text-white px-5 mr-3  rounded-0" style="background-color:red;" />
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+        <p class="p-4" style="background-color:lightgray;">First Time? Get Set up with the bot here. <a href="https://t.me/OCBC_TEAM1_BOT" target="_blank">OTP</a></p>
+    </div>
 </div>
