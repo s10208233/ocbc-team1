@@ -36,12 +36,12 @@
                     </div>
 
                     @*<div class="radio_buttons">
-                            @foreach (var item in ViewData["TransferType"] as List<String>)
-                            {
-                                <input type="radio" value="@item" class="form-check-input" />
-                                <span style="font-weight:normal;padding-right:20px">@item</span>
-                            }
-                        </div>*@
+                @foreach (var item in ViewData["TransferType"] as List<String>)
+                {
+                    <input type="radio" value="@item" class="form-check-input" />
+                    <span style="font-weight:normal;padding-right:20px">@item</span>
+                }
+            </div>*@
                 </div>
 
                 <div class="Main_container shadow">
@@ -77,7 +77,7 @@
                         </div>
                     </div>
                 </div>
-                <span class="Main_container shadow">
+                <div class="Main_container shadow">
                     <div class="container_header"><label asp-for="TransferAmount" class="col-form-label">4.Transfer amount</label></div>
                     <div class="container_content">
                         <div>
@@ -90,11 +90,24 @@
                             </div>
                         </div>
                     </div>
-                    <span class="text-danger">@TempData["ErrorMessage"]</span>
-                    <span class="text-success">@TempData["SuccessMessage"]</span>
-                    <div class="mt-5" style="float:right">
-                        <input type="submit" value="Transfer" class="btn text-white px-5 rounded-0 shadow" style="background-color:red; margin:0px" />
+                </div>
+                
+                @* OTP Part *@
+                <div class="Main_container shadow">
+                    <div class="container_header"><label asp-for="OTP" class="col-form-label">5.Enter OTP</label></div>
+                    <div class="container_content">
+                        <input asp-for="OTP" class="form-control rounded-0" placeholder="OTP" />
+                        <span asp-validation-for="OTP" class="text-danger"></span>
+                        @* OTP Send Button (Consideration but do not do: otp send cooldown timer to avoid spam) *@
+                        <button class="btn btn-danger" style="border-radius:0px;" asp-action="">Send OTP</button>
                     </div>
+                </div>
+
+                <span class="text-danger">@TempData["ErrorMessage"]</span>
+                <span class="text-success">@TempData["SuccessMessage"]</span>
+                <div class="mt-5" style="float:right">
+                    <input type="submit" value="Transfer" class="btn text-white px-5 rounded-0 shadow" style="background-color:red; margin:0px" />
+                </div>
             </fieldset>
         </form>
         <script src="~/js/Transfer.js" asp-append-version="true"></script>
