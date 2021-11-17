@@ -5,12 +5,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Telegram.Bot;
 
 namespace ocbc_team1.DAL
 {
     public class TransactionDAL
     {
+        static TelegramBotClient Bot = new TelegramBotClient("2106855009:AAEVAKqEbNj6W7GeZoOLkgmF8XgsL7ZvG2o");
         private LoginDAL loginContext = new LoginDAL();
+        private string recName = "";
 
         IFirebaseConfig ifc = new FirebaseConfig()
         {
@@ -71,7 +74,36 @@ namespace ocbc_team1.DAL
             }
             return false;
         }
+     
+        public async Task sendMessage(string destID, string text)
+        {
+            await Bot.SendTextMessageAsync(destID, text);
 
+        }
+        public string getName(string accesscode)
+        {
+            string sName = "";
+            if (loginContext.retrieveUserList() != null)
+            {
+                foreach (User u in loginContext.retrieveUserList())
+                {
+                    if (u.AccessCode == accesscode)
+                    {
+                        sName = u.FirstName + " " + u.LastName;
+                        return sName;
+                    }
+                    else
+                    {
+                        Console.WriteLine("error");
+                        return null;
+                    }
+
+                }
+
+            }
+            return sName;
+            
+        }
         public void transferFunds(TransferViewModel tfVM, string accesscode)
         {
             //if (tfVM.To_AccountNumber != null && tfVM.PhoneNumber != null) { Console.WriteLine("Two transfer type has been input, transfer canceled"); return; }
@@ -111,7 +143,10 @@ namespace ocbc_team1.DAL
                                 TimeSent = DateTime.Now,
                             });
                         }
-                        
+                        recName = "";
+                        recName = userslist[i].FirstName + " " + userslist[i].LastName;
+                        string text = "You have recieved " + "$" + tfVM.TransferAmount + " from " + getName(accesscode) + " on " + DateTime.Now.ToString("f");
+                        sendMessage(Convert.ToString(userslist[i].TelegramChatID), text);
 
                     }
                 }
@@ -151,6 +186,9 @@ namespace ocbc_team1.DAL
                                         TimeSent = DateTime.Now,
                                     });
                                 }
+                                string text = "You have sent " + "$" + tfVM.TransferAmount + " to " + recName + " on " + DateTime.Now.ToString("f");
+                                sendMessage(Convert.ToString(userslist[i].TelegramChatID), text);
+
                             }
                         }
                     }

@@ -48,6 +48,7 @@ namespace ocbc_team1.Controllers
 
         public IActionResult OTP()
         {
+            text = "";
             accesscode = HttpContext.Session.GetString("accesscode");
             Random rnd = new Random();
             string rOTP = Convert.ToString(rnd.Next(000000, 999999));
@@ -147,9 +148,11 @@ namespace ocbc_team1.Controllers
                                     ) { TempData["Message"] = "The information you have entered is not valid or unique."; return View(userinput); }
                             }
                         }
-                        signupContext.completeUserSignUp(userinput);
                         TempData["SignupSuccessMessage"] = "We've sent your access code to your email address, check your inbox.";
+                        signupContext.completeUserSignUp(userinput);
                         return RedirectToAction("Login", "Home");
+                        
+                        
                     }
                 }
                 TempData["Message"] = "The card number you have entered is invalid.";
