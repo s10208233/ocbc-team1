@@ -11,13 +11,18 @@ using MailKit;
 using MimeKit;
 using System.Linq;
 using System.Threading.Tasks;
+using Telegram.Bot;
 
 namespace ocbc_team1.Controllers
 {
     public class HomeController : Controller
     {
+        static TelegramBotClient Bot = new TelegramBotClient("2106855009:AAEVAKqEbNj6W7GeZoOLkgmF8XgsL7ZvG2o");
         private SignupDAL signupContext = new SignupDAL();
-        private LoginDAL loginContext = new LoginDAL();      
+        private LoginDAL loginContext = new LoginDAL();
+        private TelegramDAL teleContext = new TelegramDAL();
+        private string text = "";
+        private string accesscode = "";
 
         private readonly ILogger<HomeController> _logger;
 
@@ -28,7 +33,7 @@ namespace ocbc_team1.Controllers
 
         public IActionResult Index()
         {
-            
+
             return View();
         }
         public IActionResult Login()
@@ -41,7 +46,60 @@ namespace ocbc_team1.Controllers
             return View();
         }
 
+        public IActionResult OTP()
+        {
+            accesscode = HttpContext.Session.GetString("accesscode");
+            Random rnd = new Random();
+            string rOTP = Convert.ToString(rnd.Next(000000, 999999));
+            HttpContext.Session.SetString("otp", rOTP);
+            text = "Your OTP is: " + rOTP;
+            if (teleContext.getTelegramChatId(accesscode) != null)
+            {
+                string chatid = Convert.ToString(teleContext.getTelegramChatId(accesscode));
+                sendMessage(chatid, text);
+
+            }
+            else
+            {                
+            Bot.StartReceiving();
+            Bot.OnMessage += Bot_OnMessage;
+            }
+
+            return View();
+        }
+
         [HttpPost]
+        public IActionResult OTP(OTPViewModel otpVM)
+        {
+            if (ModelState.IsValid)
+            {
+                if(HttpContext.Session.GetString("otp") == otpVM.OTP)
+                {
+                    HttpContext.Session.SetString("login", "true");
+                    return RedirectToAction("Index", "Dashboard");
+                }
+                TempData["Message"] = "Invalid OTP. Try Again!";
+                return View();
+            }
+            else
+            {
+                return View(otpVM);
+            }
+        }
+        public async Task sendMessage(string destID, string text)
+        {            
+            await Bot.SendTextMessageAsync(destID, text);
+
+        }
+                
+        private void Bot_OnMessage(object sender, Telegram.Bot.Args.MessageEventArgs e)
+        {
+            string chatid = Convert.ToString(e.Message.Chat.Id);
+            sendMessage(chatid, text);
+            teleContext.setTelegramChatId(accesscode, Convert.ToInt32(chatid));
+        }       
+
+        [HttpPost] 
         public IActionResult Login(LoginViewModel loginVM) 
         {
             if(ModelState.IsValid)
@@ -50,11 +108,10 @@ namespace ocbc_team1.Controllers
                 List<User> userlist = loginContext.retrieveUserList();
                 foreach (User user in userlist)
                 if (loginVM.AccessCode == user.AccessCode && loginVM.Pin == user.BankPIN)
-                {
-                    HttpContext.Session.SetString("login", "true");
+                {                    
                     HttpContext.Session.SetString("fullname", string.Format("{0} {1}", user.FirstName, user.LastName));
                     HttpContext.Session.SetString("accesscode", user.AccessCode);
-                    return RedirectToAction("Index", "Dashboard");
+                    return RedirectToAction("OTP", "Home");
                 }
                 TempData["Message"] = "Invalid Login Credentials!";
                 return View();
@@ -92,7 +149,7 @@ namespace ocbc_team1.Controllers
                         }
                         signupContext.completeUserSignUp(userinput);
                         TempData["SignupSuccessMessage"] = "We've sent your access code to your email address, check your inbox.";
-                        return RedirectToAction("Login");
+                        return RedirectToAction("Login", "Home");
                     }
                 }
                 TempData["Message"] = "The card number you have entered is invalid.";
