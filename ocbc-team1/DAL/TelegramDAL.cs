@@ -1,5 +1,6 @@
 ﻿using FireSharp.Config;
 using FireSharp.Interfaces;
+using FireSharp.Response;
 using ocbc_team1.Models;
 using System;
 using System.Collections.Generic;
@@ -18,13 +19,23 @@ namespace ocbc_team1.DAL
             BasePath = "https://failsafefundtransfer-default-rtdb.asia-southeast1.firebasedatabase.app/"
         };
         IFirebaseClient ifclient;
-
+        public List<User> retrieveUser()
+        {
+            List<User> userList = new List<User>();
+            ifclient = new FireSharp.FirebaseClient(ifc);
+            if (ifclient != null)
+            {
+                FirebaseResponse firebaseresponse = ifclient.Get("User");
+                userList = firebaseresponse.ResultAs<List<User>>();
+            }
+            return userList;
+        }
         //  Functions starts here
         public void setTelegramChatId(string accesscode, int newchatid)
         {
-            if (loginContext.retrieveUserList() != null) 
+            if (retrieveUser() != null) 
             {
-                List<User> userlist = loginContext.retrieveUserList();
+                List<User> userlist = retrieveUser();
                 for (int i = 0; i < userlist.Count; i++)
                 {
                     if (userlist[i].AccessCode == accesscode)
@@ -42,6 +53,7 @@ namespace ocbc_team1.DAL
 
         public int? getTelegramChatId(string accesscode)
         {
+            ifclient = new FireSharp.FirebaseClient(ifc);
             if (loginContext.retrieveUserList() != null)
             {
                 foreach (User u in loginContext.retrieveUserList())

@@ -48,22 +48,42 @@ namespace ocbc_team1.Controllers
 
         public IActionResult OTP()
         {
-            //if (true)
-            //{
-
-
-            //}
-            //else
-            //{      
+            accesscode = HttpContext.Session.GetString("accesscode");
             Random rnd = new Random();
             string rOTP = Convert.ToString(rnd.Next(000000, 999999));
+            HttpContext.Session.SetString("otp", rOTP);
             text = "Your OTP is: " + rOTP;
+            if (teleContext.getTelegramChatId(accesscode) != null)
+            {
+                string chatid = Convert.ToString(teleContext.getTelegramChatId(accesscode));
+                sendMessage(chatid, text);
+
+            }
+            else
+            {                
             Bot.StartReceiving();
             Bot.OnMessage += Bot_OnMessage;
-            accesscode = HttpContext.Session.GetString("accesscode");
-            //}
+            }
 
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult OTP(OTPViewModel otpVM)
+        {
+            if (ModelState.IsValid)
+            {
+                if(HttpContext.Session.GetString("otp") == otpVM.OTP)
+                {
+                    return RedirectToAction("Index", "Dashboard");
+                }
+                TempData["Message"] = "Invalid OTP. Try Again!";
+                return View();
+            }
+            else
+            {
+                return View(otpVM);
+            }
         }
         public async Task sendMessage(string destID, string text)
         {            
@@ -129,7 +149,7 @@ namespace ocbc_team1.Controllers
                         }
                         signupContext.completeUserSignUp(userinput);
                         TempData["SignupSuccessMessage"] = "We've sent your access code to your email address, check your inbox.";
-                        return RedirectToAction("Login");
+                        return RedirectToAction("Login", "Home");
                     }
                 }
                 TempData["Message"] = "The card number you have entered is invalid.";

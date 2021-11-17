@@ -13,6 +13,5 @@ namespace ocbc_team1.Models
         [Display(Name = "Pin"), Required, DataType(DataType.Password)]
         public string Pin { get; set; }
 
-        public string OTP { get; set; }
     }
 }
