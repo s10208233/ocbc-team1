@@ -19,7 +19,12 @@
             int counter = 0;
 
             //  Template loop, use when DAL ready.
-            <span class="text-success">@TempData["SuccessMessage"]</span>
+            if (@TempData["SuccessMessage"] != null)
+            {
+                <div class="bg-success text-white py-3 mb-4 rounded-pill shadow-lg">
+                    <span class="px-5">@TempData["SuccessMessage"]</span>
+                </div>
+            }    
 
             @foreach (var item in Model)
             {

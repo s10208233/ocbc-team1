@@ -99,12 +99,12 @@ namespace ocbc_team1.Controllers
             if (ptfVM.OTP != HttpContext.Session.GetString("otp"))
             {
                 TempData["ErrorMessage"] = "Invalid OTP";
-                return RedirectToAction("Transfer", "Dashboard", ptfVM);
+                return RedirectToAction("Transfer", "Dashboard", ptfVM.tfvm);
             }
             else
             {
                 transactionContext.transferFunds(ptfVM.tfvm, HttpContext.Session.GetString("accesscode"));
-                TempData["SuccessMessage"] = "Transfer made!";
+                TempData["SuccessMessage"] = "You have sucessfully transferred $" + ptfVM.tfvm.TransferAmount + " to " + ptfVM.tfvm.PhoneNumber + ptfVM.tfvm.To_AccountNumber;
                 return RedirectToAction("Index", "Dashboard");
             }
             return null;

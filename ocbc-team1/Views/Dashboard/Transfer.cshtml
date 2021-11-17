@@ -49,7 +49,7 @@
                         <label asp-for="From_AccountNumber" class="col-form-label">2. Select an account number to transfer from</label>
                     </div>
                     <div class="container_content bg-light">
-                        <select class="form-select text-left p-3" style="width:100%" aria-label="Default select example" asp-for="From_AccountNumber"
+                        <select class="form-select text-left p-3" style="width:100%; border-style:none;" aria-label="Default select example" asp-for="From_AccountNumber"
                                 asp-items="@(new SelectList(ViewData["UserOwnAccountList"] as List<BankAccount>, "AccountNumber", "AccountNumber"))">
                             @*<option selected>Select an account</option>*@
                         </select>

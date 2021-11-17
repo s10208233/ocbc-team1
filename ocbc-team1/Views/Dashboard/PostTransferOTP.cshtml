@@ -16,16 +16,16 @@
             background-size:cover;
             background-repeat: no-repeat;
             ">
-    <div style="max-width:800px; margin:auto;" class="p-5 bg-light">
-        <h2 class="pb-5">Confirm Transfer</h2>
+    <div style="max-width:500px; margin:auto;" class="p-5 bg-light shadow-lg">
+        <h2 class="pb-3">Confirm Transfer</h2>
 
         <form method="post" class="" id="TransferBoard" asp-controller="Dashboard" asp-action="SubmitPostTransferOTP">
             <fieldset class="FormContent">
-
-                <div class="form-group">
-                    <h3>From</h3>
+                
+                <div class="form-group bg-info text-white shadow-lg rounded p-4 mb-3">
+                    <h4>From</h4>
                     <p>@Model.tfvm.From_AccountNumber</p>
-                    <h3>Recipient</h3>
+                    <h4>Recipient</h4>
                     <p>@{
                         if (Model.tfvm.To_AccountNumber != null)
                         {
@@ -36,20 +36,29 @@
                             @Model.tfvm.PhoneNumber;
                         }
                      }</p>
-                    <h3>Amount</h3>
-                    <p>@Model.tfvm.TransferAmount</p>
+                    <h4>Amount</h4>
+                    <p>$ @Model.tfvm.TransferAmount</p>
                 </div>
-                
+                <div style="display:none;">
+                    <label asp-for="tfvm.From_AccountNumber"></label>
+                    <input asp-for="tfvm.From_AccountNumber" value="@Model.tfvm.From_AccountNumber" />
+                    <label asp-for="tfvm.To_AccountNumber"></label>
+                    <input asp-for="tfvm.To_AccountNumber" value="@Model.tfvm.To_AccountNumber" />
+                    <label asp-for="tfvm.PhoneNumber"></label>
+                    <input asp-for="tfvm.PhoneNumber" value="@Model.tfvm.PhoneNumber" />
+                    <label asp-for="tfvm.TransferAmount"></label>
+                    <input asp-for="tfvm.TransferAmount" value="@Model.tfvm.TransferAmount" />
+                </div>
 
                 <div class="form-group">
                     <label asp-for="OTP" class="control-label">6-digit PIN</label>
-                    <input asp-for="OTP" class="form-control rounded-0" />
+                    <input asp-for="OTP" class="form-control rounded-0 p-3" />
                     <span asp-validation-for="OTP" class="text-danger"></span>
                 </div>
 
                 <span class="text-danger">@TempData["ErrorMessage"]</span>
                 <div class="mt-5" style="float:right">
-                    <input type="submit" value="Confirm Transfer" class="btn text-white px-5 rounded-0 shadow" style="background-color:red; margin:0px" />
+                    <input type="submit" value="Confirm Transfer" class="btn text-white px-5 rounded-0 shadow-lg" style="background-color:red; margin:0px" />
                 </div>
             </fieldset>
         </form>
