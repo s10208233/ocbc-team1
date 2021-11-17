@@ -64,24 +64,54 @@ namespace ocbc_team1.Controllers
         [HttpPost]
         public IActionResult CreateTransfer(TransferViewModel tfViewModel) 
         {
-            if(tfViewModel.OTP != HttpContext.Session.GetString("otp"))
-            {
-                TempData["ErrorMessage"] = "Invalid OTP";
-                return RedirectToAction("Transfer", "Dashboard", tfViewModel);
-            }
+            double test = tfViewModel.TransferAmount;
             if (transactionContext.checkRecipient(tfViewModel) == false)
             {
-                TempData["ErrorMessage"] = "Recipient Doesn't exsist please try again";
+                TempData["ErrorMessage"] = "Recipient Doesn't exist , please try again";
                 return RedirectToAction("Transfer", "Dashboard");
+            }
+            else if (tfViewModel.TransferAmount <= 0)
+            {
+                TempData["ErrorMessage"] = "Invalid Amount, please try again";
+                return RedirectToAction("Transfer", "Dashboard");
+            }
+            ViewData["TFVM"] = tfViewModel;
+            return RedirectToAction("postTransferOTP", "Dashboard", new PostTransferOTP_ViewModel { tfvm = tfViewModel, OTP = null});
+            
+        }
+        public IActionResult PostTransferOTP()
+        {
+            string accesscode = HttpContext.Session.GetString("accesscode");
+            Random rnd = new Random();
+            string rOTP = Convert.ToString(rnd.Next(000000, 999999));
+            HttpContext.Session.SetString("otp", rOTP);
+            string text = "Your OTP is: " + rOTP;
+            if (teleContext.getTelegramChatId(accesscode) != null)
+            {
+                string chatid = Convert.ToString(teleContext.getTelegramChatId(accesscode));
+                sendMessage(chatid, text);
+
+            }
+            return View();
+
+        }
+        [HttpPost]
+        public IActionResult PostTransferOTP(PostTransferOTP_ViewModel ptfVM)
+        {
+            
+            if (ptfVM.OTP != HttpContext.Session.GetString("otp"))
+            {
+                TempData["ErrorMessage"] = "Invalid OTP";
+                return RedirectToAction("Transfer", "Dashboard", ptfVM);
             }
             else
             {
-                transactionContext.transferFunds(tfViewModel, HttpContext.Session.GetString("accesscode"));
+                transactionContext.transferFunds(ptfVM.tfvm, HttpContext.Session.GetString("accesscode"));
                 TempData["SuccessMessage"] = "Transfer made!";
                 return RedirectToAction("Index", "Dashboard");
             }
+            return null;
         }
-
         public IActionResult NewBankAccount()
         {
             ViewData["UserOwnAccountList"] = transactionContext.getBankAccountList(HttpContext.Session.GetString("accesscode"));

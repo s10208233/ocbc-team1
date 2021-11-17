@@ -1,0 +1,58 @@
+﻿@model ocbc_team1.Models.PostTransferOTP_ViewModel
+@{
+    TransferViewModel tfvm = ViewData["TFVM"] as TransferViewModel;
+    ViewData["Title"] = "Confirm Transfer with OTP";
+}
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/css/Transfer.css">
+</head>
+
+<div style="padding-top:100px; padding-bottom:100px; min-height:1200px;
+            background-image:url('/images/white-brick.jpg');
+            background-position:top;
+            background-size:cover;
+            background-repeat: no-repeat;
+            ">
+    <div style="max-width:800px; margin:auto;" class="p-5 bg-light">
+        <h2 class="pb-5">Confirm Transfer</h2>
+
+        <form method="post" class="" id="TransferBoard" asp-controller="Dashboard" asp-action="PostTransferOTP">
+            <fieldset class="FormContent">
+
+                <div class="form-group">
+                    <h3>From</h3>
+                    <p>@((TransferViewModel)ViewData["TFVM"]).From_AccountNumber</p>
+                    <h3>Recipient</h3>
+                    <p>@{
+                        if (tfvm.To_AccountNumber != null)
+                        {
+                            @tfvm.To_AccountNumber;
+                        }
+                        if (tfvm.PhoneNumber != null)
+                        {
+                            @tfvm.PhoneNumber;
+                        }
+                     }</p>
+                    <h3>Amount</h3>
+                    <p>@((TransferViewModel)ViewData["TFVM"]).TransferAmount</p>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="OTP" class="control-label">6-digit PIN</label>
+                    <input asp-for="OTP" class="form-control rounded-0" />
+                    <span asp-validation-for="OTP" class="text-danger"></span>
+                </div>
+
+                <span class="text-danger">@TempData["ErrorMessage"]</span>
+                <div class="mt-5" style="float:right">
+                    <input type="submit" value="Confirm Transfer" class="btn text-white px-5 rounded-0 shadow" style="background-color:red; margin:0px" />
+                </div>
+            </fieldset>
+        </form>
+
+        <script src="~/js/Transfer.js" asp-append-version="true"></script>
+    </div>
+</div>
