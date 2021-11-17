@@ -75,6 +75,7 @@ namespace ocbc_team1.Controllers
             {
                 if(HttpContext.Session.GetString("otp") == otpVM.OTP)
                 {
+                    HttpContext.Session.SetString("login", "true");
                     return RedirectToAction("Index", "Dashboard");
                 }
                 TempData["Message"] = "Invalid OTP. Try Again!";
@@ -107,8 +108,7 @@ namespace ocbc_team1.Controllers
                 List<User> userlist = loginContext.retrieveUserList();
                 foreach (User user in userlist)
                 if (loginVM.AccessCode == user.AccessCode && loginVM.Pin == user.BankPIN)
-                {
-                    HttpContext.Session.SetString("login", "true");
+                {                    
                     HttpContext.Session.SetString("fullname", string.Format("{0} {1}", user.FirstName, user.LastName));
                     HttpContext.Session.SetString("accesscode", user.AccessCode);
                     return RedirectToAction("OTP", "Home");
