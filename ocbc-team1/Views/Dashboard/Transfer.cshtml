@@ -90,19 +90,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                @* OTP Part *@
-                <div class="Main_container shadow">
-                    <div class="container_header"><label asp-for="OTP" class="col-form-label">5.Enter OTP</label></div>
-                    <div class="container_content">
-                        <input asp-for="OTP" class="form-control rounded-0" placeholder="OTP" />
-                        <span asp-validation-for="OTP" class="text-danger"></span>
-                        @* OTP Send Button (Consideration but do not do: otp send cooldown timer to avoid spam) *@
-                        <button class="btn btn-danger" style="border-radius:0px;" asp-action="">Send OTP</button>
-                    </div>
-                </div>
-
+                </div>                
                 <span class="text-danger">@TempData["ErrorMessage"]</span>
                 <span class="text-success">@TempData["SuccessMessage"]</span>
                 <div class="mt-5" style="float:right">
