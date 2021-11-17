@@ -37,25 +37,29 @@
                         <th class="th-sm">
                             Amount
 
-                        </th>
-                        <th class="th-sm">
-                            Timestamp
-                        </th>
+            </th>
+            <th class="th-sm">
+                TimeSent
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            @foreach (var item in Model)
+            {
+                @if (item.From_AccountNumber == accountNo)
+                {
+                    <tr>
+                        <th>@item.From_AccountNumber</th>
+                        <th>@item.To_AccountNumber</th>
+                        <th>@item.Amount</th>
+                        <th>@item.TimeSent</th>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <th>@item.From_AccountNumber</th>
-                            <th>@item.To_AccountNumber</th>
-                            <th>@item.Amount</th>
-                            <th>@item.TimeSent</th>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-        <script src="~/js/Table.js" asp-append-version="true"></script>
-    </div>
-</div>
+                }
+            }
+        }
+    </tbody>
+</table>
+
+<script src="~/js/Table.js" asp-append-version="true"></script>
