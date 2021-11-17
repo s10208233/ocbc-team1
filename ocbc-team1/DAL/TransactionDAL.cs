@@ -110,6 +110,7 @@ namespace ocbc_team1.DAL
         }
         public void transferFunds(TransferViewModel tfVM, string accesscode)
         {
+            tfVM.TransferAmount = Math.Round(tfVM.TransferAmount, 2);
             //if (tfVM.To_AccountNumber != null && tfVM.PhoneNumber != null) { Console.WriteLine("Two transfer type has been input, transfer canceled"); return; }
             List<User> userslist = loginContext.retrieveUserList();
             if (userslist == null) { Console.WriteLine("uselist null, transfer failed"); return; }
