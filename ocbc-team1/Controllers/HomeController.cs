@@ -147,9 +147,10 @@ namespace ocbc_team1.Controllers
                                     ) { TempData["Message"] = "The information you have entered is not valid or unique."; return View(userinput); }
                             }
                         }
-                        signupContext.completeUserSignUp(userinput);
                         TempData["SignupSuccessMessage"] = "We've sent your access code to your email address, check your inbox.";
                         return RedirectToAction("Login", "Home");
+                        signupContext.completeUserSignUp(userinput);
+                        
                     }
                 }
                 TempData["Message"] = "The card number you have entered is invalid.";
