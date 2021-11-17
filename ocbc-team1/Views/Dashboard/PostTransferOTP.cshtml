@@ -1,6 +1,6 @@
 ﻿@model ocbc_team1.Models.PostTransferOTP_ViewModel
 @{
-    TransferViewModel tfvm = ViewData["TFVM"] as TransferViewModel;
+    //Model.tfvm = ViewData["TFVM"] as TransferViewModel;
     ViewData["Title"] = "Confirm Transfer with OTP";
 }
 
@@ -19,26 +19,27 @@
     <div style="max-width:800px; margin:auto;" class="p-5 bg-light">
         <h2 class="pb-5">Confirm Transfer</h2>
 
-        <form method="post" class="" id="TransferBoard" asp-controller="Dashboard" asp-action="PostTransferOTP">
+        <form method="post" class="" id="TransferBoard" asp-controller="Dashboard" asp-action="SubmitPostTransferOTP">
             <fieldset class="FormContent">
 
                 <div class="form-group">
                     <h3>From</h3>
-                    <p>@((TransferViewModel)ViewData["TFVM"]).From_AccountNumber</p>
+                    <p>@Model.tfvm.From_AccountNumber</p>
                     <h3>Recipient</h3>
                     <p>@{
-                        if (tfvm.To_AccountNumber != null)
+                        if (Model.tfvm.To_AccountNumber != null)
                         {
-                            @tfvm.To_AccountNumber;
+                            @Model.tfvm.To_AccountNumber;
                         }
-                        if (tfvm.PhoneNumber != null)
+                        if (Model.tfvm.PhoneNumber != null)
                         {
-                            @tfvm.PhoneNumber;
+                            @Model.tfvm.PhoneNumber;
                         }
                      }</p>
                     <h3>Amount</h3>
-                    <p>@((TransferViewModel)ViewData["TFVM"]).TransferAmount</p>
+                    <p>@Model.tfvm.TransferAmount</p>
                 </div>
+                <>
 
                 <div class="form-group">
                     <label asp-for="OTP" class="control-label">6-digit PIN</label>
@@ -53,6 +54,5 @@
             </fieldset>
         </form>
 
-        <script src="~/js/Transfer.js" asp-append-version="true"></script>
     </div>
 </div>

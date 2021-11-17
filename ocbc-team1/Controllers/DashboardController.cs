@@ -64,7 +64,6 @@ namespace ocbc_team1.Controllers
         [HttpPost]
         public IActionResult CreateTransfer(TransferViewModel tfViewModel) 
         {
-            double test = tfViewModel.TransferAmount;
             if (transactionContext.checkRecipient(tfViewModel) == false)
             {
                 TempData["ErrorMessage"] = "Recipient Doesn't exist , please try again";
@@ -75,11 +74,11 @@ namespace ocbc_team1.Controllers
                 TempData["ErrorMessage"] = "Invalid Amount, please try again";
                 return RedirectToAction("Transfer", "Dashboard");
             }
-            ViewData["TFVM"] = tfViewModel;
-            return RedirectToAction("postTransferOTP", "Dashboard", new PostTransferOTP_ViewModel { tfvm = tfViewModel, OTP = null});
-            
+            //ViewData["TFVM"] = tfViewModel;
+            return RedirectToAction("postTransferOTP", "Dashboard", tfViewModel);
         }
-        public IActionResult PostTransferOTP()
+
+        public ActionResult PostTransferOTP(TransferViewModel tfvm)
         {
             string accesscode = HttpContext.Session.GetString("accesscode");
             Random rnd = new Random();
@@ -90,15 +89,14 @@ namespace ocbc_team1.Controllers
             {
                 string chatid = Convert.ToString(teleContext.getTelegramChatId(accesscode));
                 sendMessage(chatid, text);
-
             }
-            return View();
+            return View(new PostTransferOTP_ViewModel { tfvm = tfvm, OTP = null });
 
         }
         [HttpPost]
-        public IActionResult PostTransferOTP(PostTransferOTP_ViewModel ptfVM)
+        public IActionResult SubmitPostTransferOTP(PostTransferOTP_ViewModel ptfVM)
         {
-            
+            ptfVM.tfvm = ViewData["TFVM"] as TransferViewModel;
             if (ptfVM.OTP != HttpContext.Session.GetString("otp"))
             {
                 TempData["ErrorMessage"] = "Invalid OTP";
@@ -112,6 +110,7 @@ namespace ocbc_team1.Controllers
             }
             return null;
         }
+
         public IActionResult NewBankAccount()
         {
             ViewData["UserOwnAccountList"] = transactionContext.getBankAccountList(HttpContext.Session.GetString("accesscode"));

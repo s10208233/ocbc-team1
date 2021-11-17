@@ -8,8 +8,7 @@ namespace ocbc_team1.Models
 {
     public class PostTransferOTP_ViewModel
     {
-        [Required]
-        public TransferViewModel tfvm { get; set; }
+        public TransferViewModel? tfvm { get; set; }
 
         public string? OTP { get; set; }
     }
