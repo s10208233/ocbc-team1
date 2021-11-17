@@ -12,6 +12,7 @@ namespace ocbc_team1.Controllers
     public class DashboardController : Controller
     {
         private TransactionDAL transactionContext = new TransactionDAL();
+        private NewBankAccountDAL newaccountContext = new NewBankAccountDAL();
         public IActionResult Index()
         {
             string accesscode = HttpContext.Session.GetString("accesscode");
@@ -54,7 +55,20 @@ namespace ocbc_team1.Controllers
                 return RedirectToAction("Index", "Dashboard");
             }
         }
-        
+
+        public IActionResult NewBankAccount()
+        {
+            ViewData["UserOwnAccountList"] = transactionContext.getBankAccountList(HttpContext.Session.GetString("accesscode"));
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AddAccount(NewBankAccountViewModel nbaViewModel)
+        {
+            newaccountContext.createNewBankAccount(nbaViewModel, HttpContext.Session.GetString("accesscode"));
+            return RedirectToAction("Index", "Dashboard");
+        }
+
         public IActionResult UserLogout()
         {
             HttpContext.Session.Clear();

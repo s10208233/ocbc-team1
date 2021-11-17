@@ -1,0 +1,44 @@
+﻿@model ocbc_team1.Models.NewBankAccountViewModel
+@{
+    ViewData["Title"] = "New Bank Account";
+}
+
+<h2 class="pb-5">Open a New Bank Account</h2>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/css/Transfer.css">
+</head>
+
+<form method="post" class="p-5" id="TransferBoard" asp-controller="Dashboard" asp-action="AddAccount">
+    <fieldset class="FormContent">
+
+        <div class="Main_container">
+            <div class="container_header"><label asp-for="AccountType" class="col-form-label">1.New Account Type</label></div>
+            <div class="container_content">
+                <div>
+                    <input asp-for="AccountType" class="form-control rounded-0" placeholder="Savings" />
+                    <span asp-validation-for="AccountType" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <span class="Main_container">
+            <div class="container_header"><label asp-for="AmountRemaining" class="col-form-label">4.Account balance</label></div>
+            <div class="container_content">
+                <div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">$</span>
+                        </div>
+                        <input asp-for="AmountRemaining" class="form-control rounded-0" placeholder="Enter Amount In New Account" />
+                        <span asp-validation-for="AmountRemaining" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <span class="text-danger">@TempData["ErrorMessage"]</span>
+            <span class="text-success">@TempData["SuccessMessage"]</span>
+            <div class="mt-5" style="float:right">
+                <input type="submit" value="Create Account" class="btn text-white px-5 rounded-0" style="background-color:red; margin:0px" />
+            </div>
+    </fieldset>
+</form>
