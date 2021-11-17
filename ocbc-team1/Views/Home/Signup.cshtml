@@ -58,10 +58,9 @@
         <span style="color:red;">@TempData["Message"]</span>
         <div class="form-group p-4 text-center">
             <input type="submit" value="Sign Up" class="btn text-white px-5" style="background-color:red; border-radius:0px" />
-        </div>
+        </div> 
     </form>
 </div>
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
