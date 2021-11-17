@@ -148,6 +148,11 @@ namespace ocbc_team1.DAL
                                     TimeSent = DateTime.Now,
                                 });
                             }
+                            recName = "";
+                            recName = userslist[i].FirstName + " " + userslist[i].LastName;
+                            string text = "You have recieved " + "$" + tfVM.TransferAmount + " from " + getName(accesscode) + " on " + DateTime.Now.ToString("f");
+                            sendMessage(Convert.ToString(userslist[i].TelegramChatID), text);
+
 
 
                         }
@@ -188,6 +193,8 @@ namespace ocbc_team1.DAL
                                             TimeSent = DateTime.Now,
                                         });
                                     }
+                                    string text = "You have sent " + "$" + tfVM.TransferAmount + " to " + recName + " on " + DateTime.Now.ToString("f");
+                                    sendMessage(Convert.ToString(userslist[i].TelegramChatID), text);
                                 }
                             }
                         }
@@ -227,7 +234,10 @@ namespace ocbc_team1.DAL
                                 TimeSent = DateTime.Now,
                             });
                         }
-
+                        recName = "";
+                        recName = userslist[i].FirstName + " " + userslist[i].LastName;
+                        string text = "You have recieved " + "$" + tfVM.TransferAmount + " from " + getName(accesscode) + " on " + DateTime.Now.ToString("f");
+                        sendMessage(Convert.ToString(userslist[i].TelegramChatID), text);
 
                     }
                 }
@@ -266,7 +276,9 @@ namespace ocbc_team1.DAL
                                             TimeSent = DateTime.Now,
                                         });
                                     }
-                                   
+                                    string text = "You have sent " + "$" + tfVM.TransferAmount + " to " + recName + " on " + DateTime.Now.ToString("f");
+                                    sendMessage(Convert.ToString(userslist[i].TelegramChatID), text);
+
                                 }
                             }
                         }
