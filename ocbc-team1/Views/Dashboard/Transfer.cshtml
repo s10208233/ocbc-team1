@@ -61,7 +61,7 @@
                     <div class="container_header"><label asp-for="To_AccountNumber" class="col-form-label">3.Transfer by Bank Account Number</label></div>
                     <div class="container_content bg-light">
                         <div>
-                            <input asp-for="To_AccountNumber" class="form-control rounded-0" id="ACinput" placeholder="Enter recipient bank account number to transfer" />
+                            <input asp-for="To_AccountNumber" class="form-control rounded-0 p-4" id="ACinput" placeholder="Enter recipient bank account number to transfer" />
                             <span asp-validation-for="To_AccountNumber" class="text-danger"></span>
                         </div>
                     </div>
@@ -72,7 +72,7 @@
                     <div class="container_header"><label asp-for="PhoneNumber" class="col-form-label">3.Transfer by Phone Number</label></div>
                     <div class="container_content ">
                         <div>
-                            <input asp-for="PhoneNumber" class="form-control rounded-0" id="PHinput" placeholder="Enter recipient phone number to transfer" />
+                            <input asp-for="PhoneNumber" class="form-control rounded-0 p-4" id="PHinput" placeholder="Enter recipient phone number to transfer" />
                             <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                         </div>
                     </div>
@@ -83,30 +83,18 @@
                         <div>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text">$</span>
+                                    <span class="input-group-text p-3">$</span>
                                 </div>
-                                <input asp-for="TransferAmount" class="form-control rounded-0" placeholder="Enter Amount To Transfer" />
+                                <input asp-for="TransferAmount" class="form-control rounded-0" style="height:auto;" placeholder="Enter Amount To Transfer" />
                                 <span asp-validation-for="TransferAmount" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                @* OTP Part *@
-                <div class="Main_container shadow">
-                    <div class="container_header"><label asp-for="OTP" class="col-form-label">5.Enter OTP</label></div>
-                    <div class="container_content">
-                        <input asp-for="OTP" class="form-control rounded-0" placeholder="OTP" />
-                        <span asp-validation-for="OTP" class="text-danger"></span>
-                        @* OTP Send Button (Consideration but do not do: otp send cooldown timer to avoid spam) *@
-                        <button class="btn btn-danger" style="border-radius:0px;" asp-action="">Send OTP</button>
-                    </div>
-                </div>
-
                 <span class="text-danger">@TempData["ErrorMessage"]</span>
                 <span class="text-success">@TempData["SuccessMessage"]</span>
                 <div class="mt-5" style="float:right">
-                    <input type="submit" value="Transfer" class="btn text-white px-5 rounded-0 shadow" style="background-color:red; margin:0px" />
+                    <input type="submit" value="Next" class="btn text-white px-5 rounded-0 shadow" style="background-color:red; margin:0px" />
                 </div>
             </fieldset>
         </form>
