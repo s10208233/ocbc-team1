@@ -48,7 +48,7 @@
                     {
                         @foreach (var item in Model)
                         {
-                            @if (item.From_AccountNumber == accountNo)
+                            @if (item.From_AccountNumber == accountNo || item.To_AccountNumber == accountNo)
                             {
                                 <tr>
                                     <th>@item.From_AccountNumber</th>
