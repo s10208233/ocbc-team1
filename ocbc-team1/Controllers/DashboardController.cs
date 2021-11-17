@@ -96,7 +96,6 @@ namespace ocbc_team1.Controllers
         [HttpPost]
         public IActionResult SubmitPostTransferOTP(PostTransferOTP_ViewModel ptfVM)
         {
-            ptfVM.tfvm = ViewData["TFVM"] as TransferViewModel;
             if (ptfVM.OTP != HttpContext.Session.GetString("otp"))
             {
                 TempData["ErrorMessage"] = "Invalid OTP";
