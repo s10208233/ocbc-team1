@@ -108,6 +108,18 @@ namespace ocbc_team1.DAL
             return sName;
             
         }
+        public bool checkConnectivity()
+        {
+            try
+            {
+                List<User> userslist = loginContext.retrieveUserList();
+                return true;
+            }
+            catch(Exception e)
+            {
+                return false;
+            }
+        }
 
         public bool checkSenderFunds(string accesscode, string AccountNumber, double TransferAmount)
         {

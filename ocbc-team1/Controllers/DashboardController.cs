@@ -108,9 +108,18 @@ namespace ocbc_team1.Controllers
             }
             else
             {
-                transactionContext.transferFunds(ptfVM.tfvm, HttpContext.Session.GetString("accesscode"));
-                TempData["SuccessMessage"] = "You have sucessfully transferred $" + ptfVM.tfvm.TransferAmount + " to " + ptfVM.tfvm.PhoneNumber + ptfVM.tfvm.To_AccountNumber;
-                return RedirectToAction("Index", "Dashboard");
+                bool con = transactionContext.checkConnectivity();
+                if (con == true)
+                {
+                    transactionContext.transferFunds(ptfVM.tfvm, HttpContext.Session.GetString("accesscode"));
+                    TempData["SuccessMessage"] = "You have sucessfully transferred $" + ptfVM.tfvm.TransferAmount + " to " + ptfVM.tfvm.PhoneNumber + ptfVM.tfvm.To_AccountNumber;
+                    return RedirectToAction("Index", "Dashboard");
+                }
+                else
+                {
+                    return RedirectToAction("")
+                }
+                
             }
             return null;
         }
