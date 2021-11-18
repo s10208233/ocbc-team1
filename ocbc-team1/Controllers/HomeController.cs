@@ -49,6 +49,7 @@ namespace ocbc_team1.Controllers
         public IActionResult OTP()
         {
             text = "";
+            accesscode = "";
             accesscode = HttpContext.Session.GetString("accesscode");
             Random rnd = new Random();
             string rOTP = Convert.ToString(rnd.Next(000000, 999999));
