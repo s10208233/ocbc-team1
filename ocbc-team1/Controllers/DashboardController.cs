@@ -101,6 +101,9 @@ namespace ocbc_team1.Controllers
         [HttpPost]
         public IActionResult SubmitPostTransferOTP(PostTransferOTP_ViewModel ptfVM)
         {
+            //if no internet
+            //return View(new PostTransferOTP_ViewModel { tfvm = ptfVM.tfvm, OTP = null });
+
             if (ptfVM.OTP != HttpContext.Session.GetString("otp"))
             {
                 TempData["ErrorMessage"] = "Invalid OTP";
@@ -113,6 +116,17 @@ namespace ocbc_team1.Controllers
                 return RedirectToAction("Index", "Dashboard");
             }
             return null;
+        }
+
+        public ActionResult TransferConnectionError(PostTransferOTP_ViewModel ptfVM)
+        {
+            return View(ptfVM);
+        }
+
+        public ActionResult RetryTransferConnectionError(PostTransferOTP_ViewModel ptfVM)
+        {
+
+            return RedirectToAction("postTransferOTP", "Dashboard", ptfVM.tfvm);
         }
 
         public IActionResult NewBankAccount()
