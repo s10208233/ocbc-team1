@@ -64,6 +64,7 @@ namespace ocbc_team1.Controllers
         [HttpPost]
         public IActionResult CreateTransfer(TransferViewModel tfViewModel) 
         {
+            string accesscode = HttpContext.Session.GetString("accesscode");
             if (transactionContext.checkRecipient(tfViewModel) == false)
             {
                 TempData["ErrorMessage"] = "Recipient Doesn't exist , please try again";
@@ -72,6 +73,10 @@ namespace ocbc_team1.Controllers
             else if (tfViewModel.TransferAmount <= 0)
             {
                 TempData["ErrorMessage"] = "Invalid Amount, please try again";
+                return RedirectToAction("Transfer", "Dashboard");
+            } else if (transactionContext.checkSenderFunds(accesscode, tfViewModel.From_AccountNumber, tfViewModel.TransferAmount))
+            {
+                TempData["ErrorMessage"] = "This account has insufficient Funds, please try again";
                 return RedirectToAction("Transfer", "Dashboard");
             }
             //ViewData["TFVM"] = tfViewModel;
