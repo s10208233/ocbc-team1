@@ -99,6 +99,7 @@ namespace ocbc_team1.Controllers
             string chatid = Convert.ToString(e.Message.Chat.Id);
             sendMessage(chatid, text);
             teleContext.setTelegramChatId(accesscode, Convert.ToInt32(chatid));
+            text = "";
         }       
 
         [HttpPost] 
