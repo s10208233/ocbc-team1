@@ -127,15 +127,15 @@ namespace ocbc_team1.Controllers
             return null;
         }
 
-        public ActionResult TransferConnectionError(PostTransferOTP_ViewModel ptfVM)
+        public ActionResult TransferConnectionError(TransferViewModel tfvm)
         {
-            return View(ptfVM);
+            return View(tfvm);
         }
 
-        public ActionResult RetryTransferConnectionError(PostTransferOTP_ViewModel ptfVM)
+        public ActionResult RetryTransferConnectionError(TransferViewModel tfvm)
         {
 
-            return RedirectToAction("postTransferOTP", "Dashboard", ptfVM.tfvm);
+            return RedirectToAction("postTransferOTP", "Dashboard", tfvm);
         }
 
         public IActionResult NewBankAccount()
