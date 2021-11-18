@@ -37,32 +37,37 @@
                             {
                                 @Model.PhoneNumber;
                             }
-                    }
-                </p>
-                <h4>Amount</h4>
-                <p>$ @Model.TransferAmount</p>
-            </div>
-            <div style="display:none;">
-                <label asp-for="From_AccountNumber"></label>
-                <input asp-for="From_AccountNumber" value="@Model.From_AccountNumber" />
-                <label asp-for="To_AccountNumber"></label>
-                <input asp-for="To_AccountNumber" value="@Model.To_AccountNumber" />
-                <label asp-for="PhoneNumber"></label>
-                <input asp-for="PhoneNumber" value="@Model.PhoneNumber" />
-                <label asp-for="TransferAmount"></label>
-                <input asp-for="TransferAmount" value="@Model.TransferAmount" />
-            </div>
+                        }
+                    </p>
+                    <h4>Amount</h4>
+                    <p>$ @Model.TransferAmount</p>
+                </div>
+                <div style="display:none;">
+                    <label asp-for="From_AccountNumber"></label>
+                    <input asp-for="From_AccountNumber" value="@Model.From_AccountNumber" />
+                    <label asp-for="To_AccountNumber"></label>
+                    <input asp-for="To_AccountNumber" value="@Model.To_AccountNumber" />
+                    <label asp-for="PhoneNumber"></label>
+                    <input asp-for="PhoneNumber" value="@Model.PhoneNumber" />
+                    <label asp-for="TransferAmount"></label>
+                    <input asp-for="TransferAmount" value="@Model.TransferAmount" />
+                </div>
+                @*<div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                    <label class="form-check-label" for="flexCheckDefault">
+                        Default checkbox
+                    </label>
+                </div>*@
+                @*<div class="form-group">
+            <label asp-for="OTP" class="control-label">6-digit PIN</label>
+            <input asp-for="OTP" class="form-control rounded-0 p-3" />
+            <span asp-validation-for="OTP" class="text-danger"></span>
+        </div>*@
 
-            @*<div class="form-group">
-                <label asp-for="OTP" class="control-label">6-digit PIN</label>
-                <input asp-for="OTP" class="form-control rounded-0 p-3" />
-                <span asp-validation-for="OTP" class="text-danger"></span>
-            </div>*@
-
-            <div class="mt-5">
-                <input type="submit" value="Retry Transfer" class="btn text-white px-5 rounded shadow-lg bg-danger" style="width:fit-content; margin:auto; display:block;" />
-            </div>
-        </fieldset>
+                <div class="mt-5">
+                    <input type="submit" value="Retry Transfer" class="btn text-white px-5 rounded shadow-lg bg-danger" style="width:fit-content; margin:auto; display:block;" />
+                </div>
+            </fieldset>
     </form>
 
 </div>
