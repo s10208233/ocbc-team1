@@ -4,6 +4,7 @@ using ocbc_team1.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
 
@@ -113,12 +114,20 @@ namespace ocbc_team1.DAL
             try
             {
                 List<User> userslist = loginContext.retrieveUserList();
-                return true;
+                if (userslist != null)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
-            catch(Exception e)
+            catch( Exception e)
             {
                 return false;
             }
+            
         }
 
         public bool checkSenderFunds(string accesscode, string AccountNumber, double TransferAmount)
@@ -144,12 +153,13 @@ namespace ocbc_team1.DAL
             }
             return true;
         }
-        public void transferFunds(TransferViewModel tfVM, string accesscode)
+        public bool transferFunds(TransferViewModel tfVM, string accesscode)
         {
             tfVM.TransferAmount = Math.Round(tfVM.TransferAmount, 2);
             //if (tfVM.To_AccountNumber != null && tfVM.PhoneNumber != null) { Console.WriteLine("Two transfer type has been input, transfer canceled"); return; }
+            Thread.Sleep(5000);
             List<User> userslist = loginContext.retrieveUserList();
-            if (userslist == null) { Console.WriteLine("uselist null, transfer failed"); return; }
+            if (userslist == null) { Console.WriteLine("uselist null, transfer failed"); return false; }
             //  By Bank Number
             if (tfVM.To_AccountNumber != null && tfVM.PhoneNumber == null)
             {
@@ -332,6 +342,7 @@ namespace ocbc_team1.DAL
             {
                 ifclient.Set("User/", userslist);
             }
+            return true;
         }
         public int Get_ToAccount(int phNo)
         {

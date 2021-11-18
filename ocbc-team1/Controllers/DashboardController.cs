@@ -123,9 +123,17 @@ namespace ocbc_team1.Controllers
                 bool con = transactionContext.checkConnectivity();
                 if (con == true)
                 {
-                    transactionContext.transferFunds(ptfVM.tfvm, HttpContext.Session.GetString("accesscode"));
-                    TempData["SuccessMessage"] = "You have sucessfully transferred $" + ptfVM.tfvm.TransferAmount + " to " + ptfVM.tfvm.PhoneNumber + ptfVM.tfvm.To_AccountNumber;
-                    return RedirectToAction("Index", "Dashboard");
+                    bool dCheck = transactionContext.transferFunds(ptfVM.tfvm, HttpContext.Session.GetString("accesscode"));
+                    if (dCheck == true)
+                    {
+                        TempData["SuccessMessage"] = "You have sucessfully transferred $" + ptfVM.tfvm.TransferAmount + " to " + ptfVM.tfvm.PhoneNumber + ptfVM.tfvm.To_AccountNumber;
+                        return RedirectToAction("Index", "Dashboard");
+                    }
+                    else
+                    {
+                        return RedirectToAction("TransferConnectionError", "Dashboard", ptfVM.tfvm);
+                    }
+                    
                 }
                 else
                 {
