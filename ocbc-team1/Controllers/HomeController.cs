@@ -81,7 +81,8 @@ namespace ocbc_team1.Controllers
                     return RedirectToAction("Index", "Dashboard");
                 }
                 TempData["ErrorMessage"] = "Invalid OTP. Try Again!";
-                return View();
+                return RedirectToAction("OTP", "Home");
+                //return View();
             }
             else
             {
