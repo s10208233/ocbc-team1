@@ -64,6 +64,7 @@ namespace ocbc_team1.Controllers
         [HttpPost]
         public IActionResult CreateTransfer(TransferViewModel tfViewModel) 
         {
+            string accesscode = HttpContext.Session.GetString("accesscode");
             if (transactionContext.checkRecipient(tfViewModel) == false)
             {
                 TempData["ErrorMessage"] = "Recipient Doesn't exist , please try again";
@@ -73,6 +74,10 @@ namespace ocbc_team1.Controllers
             {
                 TempData["ErrorMessage"] = "Invalid Amount, please try again";
                 return RedirectToAction("Transfer", "Dashboard");
+            } else if (transactionContext.checkSenderFunds(accesscode, tfViewModel.From_AccountNumber, tfViewModel.TransferAmount))
+            {
+                TempData["ErrorMessage"] = "This account has insufficient Funds, please try again";
+                return RedirectToAction("Transfer", "Dashboard");
             }
             //ViewData["TFVM"] = tfViewModel;
             return RedirectToAction("postTransferOTP", "Dashboard", tfViewModel);
@@ -80,22 +85,34 @@ namespace ocbc_team1.Controllers
 
         public ActionResult PostTransferOTP(TransferViewModel tfvm)
         {
-            string accesscode = HttpContext.Session.GetString("accesscode");
-            Random rnd = new Random();
-            string rOTP = Convert.ToString(rnd.Next(000000, 999999));
-            HttpContext.Session.SetString("otp", rOTP);
-            string text = "Your OTP is: " + rOTP;
-            if (teleContext.getTelegramChatId(accesscode) != null)
+            bool con = transactionContext.checkConnectivity();
+            if (con == true)
             {
-                string chatid = Convert.ToString(teleContext.getTelegramChatId(accesscode));
-                sendMessage(chatid, text);
+                string accesscode = HttpContext.Session.GetString("accesscode");
+                Random rnd = new Random();
+                string rOTP = Convert.ToString(rnd.Next(000000, 999999));
+                HttpContext.Session.SetString("otp", rOTP);
+                string text = "Your OTP is: " + rOTP;
+                if (teleContext.getTelegramChatId(accesscode) != null)
+                {
+                    string chatid = Convert.ToString(teleContext.getTelegramChatId(accesscode));
+                    sendMessage(chatid, text);
+                }
+                return View(new PostTransferOTP_ViewModel { tfvm = tfvm, OTP = null });
             }
-            return View(new PostTransferOTP_ViewModel { tfvm = tfvm, OTP = null });
+            else
+            {
+                return RedirectToAction("TransferConnectionError", "Dashboard", tfvm);
+            }
+            
 
         }
         [HttpPost]
         public IActionResult SubmitPostTransferOTP(PostTransferOTP_ViewModel ptfVM)
         {
+            //if no internet
+            //return RedirectToAction("TransferConnectionError", "Dashboard", ptfVM);
+
             if (ptfVM.OTP != HttpContext.Session.GetString("otp"))
             {
                 TempData["ErrorMessage"] = "Invalid OTP";
@@ -103,11 +120,43 @@ namespace ocbc_team1.Controllers
             }
             else
             {
-                transactionContext.transferFunds(ptfVM.tfvm, HttpContext.Session.GetString("accesscode"));
-                TempData["SuccessMessage"] = "You have sucessfully transferred $" + ptfVM.tfvm.TransferAmount + " to " + ptfVM.tfvm.PhoneNumber + ptfVM.tfvm.To_AccountNumber;
-                return RedirectToAction("Index", "Dashboard");
+                bool con = transactionContext.checkConnectivity();
+                if (con == true)
+                {
+                    if (ptfVM.tfvm.fail == "fail")
+                    {
+                        return RedirectToAction("TransferConnectionError", "Dashboard", ptfVM.tfvm);
+                    }
+                    bool dCheck = transactionContext.transferFunds(ptfVM.tfvm, HttpContext.Session.GetString("accesscode"));
+                    if (dCheck == true)
+                    {
+                        TempData["SuccessMessage"] = "You have sucessfully transferred $" + ptfVM.tfvm.TransferAmount + " to " + ptfVM.tfvm.PhoneNumber + ptfVM.tfvm.To_AccountNumber;
+                        return RedirectToAction("Index", "Dashboard");
+                    }
+                    else
+                    {
+                        return RedirectToAction("TransferConnectionError", "Dashboard", ptfVM.tfvm);
+                    }
+                    
+                }
+                else
+                {
+                    return RedirectToAction("TransferConnectionError", "Dashboard", ptfVM.tfvm);
+                }
+                
             }
             return null;
+        }
+
+        public ActionResult TransferConnectionError(TransferViewModel tfvm)
+        {
+            return View(tfvm);
+        }
+
+        public ActionResult RetryTransferConnectionError(TransferViewModel tfvm)
+        {
+
+            return RedirectToAction("postTransferOTP", "Dashboard", tfvm);
         }
 
         public IActionResult NewBankAccount()

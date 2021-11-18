@@ -22,14 +22,22 @@ namespace ocbc_team1.DAL
 
         public List<User> retrieveUserList()
         {
-            List<User> userList = new List<User>();
-            ifclient = new FireSharp.FirebaseClient(ifc);
-            if (ifclient != null)
+            try
             {
-                FirebaseResponse firebaseresponse = ifclient.Get("User");
-                userList = firebaseresponse.ResultAs<List<User>>();
+                List<User> userList = new List<User>();
+                ifclient = new FireSharp.FirebaseClient(ifc);
+                if (ifclient != null)
+                {
+                    FirebaseResponse firebaseresponse = ifclient.Get("User");
+                    userList = firebaseresponse.ResultAs<List<User>>();
+                }
+
+                return userList;
             }
-            return userList;
+            catch(Exception e)
+            {
+                return null;
+            }
         }
         public List<string> existingAccessCodeList(List<User> userlist)
         {

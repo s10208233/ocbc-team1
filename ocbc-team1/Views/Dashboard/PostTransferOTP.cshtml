@@ -21,45 +21,53 @@
 
         <form method="post" class="" id="TransferBoard" asp-controller="Dashboard" asp-action="SubmitPostTransferOTP">
             <fieldset class="FormContent">
-                
+
                 <div class="form-group bg-info text-white shadow-lg rounded p-4 mb-3">
                     <h4>From</h4>
                     <p>@Model.tfvm.From_AccountNumber</p>
                     <h4>Recipient</h4>
-                    <p>@{
-                        if (Model.tfvm.To_AccountNumber != null)
-                        {
-                            @Model.tfvm.To_AccountNumber;
-                        }
-                        if (Model.tfvm.PhoneNumber != null)
-                        {
-                            @Model.tfvm.PhoneNumber;
-                        }
-                     }</p>
-                    <h4>Amount</h4>
-                    <p>$ @Model.tfvm.TransferAmount</p>
-                </div>
-                <div style="display:none;">
-                    <label asp-for="tfvm.From_AccountNumber"></label>
-                    <input asp-for="tfvm.From_AccountNumber" value="@Model.tfvm.From_AccountNumber" />
-                    <label asp-for="tfvm.To_AccountNumber"></label>
-                    <input asp-for="tfvm.To_AccountNumber" value="@Model.tfvm.To_AccountNumber" />
-                    <label asp-for="tfvm.PhoneNumber"></label>
-                    <input asp-for="tfvm.PhoneNumber" value="@Model.tfvm.PhoneNumber" />
-                    <label asp-for="tfvm.TransferAmount"></label>
-                    <input asp-for="tfvm.TransferAmount" value="@Model.tfvm.TransferAmount" />
-                </div>
+                    <p>
+                        @{
+                            if (Model.tfvm.To_AccountNumber != null)
+                            {
+                                @Model.tfvm.To_AccountNumber;
+                            }
+                            if (Model.tfvm.PhoneNumber != null)
+                            {
+                                @Model.tfvm.PhoneNumber;
+                            }
+                    }
+                </p>
+                <h4>Amount</h4>
+                <p>$ @Model.tfvm.TransferAmount</p>
+            </div>
+            <div style="display:none;">
+                <label asp-for="tfvm.From_AccountNumber"></label>
+                <input asp-for="tfvm.From_AccountNumber" value="@Model.tfvm.From_AccountNumber" />
+                <label asp-for="tfvm.To_AccountNumber"></label>
+                <input asp-for="tfvm.To_AccountNumber" value="@Model.tfvm.To_AccountNumber" />
+                <label asp-for="tfvm.PhoneNumber"></label>
+                <input asp-for="tfvm.PhoneNumber" value="@Model.tfvm.PhoneNumber" />
+                <label asp-for="tfvm.TransferAmount"></label>
+                <input asp-for="tfvm.TransferAmount" value="@Model.tfvm.TransferAmount" />
+            </div>
 
-                <div class="form-group">
-                    <label asp-for="OTP" class="control-label">6-digit PIN</label>
-                    <input asp-for="OTP" class="form-control rounded-0 p-3" />
-                    <span asp-validation-for="OTP" class="text-danger"></span>
-                </div>
+            <div class="form-group">
+                <label asp-for="OTP" class="control-label">6-digit PIN</label>
+                <input asp-for="OTP" class="form-control rounded-0 p-3" />
+                <span asp-validation-for="OTP" class="text-danger"></span>
+            </div>
 
-                <span class="text-danger">@TempData["ErrorMessage"]</span>
-                <div class="mt-5" style="float:right">
-                    <input type="submit" value="Confirm Transfer" class="btn text-white px-5 rounded-0 shadow-lg" style="background-color:red; margin:0px" />
-                </div>
+            <div class="form-check">
+                <input asp-for="tfvm.fail" class="form-check-input" type="checkbox" value="fail" id="flexCheckDefault">
+                <label asp-for="tfvm.fail" class="form-check-label" for="flexCheckDefault">
+                </label>
+            </div>
+
+            <span class="text-danger">@TempData["ErrorMessage"]</span>
+            <div class="mt-5" style="float:right">
+                <input type="submit" value="Confirm Transfer" class="btn text-white px-5 rounded-0 shadow-lg" style="background-color:red; margin:0px" />
+            </div>
             </fieldset>
         </form>
 
