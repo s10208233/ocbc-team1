@@ -16,8 +16,8 @@
             background-size:cover;
             background-repeat: no-repeat;
             ">
-    <div style="max-width:500px; margin:auto; background-color:red;" class="p-5 shadow-lg">
-        <h2 class="pb-3">Transfer Failed</h2>
+    <div style="max-width:500px; margin:auto;" class="p-5 shadow-lg bg-light">
+        <h2 class="pb-3 text-center text-danger">Transfer Failed</h2>
 
         <form method="post" class="" id="TransferBoard" asp-controller="Dashboard" asp-action="RetryTransferConnectionError">
             <fieldset class="FormContent">
@@ -58,8 +58,8 @@
                 <span asp-validation-for="OTP" class="text-danger"></span>
             </div>*@
 
-            <div class="mt-5" style="float:right">
-                <input type="submit" value="Retry Transfer" class="btn text-white px-5 rounded-0 shadow-lg bg-warning" style="margin:0px" />
+            <div class="mt-5">
+                <input type="submit" value="Retry Transfer" class="btn text-white px-5 rounded-0 shadow-lg bg-warning" style="margin:0px; width:fit-content; margin:auto;" />
             </div>
         </fieldset>
     </form>
