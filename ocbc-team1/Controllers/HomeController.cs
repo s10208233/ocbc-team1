@@ -80,7 +80,7 @@ namespace ocbc_team1.Controllers
                     HttpContext.Session.SetString("login", "true");
                     return RedirectToAction("Index", "Dashboard");
                 }
-                TempData["Message"] = "Invalid OTP. Try Again!";
+                TempData["ErrorMessage"] = "Invalid OTP. Try Again!";
                 return View();
             }
             else

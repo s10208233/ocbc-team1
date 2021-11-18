@@ -34,8 +34,20 @@
                     </div>
                 </div>
                 <div class="row">
-                    <span style="color:red;">@TempData["Message"]</span>
-                    <span style="color:green;">@TempData["SignupSuccessMessage"]</span>
+                    @if (@TempData["Message"] != null)
+                    {
+                        <div class="bg-danger text-white py-3 px-5 mb-4 rounded-pill shadow-lg text-center">
+                            @TempData["Message"]
+                        </div>
+                    }
+                    @if (@TempData["SignupSuccessMessage"] != null)
+                    {
+                        <div class="bg-success text-white py-3 px-5 mb-4 rounded-pill shadow-lg text-center">
+                            @TempData["SignupSuccessMessage"]
+                        </div>
+                    }
+                    @*<span style="color:red;">@TempData["Message"]</span>
+                    <span style="color:green;">@TempData["SignupSuccessMessage"]</span>*@
                 </div>
                 <div class="form-group row float-right">
                     <div>

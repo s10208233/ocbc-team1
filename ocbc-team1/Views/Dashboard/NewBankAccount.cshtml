@@ -42,8 +42,20 @@
                             </div>
                         </div>
                     </div>
-                    <span class="text-danger">@TempData["ErrorMessage"]</span>
-                    <span class="text-success">@TempData["SuccessMessage"]</span>
+                    @if (@TempData["ErrorMessage"] != null)
+                    {
+                        <div class="bg-danger text-white py-3 px-5 mb-4 rounded-pill shadow-lg text-center">
+                            @TempData["ErrorMessage"]
+                        </div>
+                    }
+                    @if (@TempData["SuccessMessage"] != null)
+                    {
+                        <div class="bg-success text-white py-3 px-5 mb-4 rounded-pill shadow-lg text-center">
+                            @TempData["SuccessMessage"]
+                        </div>
+                    }
+                    @*<span class="text-danger">@TempData["ErrorMessage"]</span>
+                    <span class="text-success">@TempData["SuccessMessage"]</span>*@
                     <div class="mt-5" style="float:right">
                         <input type="submit" value="Create Account" class="btn text-white px-5 rounded-0" style="background-color:red; margin:0px" />
                     </div>
