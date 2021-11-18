@@ -102,7 +102,7 @@ namespace ocbc_team1.Controllers
         public IActionResult SubmitPostTransferOTP(PostTransferOTP_ViewModel ptfVM)
         {
             //if no internet
-            //return View(new PostTransferOTP_ViewModel { tfvm = ptfVM.tfvm, OTP = null });
+            //return RedirectToAction("TransferConnectionError", "Dashboard", ptfVM);
 
             if (ptfVM.OTP != HttpContext.Session.GetString("otp"))
             {
