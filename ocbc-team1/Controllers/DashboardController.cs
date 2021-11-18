@@ -123,6 +123,10 @@ namespace ocbc_team1.Controllers
                 bool con = transactionContext.checkConnectivity();
                 if (con == true)
                 {
+                    if (ptfVM.tfvm.fail == "fail")
+                    {
+                        return RedirectToAction("TransferConnectionError", "Dashboard", ptfVM.tfvm);
+                    }
                     bool dCheck = transactionContext.transferFunds(ptfVM.tfvm, HttpContext.Session.GetString("accesscode"));
                     if (dCheck == true)
                     {
