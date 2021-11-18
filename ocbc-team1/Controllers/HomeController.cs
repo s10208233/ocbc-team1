@@ -113,12 +113,14 @@ namespace ocbc_team1.Controllers
                     TempData["Message"] = "No users in the database.";
                     return View();
                 }
-                    foreach (User user in userlist)
-                if (loginVM.AccessCode == user.AccessCode && loginVM.Pin == user.BankPIN)
-                {                    
-                    HttpContext.Session.SetString("fullname", string.Format("{0} {1}", user.FirstName, user.LastName));
-                    HttpContext.Session.SetString("accesscode", user.AccessCode);
-                    return RedirectToAction("OTP", "Home");
+                foreach (User user in userlist)
+                {
+                    if (loginVM.AccessCode == user.AccessCode && loginVM.Pin == user.BankPIN)
+                    {
+                        HttpContext.Session.SetString("fullname", string.Format("{0} {1}", user.FirstName, user.LastName));
+                        HttpContext.Session.SetString("accesscode", user.AccessCode);
+                        return RedirectToAction("OTP", "Home");
+                    }
                 }
                 TempData["Message"] = "Invalid Login Credentials!";
                 return View();
@@ -129,7 +131,7 @@ namespace ocbc_team1.Controllers
                 //to display error message
                 return View(loginVM);
             }
-            
+            return View();
         }
 
         [HttpPost]
