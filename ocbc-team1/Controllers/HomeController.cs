@@ -177,6 +177,16 @@ namespace ocbc_team1.Controllers
 
         }
                
+        public IActionResult forgetPassword()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult forgetPassword(ResendAcessCode Rmail)
+        {
+            loginContext.ResendAccessCode(Rmail.Email);
+            return RedirectToAction("Login","Home");
+        }
 
         public IActionResult Privacy()
         {

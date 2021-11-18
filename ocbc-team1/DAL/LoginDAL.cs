@@ -8,6 +8,8 @@ using FireSharp.Interfaces;
 using FireSharp.Response;
 using ocbc_team1.Models;
 using Newtonsoft.Json;
+using MailKit.Net.Smtp;
+using MimeKit;
 
 namespace ocbc_team1.DAL
 {
@@ -51,6 +53,50 @@ namespace ocbc_team1.DAL
             }
             return accesscodelist;
         }
+        public void ResendAccessCode(string rEmail)
+        {
+            List<User> userslist = retrieveUserList();
+            for (int i = 0; i < userslist.Count; i++)
+            {
+                if (userslist[i].Email == rEmail)
+                {
+                    string rName = userslist[i].FirstName + userslist[i].LastName;
+                    string accesscode = userslist[i].AccessCode;
 
+                    MimeMessage message = new MimeMessage();
+                    message.From.Add(new MailboxAddress("OCBC Team 1", "ocbcteam1@gmail.com"));
+                    message.To.Add(MailboxAddress.Parse(rEmail));
+                    message.Subject = "OCBC Account Access Code";
+                    message.Body = new TextPart("html")
+                    {
+                        Text = "Welcome " + rName + "<br>Thank You For Signing Up at OCBC Bank." +
+                        "<br>Here is Your Access Code" +
+                        "<br>You will need this code to Log In" +
+                        "<br>Access Code: " + accesscode
+
+                    };
+                    string emailAddress = "ocbcteam1@gmail.com";
+                    string password = "ocbcteam1";
+                    SmtpClient client = new SmtpClient();
+                    try
+                    {
+                        client.Connect("smtp.gmail.com", 465, true);
+                        client.Authenticate(emailAddress, password);
+                        client.Send(message);
+
+                        Console.WriteLine("Email Sent!.");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                    finally
+                    {
+                        client.Disconnect(true);
+                        client.Dispose();
+                    }
+                }
+            }
+        }
     }
 }
