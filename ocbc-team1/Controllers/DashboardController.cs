@@ -120,7 +120,7 @@ namespace ocbc_team1.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("")
+                    return RedirectToAction("TransferConnectionError", "Dashboard", ptfVM);
                 }
                 
             }
