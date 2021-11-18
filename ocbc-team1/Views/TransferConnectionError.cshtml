@@ -1,4 +1,4 @@
-﻿@model ocbc_team1.Models.PostTransferOTP_ViewModel
+﻿@model ocbc_team1.Models.TransferViewModel
 @{
     //Model.tfvm = ViewData["TFVM"] as TransferViewModel;
     ViewData["Title"] = "Confirm Transfer with OTP";
@@ -24,32 +24,32 @@
 
                 <div class="form-group bg-secondary text-white shadow-lg rounded p-4 mb-3">
                     <h4>From</h4>
-                    <p>@Model.tfvm.From_AccountNumber</p>
+                    <p>@Model.From_AccountNumber</p>
                     <h4>Recipient</h4>
                     <p>
                         @{
-                            if (Model.tfvm.To_AccountNumber != null)
+                            if (Model.To_AccountNumber != null)
                             {
-                                @Model.tfvm.To_AccountNumber;
+                                @Model.To_AccountNumber;
                             }
-                            if (Model.tfvm.PhoneNumber != null)
+                            if (Model.PhoneNumber != null)
                             {
-                                @Model.tfvm.PhoneNumber;
+                                @Model.PhoneNumber;
                             }
                     }
                 </p>
                 <h4>Amount</h4>
-                <p>$ @Model.tfvm.TransferAmount</p>
+                <p>$ @Model.TransferAmount</p>
             </div>
             <div style="display:none;">
-                <label asp-for="tfvm.From_AccountNumber"></label>
-                <input asp-for="tfvm.From_AccountNumber" value="@Model.tfvm.From_AccountNumber" />
-                <label asp-for="tfvm.To_AccountNumber"></label>
-                <input asp-for="tfvm.To_AccountNumber" value="@Model.tfvm.To_AccountNumber" />
-                <label asp-for="tfvm.PhoneNumber"></label>
-                <input asp-for="tfvm.PhoneNumber" value="@Model.tfvm.PhoneNumber" />
-                <label asp-for="tfvm.TransferAmount"></label>
-                <input asp-for="tfvm.TransferAmount" value="@Model.tfvm.TransferAmount" />
+                <label asp-for="From_AccountNumber"></label>
+                <input asp-for="From_AccountNumber" value="@Model.From_AccountNumber" />
+                <label asp-for="To_AccountNumber"></label>
+                <input asp-for="To_AccountNumber" value="@Model.To_AccountNumber" />
+                <label asp-for="PhoneNumber"></label>
+                <input asp-for="PhoneNumber" value="@Model.PhoneNumber" />
+                <label asp-for="TransferAmount"></label>
+                <input asp-for="TransferAmount" value="@Model.TransferAmount" />
             </div>
 
             @*<div class="form-group">
