@@ -74,11 +74,15 @@ namespace ocbc_team1.DAL
                 int randombal = rnd.Next(15, 1500);
 
                 ifclient = new FireSharp.FirebaseClient(ifc);
-                List<User> userList = loginContext.retrieveUserList();
+                List<User> userList = new List<User>();
+                if (loginContext.retrieveUserList() != null)
+                {
+                    userList = loginContext.retrieveUserList();
+                }
 
                 List<BankAccount> bankaccountlist = new List<BankAccount>();
                 int newbankaccountnumber = rnd.Next(000000000, 999999999);
-                foreach (User u in loginContext.retrieveUserList())
+                foreach (User u in userList)
                 {
                     foreach (BankAccount ba in u.AccountsList)
                     {
@@ -96,10 +100,6 @@ namespace ocbc_team1.DAL
                 });
                 List<Transaction> transactionlist = new List<Transaction>();
 
-                if (userList == null)
-                {
-                    userList = new List<User>();
-                }
                 userList.Add(new User()
                 {
                     AccessCode = accesscode,
