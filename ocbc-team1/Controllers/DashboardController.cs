@@ -85,17 +85,26 @@ namespace ocbc_team1.Controllers
 
         public ActionResult PostTransferOTP(TransferViewModel tfvm)
         {
-            string accesscode = HttpContext.Session.GetString("accesscode");
-            Random rnd = new Random();
-            string rOTP = Convert.ToString(rnd.Next(000000, 999999));
-            HttpContext.Session.SetString("otp", rOTP);
-            string text = "Your OTP is: " + rOTP;
-            if (teleContext.getTelegramChatId(accesscode) != null)
+            bool con = transactionContext.checkConnectivity();
+            if (con == true)
             {
-                string chatid = Convert.ToString(teleContext.getTelegramChatId(accesscode));
-                sendMessage(chatid, text);
+                string accesscode = HttpContext.Session.GetString("accesscode");
+                Random rnd = new Random();
+                string rOTP = Convert.ToString(rnd.Next(000000, 999999));
+                HttpContext.Session.SetString("otp", rOTP);
+                string text = "Your OTP is: " + rOTP;
+                if (teleContext.getTelegramChatId(accesscode) != null)
+                {
+                    string chatid = Convert.ToString(teleContext.getTelegramChatId(accesscode));
+                    sendMessage(chatid, text);
+                }
+                return View(new PostTransferOTP_ViewModel { tfvm = tfvm, OTP = null });
             }
-            return View(new PostTransferOTP_ViewModel { tfvm = tfvm, OTP = null });
+            else
+            {
+                return RedirectToAction("TransferConnectionError", "Dashboard", tfvm);
+            }
+            
 
         }
         [HttpPost]
@@ -120,7 +129,7 @@ namespace ocbc_team1.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("TransferConnectionError", "Dashboard", ptfVM);
+                    return RedirectToAction("TransferConnectionError", "Dashboard", ptfVM.tfvm);
                 }
                 
             }
