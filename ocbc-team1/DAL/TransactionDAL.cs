@@ -87,9 +87,10 @@ namespace ocbc_team1.DAL
         public string getName(string accesscode)
         {
             string sName = "";
-            if (loginContext.retrieveUserList() != null)
-            {
-                foreach (User u in loginContext.retrieveUserList())
+            List<User> userl = loginContext.retrieveUserList();
+            if (userl != null)
+            {                
+                foreach (User u in userl)
                 {
                     if (u.AccessCode == accesscode)
                     {
@@ -99,7 +100,6 @@ namespace ocbc_team1.DAL
                     else
                     {
                         Console.WriteLine("error");
-                        return null;
                     }
 
                 }
@@ -151,7 +151,8 @@ namespace ocbc_team1.DAL
                             }
                             recName = "";
                             recName = userslist[i].FirstName + " " + userslist[i].LastName;
-                            string text = "You have recieved " + "$" + tfVM.TransferAmount + " from " + getName(accesscode) + " on " + DateTime.Now.ToString("f");
+                            string sName = getName(accesscode);
+                            string text = "You have recieved " + "$" + tfVM.TransferAmount + " from " + sName + " on " + DateTime.Now.ToString("f");
                             sendMessage(Convert.ToString(userslist[i].TelegramChatID), text);
 
 
@@ -237,7 +238,8 @@ namespace ocbc_team1.DAL
                         }
                         recName = "";
                         recName = userslist[i].FirstName + " " + userslist[i].LastName;
-                        string text = "You have recieved " + "$" + tfVM.TransferAmount + " from " + getName(accesscode) + " on " + DateTime.Now.ToString("f");
+                        string sName = getName(accesscode);
+                        string text = "You have recieved " + "$" + tfVM.TransferAmount + " from " + sName + " on " + DateTime.Now.ToString("f");
                         sendMessage(Convert.ToString(userslist[i].TelegramChatID), text);
 
                     }
