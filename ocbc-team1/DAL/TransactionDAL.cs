@@ -108,6 +108,30 @@ namespace ocbc_team1.DAL
             return sName;
             
         }
+
+        public bool checkSenderFunds(string accesscode, string AccountNumber, double TransferAmount)
+        {
+            // returns true if insufficient
+            List<User> userslist = loginContext.retrieveUserList();
+            if (userslist == null) { Console.WriteLine("uselist null, transfer failed"); return true; }
+            for (int i = 0; i < userslist.Count; i++)
+            {
+                if (userslist[i].AccessCode == accesscode)
+                {
+                    for (int j = 0; j < userslist[i].AccountsList.Count; j++)
+                    {
+                        if (Convert.ToString(userslist[i].AccountsList[j].AccountNumber) == AccountNumber)
+                        {
+                            if (userslist[i].AccountsList[j].AmountAvaliable > TransferAmount && userslist[i].AccountsList[j].AmountRemaining > TransferAmount)
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
+        }
         public void transferFunds(TransferViewModel tfVM, string accesscode)
         {
             tfVM.TransferAmount = Math.Round(tfVM.TransferAmount, 2);
@@ -124,7 +148,6 @@ namespace ocbc_team1.DAL
                     {
                         if (Convert.ToString(userslist[i].AccountsList[j].AccountNumber) == tfVM.To_AccountNumber)
                         {
-
                             userslist[i].AccountsList[j].AmountAvaliable += tfVM.TransferAmount;
                             userslist[i].AccountsList[j].AmountRemaining += tfVM.TransferAmount;
                             if (userslist[i].TransactionList == null)
