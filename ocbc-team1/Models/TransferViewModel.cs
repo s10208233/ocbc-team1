@@ -27,5 +27,7 @@ namespace ocbc_team1.Models
         [RegularExpression("[+]?\\d*\\.?\\d+", ErrorMessage = "Please enter a number larger than 0")]
         public double TransferAmount { get; set; }
 
+        public string? fail { get; set; }
+
     }
 }

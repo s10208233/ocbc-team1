@@ -1,0 +1,74 @@
+﻿@model ocbc_team1.Models.TransferViewModel
+@{
+    //Model.tfvm = ViewData["TFVM"] as TransferViewModel;
+    ViewData["Title"] = "Confirm Transfer with OTP";
+}
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/css/Transfer.css">
+</head>
+
+<div style="padding-top:100px; padding-bottom:100px; min-height:1200px;
+            background-image:url('/images/white-brick.jpg');
+            background-position:top;
+            background-size:cover;
+            background-repeat: no-repeat;
+            ">
+    <div style="max-width:500px; margin:auto; background-color:#f1f1f1" class="p-5 shadow-lg">
+        <img style="margin:auto; max-height: 100px;display:block;" src="~/images/loading-fail.gif">
+        <h2 class="pb-3 text-center text-danger">Transfer Failed</h2>
+
+        <form method="post" class="" id="TransferBoard" asp-controller="Dashboard" asp-action="RetryTransferConnectionError">
+            <fieldset class="FormContent">
+
+                <div class="form-group bg-danger text-white shadow-lg rounded p-4 mb-3 text-center">
+                    <h4>From</h4>
+                    <p>@Model.From_AccountNumber</p>
+                    <h4>Recipient</h4>
+                    <p>
+                        @{
+                            if (Model.To_AccountNumber != null)
+                            {
+                                @Model.To_AccountNumber;
+                            }
+                            if (Model.PhoneNumber != null)
+                            {
+                                @Model.PhoneNumber;
+                            }
+                        }
+                    </p>
+                    <h4>Amount</h4>
+                    <p>$ @Model.TransferAmount</p>
+                </div>
+                <div style="display:none;">
+                    <label asp-for="From_AccountNumber"></label>
+                    <input asp-for="From_AccountNumber" value="@Model.From_AccountNumber" />
+                    <label asp-for="To_AccountNumber"></label>
+                    <input asp-for="To_AccountNumber" value="@Model.To_AccountNumber" />
+                    <label asp-for="PhoneNumber"></label>
+                    <input asp-for="PhoneNumber" value="@Model.PhoneNumber" />
+                    <label asp-for="TransferAmount"></label>
+                    <input asp-for="TransferAmount" value="@Model.TransferAmount" />
+                </div>
+                @*<div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                    <label class="form-check-label" for="flexCheckDefault">
+                        Default checkbox
+                    </label>
+                </div>*@
+                @*<div class="form-group">
+            <label asp-for="OTP" class="control-label">6-digit PIN</label>
+            <input asp-for="OTP" class="form-control rounded-0 p-3" />
+            <span asp-validation-for="OTP" class="text-danger"></span>
+        </div>*@
+
+                <div class="mt-5">
+                    <input type="submit" value="Retry Transfer" class="btn text-white px-5 rounded shadow-lg bg-danger" style="width:fit-content; margin:auto; display:block;" />
+                </div>
+            </fieldset>
+    </form>
+
+</div>
+</div>

@@ -80,8 +80,9 @@ namespace ocbc_team1.Controllers
                     HttpContext.Session.SetString("login", "true");
                     return RedirectToAction("Index", "Dashboard");
                 }
-                TempData["Message"] = "Invalid OTP. Try Again!";
-                return View();
+                TempData["ErrorMessage"] = "Invalid OTP. Try Again!";
+                return RedirectToAction("OTP", "Home");
+                //return View();
             }
             else
             {
@@ -177,6 +178,16 @@ namespace ocbc_team1.Controllers
 
         }
                
+        public IActionResult forgetPassword()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult forgetPassword(ResendAcessCode Rmail)
+        {
+            loginContext.ResendAccessCode(Rmail.Email);
+            return RedirectToAction("Login","Home");
+        }
 
         public IActionResult Privacy()
         {

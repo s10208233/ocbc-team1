@@ -34,14 +34,27 @@
                     </div>
                 </div>
                 <div class="row">
-                    <span style="color:red;">@TempData["Message"]</span>
-                    <span style="color:green;">@TempData["SignupSuccessMessage"]</span>
+                    @if (@TempData["Message"] != null)
+                    {
+                        <div class="bg-danger text-white py-3 px-5 mb-4 rounded-pill shadow-lg text-center">
+                            @TempData["Message"]
+                        </div>
+                    }
+                    @if (@TempData["SignupSuccessMessage"] != null)
+                    {
+                        <div class="bg-success text-white py-3 px-5 mb-4 rounded-pill shadow-lg text-center">
+                            @TempData["SignupSuccessMessage"]
+                        </div>
+                    }
+                    @*<span style="color:red;">@TempData["Message"]</span>
+                    <span style="color:green;">@TempData["SignupSuccessMessage"]</span>*@
                 </div>
                 <div class="form-group row float-right">
                     <div>
                         <input type="submit" value="Login" class="btn text-white px-5 mr-3  rounded-0" style="background-color:red;" />
                     </div>
                 </div>
+                <a href="~/Home/forgetPassword">Forgot Access Code?</a>
             </fieldset>
         </form>
         <p class="p-4" style="background-color:lightgray;">Don't have an account? <a href="~/Home/Signup">Sign up</a></p>
