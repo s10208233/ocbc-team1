@@ -168,6 +168,16 @@ namespace ocbc_team1.Controllers
         [HttpPost]
         public IActionResult AddAccount(NewBankAccountViewModel nbaViewModel)
         {
+            if (nbaViewModel.AmountRemaining < 0)
+            {
+                TempData["ErrorMessage"] = "Choose between 0 and 1000000 in Balance";
+                return RedirectToAction("NewBankAccount", "Dashboard");
+            } else if (nbaViewModel.AmountRemaining > 1000000)
+            {
+                TempData["ErrorMessage"] = "Choose between 0 and 1000000 in Balance";
+                return RedirectToAction("NewBankAccount", "Dashboard");
+            }
+            nbaViewModel.AmountRemaining = Math.Round(nbaViewModel.AmountRemaining, 2);
             newaccountContext.createNewBankAccount(nbaViewModel, HttpContext.Session.GetString("accesscode"));
             return RedirectToAction("Index", "Dashboard");
         }
