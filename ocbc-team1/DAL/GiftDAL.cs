@@ -99,8 +99,8 @@ namespace ocbc_team1.DAL
                 //  Update bool Gift.Received 
                 giftdictionary[key].Received = true;
                 //  Send Telegram Notification
-                await transactionContext.sendMessage(Convert.ToString(giftdictionary[key].Sender.TelegramChatID), $"You have opened a gift from {giftdictionary[key].Sender.FirstName + giftdictionary[key].Sender.LastName}, ${giftdictionary[key].transaction.Amount} has been transferred to ${giftdictionary[key].transaction.To_AccountNumber} ");
-                await transactionContext.sendMessage(Convert.ToString(giftdictionary[key].Sender.TelegramChatID), $"{giftdictionary[key].Receipient.FirstName + giftdictionary[key].Receipient.LastName} has opened a your gift, ${giftdictionary[key].transaction.Amount} has been transferred to ${giftdictionary[key].transaction.To_AccountNumber} ");
+                await transactionContext.sendMessage(Convert.ToString(giftdictionary[key].Sender.TelegramChatID), $"You have opened a gift from {giftdictionary[key].Sender.FirstName +" "+ giftdictionary[key].Sender.LastName}, ${giftdictionary[key].transaction.Amount} has been transferred to {giftdictionary[key].transaction.To_AccountNumber} ");
+                await transactionContext.sendMessage(Convert.ToString(giftdictionary[key].Sender.TelegramChatID), $"{giftdictionary[key].Receipient.FirstName +" "+ giftdictionary[key].Receipient.LastName} has opened a your gift, ${giftdictionary[key].transaction.Amount} has been transferred to {giftdictionary[key].transaction.To_AccountNumber} ");
                 //  Update FireBase
                 ifclient = new FireSharp.FirebaseClient(ifc);
                 if (ifclient != null)
@@ -147,8 +147,8 @@ namespace ocbc_team1.DAL
                     }
                 }
                 //  Send Telegram Notification
-                await transactionContext.sendMessage(Convert.ToString(gift.Sender.TelegramChatID), $"You have sent ${gift.transaction.Amount} to ${gift.Receipient.FirstName + gift.Receipient.LastName}");
-                await transactionContext.sendMessage(Convert.ToString(gift.Receipient.TelegramChatID), $"{gift.Sender.FirstName + gift.Sender.LastName} has sent ${gift.transaction.Amount} from ${gift.transaction.From_AccountNumber} to you, check your gift inbox to claim this amount.");
+                await transactionContext.sendMessage(Convert.ToString(gift.Sender.TelegramChatID), $"You have sent ${gift.transaction.Amount} to {gift.Receipient.FirstName +" "+ gift.Receipient.LastName}");
+                await transactionContext.sendMessage(Convert.ToString(gift.Receipient.TelegramChatID), $"{gift.Sender.FirstName +" "+ gift.Sender.LastName} has sent ${gift.transaction.Amount} from {gift.transaction.From_AccountNumber} to you, check your gift inbox to claim this amount.");
                 //  Update FireBase
                 ifclient = new FireSharp.FirebaseClient(ifc);
                 if (ifclient != null)
