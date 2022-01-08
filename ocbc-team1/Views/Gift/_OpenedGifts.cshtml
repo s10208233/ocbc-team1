@@ -1,0 +1,54 @@
+﻿@{
+    Dictionary<string, Gift> opened_giftdictionary = null;
+    try
+    {
+        opened_giftdictionary = ViewData["OpenedGiftsDictionary"] as Dictionary<string, Gift>;
+    }
+    catch { }
+}
+@* Tab 2 *@
+<h2 class="pt-3">Opened Gifts</h2>
+<hr />
+@{
+    if (opened_giftdictionary.Count == 0 || opened_giftdictionary == null)
+    {
+        <div class="text-center mx-auto py-5">
+            <p>You have not opened any gifts before</p>
+            <lottie-player src="https://assets7.lottiefiles.com/private_files/lf30_bn5winlb.json" background="transparent" class="col-6 mx-auto" speed="1" loop autoplay></lottie-player>
+            <a asp-action="Inbox" asp-controller="Gift" class="mx-auto btn btn-secondary">Check Inbox</a>
+        </div>
+    }
+    else
+    {
+        <div class="">
+            @foreach (var row in opened_giftdictionary)
+            {
+
+                <div class="row py-3 border-bottom">
+                    <div class="col-4 p-3">
+                        @{
+                            if (row.Value.sticker_src == null)
+                            {
+                                <lottie-player src="https://assets3.lottiefiles.com/packages/lf20_gfiuS6.json" background="transparent" class="col-4 col-md-6 mx-auto" speed="1" loop autoplay></lottie-player>
+                            }
+                            else
+                            {
+                                <lottie-player src="@row.Value.sticker_src" background="transparent" class="col-4 col-md-6 mx-auto" speed="1" loop autoplay></lottie-player>
+                            }
+                        }
+                    </div>
+                    <div class="col-8 p-3">
+                        <p>
+                            From <br />@row.Value.Sender.FirstName @row.Value.Sender.LastName <br />
+                            @row.Value.transaction.TimeSent.ToShortDateString()
+                        </p>
+                        <hr />
+                        @if (row.Value.Message != null || row.Value.Message == "") { <h5>"@row.Value.Message"</h5> }
+                        <p>$@row.Value.transaction.Amount</p>
+                    </div>
+                </div>
+
+            }
+        </div>
+    }
+}

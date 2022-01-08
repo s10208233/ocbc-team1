@@ -23,27 +23,28 @@ namespace ocbc_team1.DAL
         IFirebaseClient ifclient;
 
         // not in use yet
-        public Dictionary<string, User> retrieveUserDictionary()
-        {
-            try
-            {
-                ifclient = new FireSharp.FirebaseClient(ifc);
-                if (ifclient != null)
-                {
-                    FirebaseResponse firebaseresponse = ifclient.Get("User");
-                    if (firebaseresponse == null) { return null; }
-                    Dictionary<string, User> userdictionary = firebaseresponse.ResultAs<Dictionary<string, User>>();
-                    if (userdictionary == null) { return null; }
-                    return userdictionary;
-                }
-                return null;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Error Occured, {e.Message}");
-                return null;
-            }
-        }
+        // UPDATE DO NOT USE retrieveUserDictionary
+        //public Dictionary<string, User> retrieveUserDictionary()
+        //{
+        //    try
+        //    {
+        //        ifclient = new FireSharp.FirebaseClient(ifc);
+        //        if (ifclient != null)
+        //        {
+        //            FirebaseResponse firebaseresponse = ifclient.Get("User");
+        //            if (firebaseresponse == null) { return null; }
+        //            Dictionary<string, User> userdictionary = firebaseresponse.ResultAs<Dictionary<string, User>>();
+        //            if (userdictionary == null) { return null; }
+        //            return userdictionary;
+        //        }
+        //        return null;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Console.WriteLine($"Error Occured, {e.Message}");
+        //        return null;
+        //    }
+        //}
 
         public List<User> retrieveUserList()
         {

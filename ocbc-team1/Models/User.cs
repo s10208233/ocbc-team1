@@ -56,5 +56,8 @@ namespace ocbc_team1.Models
         public List<Transaction> TransactionList { get; set; }
 
         public int? TelegramChatID { get; set; }
+
+        //  ASSIGNMENT 2
+        public List<Gift>? GiftList { get; set; }
     }
 }

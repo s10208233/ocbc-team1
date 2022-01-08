@@ -1,0 +1,73 @@
+﻿@{
+    Dictionary<string, Gift> unopened_giftdictionary = null;
+    try
+    {
+        unopened_giftdictionary = ViewData["UnopenedGiftsDictionary"] as Dictionary<string, Gift>;
+    }
+    catch { }
+}
+@* Tab 1 *@
+<h2 class="pt-3">Unopened Gifts</h2>
+<hr />
+@{
+    if (unopened_giftdictionary.Count == 0 || unopened_giftdictionary == null)
+    {
+        <div class="text-center mx-auto py-5">
+            <p>Sorry we couldn't find anything at the moment, your peers have not sent you any gifts...</p>
+            <lottie-player src="https://assets7.lottiefiles.com/private_files/lf30_bn5winlb.json" background="transparent" class="col-6 mx-auto" speed="1" loop autoplay></lottie-player>
+            <a asp-action="CreateGift" asp-controller="Gift" class="btn btn-success">Send Gift Instead</a>
+        </div>
+    }
+    else
+    {
+        <div class="d-flex flex-wrap">
+            @foreach (var row in unopened_giftdictionary)
+            {
+                Random rnd = new Random();
+                string targetdiv = row.Key + "_div";
+                string targetmodal = row.Key + "_modal";
+
+                <div class="col-12 col-md-4" id="@targetdiv" data-toggle="modal" data-target="#@targetmodal">
+                    <div>
+                        <a asp-controller="Gift" asp-action="OpenGift" asp-route-giftkey="@row.Key" id="@row.Key"></a>
+                        <lottie-player src="https://assets10.lottiefiles.com/packages/lf20_wnnwls0q.json" background="transparent" speed="2" hover loop></lottie-player>
+                        @* Modal *@
+                        <div class="modal fade bd-example-modal-lg" id="@targetmodal" tabindex="-1" role="dialog" aria-hidden="true" onclick="OpenGift('@row.Key')">
+                            <div class="modal-dialog modal-lg">
+                                @* Loading container *@
+                                <div class="modal_opening_animation_container">
+                                </div>
+                                <div class="modal-content">
+                                    @* Modal Content *@
+                                    <div class="modal-header">
+                                        <button type="button" class="close btn-secondary" data-dismiss="modal">x</button>
+                                    </div>
+                                    <div class="modal-body text-center">
+                                        @{
+                                            if (row.Value.sticker_src == null)
+                                            {
+                                                <lottie-player src="https://assets3.lottiefiles.com/packages/lf20_gfiuS6.json" background="transparent" class="col-4 col-md-6 mx-auto" speed="1" loop autoplay></lottie-player>
+                                            }
+                                            else
+                                            {
+                                                <lottie-player src="@row.Value.sticker_src" background="transparent" class="col-4 col-md-6 mx-auto" speed="1" loop autoplay></lottie-player>
+                                            }
+                                        }
+                                        @if (row.Value.Message != null || row.Value.Message == "") { <p>"@row.Value.Message"</p> }
+                                        <h1 class="display-4">$@row.Value.transaction.Amount</h1>
+                                        <hr />
+                                        <p>
+                                            From <br />@row.Value.Sender.FirstName @row.Value.Sender.LastName <br />
+                                            @row.Value.transaction.TimeSent.ToShortDateString()
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+    }
+}
