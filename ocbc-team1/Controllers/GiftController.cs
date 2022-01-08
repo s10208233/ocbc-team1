@@ -24,6 +24,8 @@ namespace ocbc_team1.Controllers
             Dictionary<string, Gift> opened_giftdictionary = new Dictionary<string, Gift>();
             Dictionary<string, Gift> sent_giftdictionary = new Dictionary<string, Gift>();
 
+            if (giftdictionary == null) { giftdictionary = new Dictionary<string, Gift>(); }
+
             foreach (var row in giftdictionary)
             {
                 if (row.Value.Sender.AccessCode == accesscode || row.Value.Receipient.AccessCode == accesscode)
