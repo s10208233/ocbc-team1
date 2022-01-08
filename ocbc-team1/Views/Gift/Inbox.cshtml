@@ -47,20 +47,26 @@
             </li>
         </ul>
         <div>
-            @{
-                if (TempData["TabString"] == null || TempData["TabString"] as string == "UnopenedGifts")
+                @if (@TempData["Message"] != null)
                 {
-                    @await Html.PartialAsync("~/Views/Gift/_UnopenedGifts.cshtml")
+                    <div class="col-12 bg-info text-white py-3 px-5 mb-4 rounded-pill shadow-lg text-center">
+                        @TempData["Message"]
+                    </div>
                 }
-                if (TempData["TabString"] as string == "OpenedGifts")
-                {
-                    @await Html.PartialAsync("~/Views/Gift/_OpenedGifts.cshtml")
+                @{
+                    if (TempData["TabString"] == null || TempData["TabString"] as string == "UnopenedGifts")
+                    {
+                        @await Html.PartialAsync("~/Views/Gift/_UnopenedGifts.cshtml")
+                    }
+                    if (TempData["TabString"] as string == "OpenedGifts")
+                    {
+                        @await Html.PartialAsync("~/Views/Gift/_OpenedGifts.cshtml")
+                    }
+                    if (TempData["TabString"] as string == "SentGifts")
+                    {
+                        @await Html.PartialAsync("~/Views/Gift/_SentGifts.cshtml")
+                    }
                 }
-                if (TempData["TabString"] as string == "SentGifts")
-                {
-                    @await Html.PartialAsync("~/Views/Gift/_SentGifts.cshtml")
-                }
-            }
         </div>
     </div>
 
