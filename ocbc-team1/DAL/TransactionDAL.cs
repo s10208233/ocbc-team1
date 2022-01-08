@@ -79,7 +79,28 @@ namespace ocbc_team1.DAL
             }
             return false;
         }
-     
+        public bool checkScheduleRecipient(ScheduledTransfer tfVM)
+        {
+            List<User> userslist = loginContext.retrieveUserList();
+
+            for (int i = 0; i < userslist.Count; i++)
+            {
+                for (int j = 0; j < userslist[i].AccountsList.Count; j++)
+                {
+                    if (Convert.ToString(userslist[i].AccountsList[j].AccountNumber) == tfVM.To_AccountNumber && tfVM.From_AccountNumber != tfVM.To_AccountNumber)
+                    {
+                        return true;
+                    }
+                    else if (userslist[i].PhoneNumber == tfVM.PhoneNumber)
+                    {
+                        return true;
+                    }
+
+                }
+            }
+            return false;
+        }
+
         public async Task sendMessage(string destID, string text)
         {
             await Bot.SendTextMessageAsync(destID, text);

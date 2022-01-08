@@ -40,6 +40,12 @@ namespace ocbc_team1.Controllers
             return View();
         }
 
+        public IActionResult ScheduledTransfer()
+        {
+            ViewData["UserOwnAccountList"] = transactionContext.getBankAccountList(HttpContext.Session.GetString("accesscode"));
+            return View();
+        }
+
         public IActionResult transferOTP()
         {
             string accesscode = HttpContext.Session.GetString("accesscode");
@@ -81,6 +87,34 @@ namespace ocbc_team1.Controllers
             }
             //ViewData["TFVM"] = tfViewModel;
             return RedirectToAction("postTransferOTP", "Dashboard", tfViewModel);
+        }
+
+        [HttpPost]
+        public IActionResult CreateScheduledTransfer(ScheduledTransfer ScheduledTransfer)
+        {
+            string accesscode = HttpContext.Session.GetString("accesscode");
+            if (transactionContext.checkScheduleRecipient(ScheduledTransfer) == false)
+            {
+                TempData["ErrorMessage"] = "Recipient doesn't exist , please try again";
+                return RedirectToAction("Transfer", "Dashboard");
+            }
+            else if (ScheduledTransfer.TransferAmount <= 0)
+            {
+                TempData["ErrorMessage"] = "Invalid amount, please try again";
+                return RedirectToAction("Transfer", "Dashboard");
+            }
+            else if (transactionContext.checkSenderFunds(accesscode, ScheduledTransfer.From_AccountNumber, ScheduledTransfer.TransferAmount))
+            {
+                TempData["ErrorMessage"] = "This account has insufficient funds, please try again";
+                return RedirectToAction("Transfer", "Dashboard");
+            }
+            else if (ScheduledTransfer.TransferDate < DateTime.Now)
+            {
+                TempData["ErrorMessage"] = "This date is not valid, please try again";
+                return RedirectToAction("Transfer", "Dashboard");
+            }
+            //ViewData["TFVM"] = tfViewModel;
+            return RedirectToAction("postTransferOTP", "Dashboard", ScheduledTransfer);
         }
 
         public ActionResult PostTransferOTP(TransferViewModel tfvm)
