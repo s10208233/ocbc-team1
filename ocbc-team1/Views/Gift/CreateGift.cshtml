@@ -139,11 +139,13 @@
 
         function changingOptions1() {
             $("#GiftPHFormGroup").hide()
+            $("#GiftACInput").val($("#GiftPHInput").val())
             $("#GiftPHInput").val('')
             $("#GiftACFormGroup").show()
         }
         function changingOptions2() {
             $("#GiftACFormGroup").hide()
+            $("#GiftPHInput").val($("#GiftACInput").val())
             $("#GiftACInput").val('')
             $("#GiftPHFormGroup").show()
         }
