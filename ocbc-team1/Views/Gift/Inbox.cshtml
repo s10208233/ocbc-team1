@@ -1,0 +1,84 @@
+﻿@{
+    ViewData["Title"] = "Gift Inbox";
+    string tabcolor = "";
+    string tabactive = "aria-current='page'";
+    if (TempData["TabString"] as string == "UnopenedGifts") { tabcolor = "text-danger"; }
+    if (TempData["TabString"] as string == "OpenedGifts") { tabcolor = "text-danger"; }
+    if (TempData["TabString"] as string == "SentGifts") { tabcolor = "bg-secondary text-danger"; }
+}
+
+<div style="
+            background-color: #9e0005;
+            background-image: linear-gradient(19deg, #9e0005 0%, #ff6367 100%);
+            background-position:top;
+            background-size:cover;
+            background-repeat: no-repeat;
+            " class="p-3 p-md-5">
+    <div class="p-5 bg-white shadow mx-auto container">
+        <ul class="nav nav-tabs">
+            <li class="nav-item pr-2">
+                @{
+                    if (TempData["TabString"] as string == "UnopenedGifts")
+                    {
+                        <a asp-controller="Gift" asp-action="ChangeTab" asp-route-tabstring="UnopenedGifts" class="nav-link active">Unopened Gifts</a>
+                    }
+                    else
+                    { <a asp-controller="Gift" asp-action="ChangeTab" asp-route-tabstring="UnopenedGifts" class="nav-link text-black-50">Unopened Gifts</a> }
+                }
+            </li>
+            <li class="nav-item pr-2">
+                @{
+                    if (TempData["TabString"] as string == "OpenedGifts")
+                    { <a asp-controller="Gift" asp-action="ChangeTab" asp-route-tabstring="OpenedGifts" class="nav-link active">Opened Gifts</a> }
+                    else
+                    { <a asp-controller="Gift" asp-action="ChangeTab" asp-route-tabstring="OpenedGifts" class="nav-link text-black-50">Opened Gifts</a> }
+                }
+            </li>
+            <li class="nav-item pr-2">
+                @{
+                    if (TempData["TabString"] as string == "SentGifts")
+                    { <a asp-controller="Gift" asp-action="ChangeTab" asp-route-tabstring="SentGifts" class="nav-link active">Sent Gifts</a> }
+                    else
+                    { <a asp-controller="Gift" asp-action="ChangeTab" asp-route-tabstring="SentGifts" class="nav-link text-black-50">Sent Gifts</a> }
+                }
+            </li>
+            <li class="nav-item pr-2">
+                <a asp-action="CreateGift" asp-controller="Gift" class="mx-auto btn btn-success">Send Gift</a>
+            </li>
+        </ul>
+        <div>
+            @{
+                if (TempData["TabString"] == null || TempData["TabString"] as string == "UnopenedGifts")
+                {
+                    @await Html.PartialAsync("~/Views/Gift/_UnopenedGifts.cshtml")
+                }
+                if (TempData["TabString"] as string == "OpenedGifts")
+                {
+                    @await Html.PartialAsync("~/Views/Gift/_OpenedGifts.cshtml")
+                }
+                if (TempData["TabString"] as string == "SentGifts")
+                {
+                    @await Html.PartialAsync("~/Views/Gift/_SentGifts.cshtml")
+                }
+            }
+        </div>
+    </div>
+
+
+</div>
+
+<script type="text/javascript">
+    function OpenGift(giftkey) {
+        $(`#${giftkey}_modal`).on('hidden.bs.modal', function () {
+            /*$(`#${giftkey}`).click()*/
+            $.ajax({
+                url: '@Url.Action("OpenGift", "Gift")/',
+                data: { giftkey: giftkey }
+            }).done(function () {
+                console.log("ASP Action OpenGift ran")
+                $(`#${giftkey}_div`).remove()
+                document.location.reload(true)
+            });
+        })
+    }
+</script>

@@ -1,0 +1,170 @@
+﻿@model ocbc_team1.Models.CreateGift_ViewModel
+@{
+    ViewData["Title"] = "Send a Gift";
+    Dictionary<string, List<string>> StickerDictionary = ViewData["StickerDictionary"] as Dictionary<string, List<string>>;
+}
+
+<div style="padding-top:100px; padding-bottom:100px;
+            background-color: #9e0005;
+            background-image: linear-gradient(19deg, #9e0005 0%, #ff6367 100%);
+            background-position:top;
+            background-size:cover;
+            background-repeat: no-repeat;
+            ">
+        <form id="GiftForm" method="post" class="p-5 bg-white shadow col-md-6 mx-auto" asp-controller="Gift" asp-action="SubmitCreateGift">
+        <fieldset class="FormContent">
+            <h2 class="pt-3 text-center">Create New Gift</h2>
+            @* FROM ACCOUNT *@
+            <div class="form-group">
+                <label asp-for="From_AccountNumber" class="col-form-label">Fund Source</label>
+                <div>
+                    <select class="form-select text-left p-3" style="width:100%; border-style:none;" aria-label="Default select example" asp-for="From_AccountNumber"
+                            asp-items="@(new SelectList(ViewData["UserOwnAccountList"] as List<BankAccount>, "AccountNumber", "AccountNumber"))">
+                        @*<option selected>Select an account</option>*@
+                    </select>
+                    <span asp-validation-for="From_AccountNumber"
+                          class="text-danger"></span>
+                </div>
+            </div>
+            <hr />
+            @* SELECT OPTION TO SENT BY ACCOUNT/PHONE # *@
+            <div class="form-group form-check-inline">
+                <div class="ml-3 p-3">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" value="0" onclick="changingOptions1()" checked>
+                    <label class="form-check-label" for="inlineRadio1">Using OCBC Acount Number</label>
+                </div>
+                <div class="ml-3 p-3">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" value="0" onclick="changingOptions2()">
+                    <label class="form-check-label" for="inlineRadio1">Using Phone Number</label>
+                </div>
+            </div>
+            @* TO ACCOUNTNUMBER *@
+            <div class="form-group" id="GiftACFormGroup">
+                <label asp-for="To_AccountNumber" class="col-form-label">Receipient Account Number</label>
+                <div>
+                    <input asp-for="To_AccountNumber" class="form-control rounded-0 p-4" id="GiftACInput" placeholder="Recipient Bank Account Number" />
+                    <span asp-validation-for="To_AccountNumber" class="text-danger"></span>
+                </div>
+            </div>
+
+            @* TO PHONENUMBER *@
+            <div class="form-group" id="GiftPHFormGroup">
+                <label asp-for="To_PhoneNumber" class="col-form-label">Receipient Phone Number</label>
+                <div>
+                    <input asp-for="To_PhoneNumber" class="form-control rounded-0 p-4" id="GiftPHInput" placeholder="Enter recipient phone number to transfer" />
+                    <span asp-validation-for="To_PhoneNumber" class="text-danger"></span>
+                </div>
+            </div>
+            @* GIFT STICKER *@
+            <div class="form-group">
+                @* Sticker selection display *@
+                <div class="col-6 col-md-4 mx-auto" id="StickerChoiceDisplay">
+
+                </div>
+                <div class="form-check-inline">
+                    <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target=".bd-example-modal-lg">Select a Sticker</button>
+                    <button type="button" class="btn btn-outline-secondary ml-2" onclick="ClearSticker()" id="ClearStickerBtn">Clear Stickers</button>
+                </div>
+                <div id="CloseModal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Select a Sticker</h4>
+                                <button type="button" class="close btn-secondary" data-dismiss="modal">x</button>
+                            </div>
+                            <div class="modal-body">
+                                @{
+                                    foreach (var row in StickerDictionary)
+                                    {
+                                        <div class="mb-2">
+                                            <h5>@row.Key</h5>
+                                            <div class="d-flex flex-wrap">
+                                                @{
+                                                    foreach (string url in row.Value)
+                                                    {
+                                                        <div class="col-4" onclick="PickSticker('@url')" onMouseOver="this.style.cursor='pointer'">
+                                                            <lottie-player src="@url" background="transparent" speed="1" class="p-2" loop autoplay></lottie-player>
+                                                        </div>
+                                                    }
+                                                }
+                                            </div>
+                                            <hr />
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input asp-for="sticker_src" id="StickerURLInput" class="form-control rounded-0" style="height:auto; display:none;" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Message"></label>
+                <textarea asp-for="Message" class="form-control col-12" rows="6" placeholder="Enter a message"></textarea>
+            </div>
+            @* GIFT AMOUNT *@
+            <div class="form-group">
+                <label asp-for="Amount" class="col-form-label">Receipient Phone Number</label>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text p-3">$</span>
+                    </div>
+                    <input asp-for="Amount" class="form-control rounded-0" style="height:auto;" placeholder="Gift Amount" />
+                </div>
+                <span asp-validation-for="Amount" class="text-danger"></span>
+            </div>
+            @* Tempdata message *@
+            <div class="row mx-auto">
+                @if (@TempData["Message"] != null)
+                {
+                    <div class="col-12 bg-danger text-white py-3 px-5 mb-4 rounded-pill shadow-lg text-center">
+                        @TempData["Message"]
+                    </div>
+                }
+            </div>
+            @* Submit Btn *@
+            <div class="form-group row">
+                <input type="submit" value="Send Gift" class="btn text-white px-5 py-3 mx-auto rounded-0 mb-5" style="background-color:red;" />
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+<script type="text/javascript">
+        window.onload = function () {
+            $("#GiftPHFormGroup").hide()
+            $("#ClearStickerBtn").hide()
+        };
+
+        function changingOptions1() {
+            $("#GiftPHFormGroup").hide()
+            $("#GiftPHInput").val('')
+            $("#GiftACFormGroup").show()
+        }
+        function changingOptions2() {
+            $("#GiftACFormGroup").hide()
+            $("#GiftACInput").val('')
+            $("#GiftPHFormGroup").show()
+        }
+
+        function PickSticker(url) {
+            var src = url
+            $("ClearStickerBtn").hide()
+            $("#CloseModal").css({ "cursor": "wait", "pointer-events": "none" });
+            $("#StickerChoiceDisplay").empty()
+            $("#StickerChoiceDisplay").append(`<lottie-player src="${src}" background="transparent" speed="1" class="p-2 mx-auto" loop autoplay></lottie-player>`)
+            $("#StickerURLInput").val(`${src}`)
+            $("#CloseModal").click()
+            $("#CloseModal").css({ "cursor": "default", "pointer-events": "auto" });
+            $("#ClearStickerBtn").show();
+        }
+
+    function ClearSticker() {
+        $("#StickerChoiceDisplay").empty()
+        $("#StickerURLInput").val("")
+    }
+</script>
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }
