@@ -82,6 +82,7 @@ namespace ocbc_team1.DAL
                             {
                                 userlist[u].AccountsList[ba].AmountAvaliable += giftdictionary[key].transaction.Amount;
                                 userlist[u].AccountsList[ba].AmountRemaining += giftdictionary[key].transaction.Amount;
+                                giftdictionary[key].transaction.Amount = Math.Round(giftdictionary[key].transaction.Amount, 2);
                                 if (userlist[u].TransactionList == null)
                                 {
                                     List<Transaction> transactionlist = new List<Transaction>();
@@ -90,6 +91,7 @@ namespace ocbc_team1.DAL
                                 }
                                 else
                                 {
+
                                     userlist[u].TransactionList.Add(giftdictionary[key].transaction);
                                 }
                             }
@@ -132,6 +134,7 @@ namespace ocbc_team1.DAL
                             {
                                 userlist[u].AccountsList[ba].AmountAvaliable -= gift.transaction.Amount;
                                 userlist[u].AccountsList[ba].AmountRemaining -= gift.transaction.Amount;
+                                gift.transaction.Amount = Math.Round(gift.transaction.Amount, 2);
                                 if (userlist[u].TransactionList == null)
                                 {
                                     List<Transaction> transactionlist = new List<Transaction>();
