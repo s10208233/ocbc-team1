@@ -102,7 +102,7 @@ namespace ocbc_team1.DAL
                 giftdictionary[key].Received = true;
                 //  Send Telegram Notification
                 await transactionContext.sendMessage(Convert.ToString(giftdictionary[key].Sender.TelegramChatID), $"You have opened a gift from {giftdictionary[key].Sender.FirstName +" "+ giftdictionary[key].Sender.LastName}, ${giftdictionary[key].transaction.Amount} has been transferred to your account {giftdictionary[key].transaction.To_AccountNumber}");
-                await transactionContext.sendMessage(Convert.ToString(giftdictionary[key].Sender.TelegramChatID), $"{giftdictionary[key].Receipient.FirstName +" "+ giftdictionary[key].Receipient.LastName} has opened and received your gift of ${giftdictionary[key].transaction.Amount} has been transferred to their account.");
+                await transactionContext.sendMessage(Convert.ToString(giftdictionary[key].Receipient.TelegramChatID), $"{giftdictionary[key].Receipient.FirstName +" "+ giftdictionary[key].Receipient.LastName} has opened and received your gift of ${giftdictionary[key].transaction.Amount} has been transferred to their account.");
                 //  Update FireBase
                 ifclient = new FireSharp.FirebaseClient(ifc);
                 if (ifclient != null)
