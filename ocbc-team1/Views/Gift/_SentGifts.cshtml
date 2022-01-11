@@ -7,8 +7,8 @@
     catch { }
 }
 @* Tab 3 *@
-<h2 class="pt-3">Sent Gifts</h2>
-<hr />
+<h2 class="my-5">Sent Gifts</h2>
+
 @{
     if (sent_giftdictionary.Count == 0 || sent_giftdictionary == null)
     {
@@ -20,48 +20,49 @@
     }
     else
     {
-<div class="">
-    @foreach (var row in sent_giftdictionary)
-    {
+        <div class="">
+            @foreach (var row in sent_giftdictionary)
+            {
 
-        <div class="row py-3 border-bottom">
-            <div class="col-4 p-3">
-                @{
-                    if (row.Value.sticker_src == null)
-                    {
-                        <lottie-player src="https://assets3.lottiefiles.com/packages/lf20_gfiuS6.json" background="transparent" class="col-4 col-md-6 mx-auto" speed="1" loop autoplay></lottie-player>
-                    }
-                    else
-                    {
-                        <lottie-player src="@row.Value.sticker_src" background="transparent" class="col-4 col-md-6 mx-auto" speed="1" loop autoplay></lottie-player>
-                    }
-                }
-            </div>
-            <div class="col-6 p-3">
-                <p>
-                    To <br />@row.Value.Receipient.FirstName @row.Value.Receipient.LastName <br />
-                    @row.Value.transaction.TimeSent.ToShortDateString()
-                </p>
-                <hr />
-                @if (row.Value.Message != null || row.Value.Message == "") { <h5>"@row.Value.Message"</h5> }
-                <p>$@row.Value.transaction.Amount</p>
-            </div>
-            <div class="col-2 p-3">
-                @{
-                    if (row.Value.Received)
-                    {
-                        <p class="text-success"><i class="bi bi-envelope-check-fill"></i> Opened & Received</p>
-                    }
-                    else
-                    {
-                        <p class="text-black-50"><i class="bi bi-envelope-check"></i> Unopened</p>
-                    }
-                }
-            </div>
+                <div class="row py-3 border-bottom">
+                    <div class="col-4 p-3">
+                        @{
+                            if (row.Value.sticker_src == null)
+                            {
+                                <lottie-player src="https://assets3.lottiefiles.com/packages/lf20_gfiuS6.json" background="transparent" class="col-4 col-md-6 mx-auto" speed="1" loop autoplay></lottie-player>
+                            }
+                            else
+                            {
+                                <lottie-player src="@row.Value.sticker_src" background="transparent" class="col-4 col-md-6 mx-auto" speed="1" loop autoplay></lottie-player>
+                            }
+                        }
+                    </div>
+                    <div class="col-6 p-3">
+                        <p>
+                            To <br />@row.Value.Receipient.FirstName @row.Value.Receipient.LastName <br />
+                            @row.Value.transaction.TimeSent.ToShortDateString()
+                        </p>
+                        <hr />
+                        @if (row.Value.Message != null || row.Value.Message == "")
+                        {<h5>"@row.Value.Message"</h5>}
+                        <p>$@row.Value.transaction.Amount</p>
+                    </div>
+                    <div class="col-2 p-3">
+                        @{
+                            if (row.Value.Received)
+                            {
+                                <p class="text-success"><i class="bi bi-envelope-open-fill"></i> Opened & Received</p>
+                            }
+                            else
+                            {
+                                <p class="text-black-50"><i class="bi bi-envelope"></i> Unopened</p>
+                            }
+                        }
+                    </div>
+                </div>
+
+            }
         </div>
-
-    }
-</div>
     }
 }
 

@@ -171,7 +171,8 @@ namespace ocbc_team1.Controllers
             }
             giftContext.SendGift(newgift);
             TempData["Message"] = $"Gift of ${form.Amount} successfully sent to {receipient.FirstName + receipient.LastName}!";
-            return RedirectToAction("CreateGift", "Gift");
+            TempData["TabString"] = "SentGifts";
+            return RedirectToAction("Inbox", "Gift");
 
         }
 

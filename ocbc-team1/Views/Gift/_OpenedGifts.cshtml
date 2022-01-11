@@ -7,8 +7,7 @@
     catch { }
 }
 @* Tab 2 *@
-<h2 class="pt-3">Opened Gifts</h2>
-<hr />
+<h2 class="my-5">Opened Gifts</h2>
 @{
     if (opened_giftdictionary.Count == 0 || opened_giftdictionary == null)
     {
@@ -37,7 +36,7 @@
                             }
                         }
                     </div>
-                    <div class="col-8 p-3">
+                    <div class="col-6 p-3">
                         <p>
                             From <br />@row.Value.Sender.FirstName @row.Value.Sender.LastName <br />
                             @row.Value.transaction.TimeSent.ToShortDateString()
@@ -45,6 +44,9 @@
                         <hr />
                         @if (row.Value.Message != null || row.Value.Message == "") { <h5>"@row.Value.Message"</h5> }
                         <p>$@row.Value.transaction.Amount</p>
+                    </div>
+                    <div class="col-2 p-2">
+                        <p class="text-success"><i class="bi bi-envelope-open-fill"></i> Opened & Received</p>
                     </div>
                 </div>
 

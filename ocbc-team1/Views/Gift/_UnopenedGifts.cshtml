@@ -7,8 +7,8 @@
     catch { }
 }
 @* Tab 1 *@
-<h2 class="pt-3">Unopened Gifts</h2>
-<hr />
+<h2 class="my-5">Unopened Gifts</h2>
+
 @{
     if (unopened_giftdictionary.Count == 0 || unopened_giftdictionary == null)
     {
@@ -53,7 +53,8 @@
                                                 <lottie-player src="@row.Value.sticker_src" background="transparent" class="col-4 col-md-6 mx-auto" speed="1" loop autoplay></lottie-player>
                                             }
                                         }
-                                        @if (row.Value.Message != null || row.Value.Message == "") { <p>"@row.Value.Message"</p> }
+                                        @if (row.Value.Message != null || row.Value.Message == "")
+                                        {<p>"@row.Value.Message"</p>}
                                         <h1 class="display-4">$@row.Value.transaction.Amount</h1>
                                         <hr />
                                         <p>
