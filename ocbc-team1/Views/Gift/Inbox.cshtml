@@ -46,7 +46,7 @@
                 <a asp-action="CreateGift" asp-controller="Gift" class="mx-auto btn btn-success">Send Gift</a>
             </li>
         </ul>
-        <div>
+        <div class="min-vh-100">
                 @if (@TempData["Message"] != null)
                 {
                     <div class="col-12 bg-info text-white py-2 px-3 my-4 rounded-pill shadow-lg text-center">
@@ -81,9 +81,9 @@
                 url: '@Url.Action("OpenGift", "Gift")/',
                 data: { giftkey: giftkey }
             }).done(function () {
-                console.log("ASP Action OpenGift ran")
+                console.log("ASP Action OpenGift ran, now reloading")
+                //document.location.reload(true)
                 $(`#${giftkey}_div`).remove()
-                document.location.reload(true)
             });
         })
     }
