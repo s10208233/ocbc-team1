@@ -174,6 +174,10 @@ namespace ocbc_team1.DAL
             }
             return true;
         }
+        public bool scheduledTransferFunds(ScheduledTransfer tfVM, string accesscode)
+        {
+            return true;
+        }
         public bool transferFunds(TransferViewModel tfVM, string accesscode)
         {
             tfVM.TransferAmount = Math.Round(tfVM.TransferAmount, 2);
