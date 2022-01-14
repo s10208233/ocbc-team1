@@ -31,6 +31,7 @@ namespace ocbc_team1.Models
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime TransferDate { get; set; }
+        public string? accesscode { get; set; }
 
         public string? fail { get; set; }
 

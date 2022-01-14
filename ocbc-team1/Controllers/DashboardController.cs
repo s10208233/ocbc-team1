@@ -119,6 +119,7 @@ namespace ocbc_team1.Controllers
                 return RedirectToAction("ScheduledTransfer", "Dashboard");
             }
             //ViewData["TFVM"] = tfViewModel;
+            transactionContext.scheduledTransferFunds(ScheduledTransfer, accesscode);
             return RedirectToAction("postTransferOTP", "Dashboard", ScheduledTransfer);
         }
 
@@ -153,7 +154,6 @@ namespace ocbc_team1.Controllers
 
         }
 
-        [HttpPost]
         public IActionResult ChangeProfile(string typeotp)
         {
             string accesscode = HttpContext.Session.GetString("accesscode");

@@ -52,6 +52,7 @@ namespace ocbc_team1.DAL
         }
         public void setOTPType(string accesscode, string OTPType)
         {
+            ifclient = new FireSharp.FirebaseClient(ifc);
             if (retrieveUser() != null)
             {
                 List<User> userlist = retrieveUser();
