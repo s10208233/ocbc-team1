@@ -114,7 +114,6 @@ namespace ocbc_team1.Controllers
 
         }
 
-        [HttpPost]
         public IActionResult ChangeProfile(string typeotp)
         {
             string accesscode = HttpContext.Session.GetString("accesscode");
