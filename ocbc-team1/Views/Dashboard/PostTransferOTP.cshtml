@@ -18,7 +18,16 @@
             background-repeat: no-repeat;
             ">
     <div style="max-width:500px; margin:auto;" class="p-5 bg-light shadow-lg">
-        <h2 class="pb-3">Confirm Transfer</h2>
+        @{
+            if (Model.tfvm.isScheduled == true)
+            {
+                <h2 class="pb-3">Confirm Scheduled Transfer</h2>
+            }
+            else
+            {
+                <h2 class="pb-3">Confirm Transfer</h2>
+            }
+        }
 
         <form method="post" class="" id="TransferBoard" asp-controller="Dashboard" asp-action="SubmitPostTransferOTP">
             <fieldset class="FormContent">
@@ -41,6 +50,14 @@
                     </p>
                     <h4>Amount</h4>
                     <p>$ @Model.tfvm.TransferAmount</p>
+                    @{
+                        if (Model.tfvm.isScheduled == true)
+                        {
+                            <h4>Scheduled on</h4>
+                            <p>@Model.tfvm.TransferDate.</p>
+                        }
+
+                     }
                 </div>
                 <div style="display:none;">
                     <label asp-for="tfvm.From_AccountNumber"></label>
@@ -51,6 +68,10 @@
                     <input asp-for="tfvm.PhoneNumber" value="@Model.tfvm.PhoneNumber" />
                     <label asp-for="tfvm.TransferAmount"></label>
                     <input asp-for="tfvm.TransferAmount" value="@Model.tfvm.TransferAmount" />
+                    <label asp-for="tfvm.TransferDate"></label>
+                    <input asp-for="tfvm.TransferDate" value="@Model.tfvm.TransferDate" />
+                    <label asp-for="tfvm.isScheduled"></label>
+                    <input asp-for="tfvm.isScheduled" value="@Model.tfvm.isScheduled" />
                 </div>
 
                 <div class="form-group">

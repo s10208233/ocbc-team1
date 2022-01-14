@@ -23,10 +23,15 @@ namespace ocbc_team1.Models
         public string? PhoneNumber { get; set; }
 
         [Required]
-        [Range(0.00,double.MaxValue, ErrorMessage = "Please enter a number larger than 0")]
+        [Range(0.00, double.MaxValue, ErrorMessage = "Please enter a number larger than 0")]
         [RegularExpression("[+]?\\d*\\.?\\d+", ErrorMessage = "Please enter a number larger than 0")]
         public double TransferAmount { get; set; }
+        //  Scheduled Things
+        public bool? isScheduled {get;set;}
+        public DateTime? TransferDate { get; set; }
+        public string? accesscode { get; set; }
 
+        //  Failsafe
         public string? fail { get; set; }
 
     }

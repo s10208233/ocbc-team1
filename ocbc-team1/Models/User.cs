@@ -61,5 +61,8 @@ namespace ocbc_team1.Models
         public List<Gift>? GiftList { get; set; }
 
         public string? TypeOTP { get; set; }
+
+        public string? ProfilePicURL { get; set; }
+        public string? ProfilePicStrIdentifier { get; set; }
     }
 }

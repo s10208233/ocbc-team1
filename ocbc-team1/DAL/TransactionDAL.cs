@@ -79,7 +79,7 @@ namespace ocbc_team1.DAL
             }
             return false;
         }
-        public bool checkScheduleRecipient(ScheduledTransfer tfVM)
+        public bool checkScheduleRecipient(TransferViewModel tfVM)
         {
             List<User> userslist = loginContext.retrieveUserList();
 
@@ -174,9 +174,8 @@ namespace ocbc_team1.DAL
             }
             return true;
         }
-        public void scheduledTransferFunds(ScheduledTransfer tfVM, string accesscode)
+        public void scheduledTransferFunds(TransferViewModel tfVM)
         {
-            tfVM.accesscode = accesscode;
             ifclient = new FireSharp.FirebaseClient(ifc);
             if (ifclient != null)
             {

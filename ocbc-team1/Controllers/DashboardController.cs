@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ocbc_team1.DAL;
 using ocbc_team1.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Telegram.Bot;
@@ -90,32 +93,33 @@ namespace ocbc_team1.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateScheduledTransfer(ScheduledTransfer ScheduledTransfer)
+        public IActionResult CreateScheduledTransfer(TransferViewModel tfvm)
         {
+            tfvm.accesscode = HttpContext.Session.GetString("accesscode");
+            tfvm.isScheduled = true;
             string accesscode = HttpContext.Session.GetString("accesscode");
-            if (transactionContext.checkScheduleRecipient(ScheduledTransfer) == false)
+            if (transactionContext.checkScheduleRecipient(tfvm) == false)
             {
                 TempData["ErrorMessage"] = "Recipient doesn't exist , please try again";
                 return RedirectToAction("ScheduledTransfer", "Dashboard");
             }
-            else if (ScheduledTransfer.TransferAmount <= 0)
+            else if (tfvm.TransferAmount <= 0)
             {
                 TempData["ErrorMessage"] = "Invalid amount, please try again";
                 return RedirectToAction("ScheduledTransfer", "Dashboard");
             }
-            else if (transactionContext.checkSenderFunds(accesscode, ScheduledTransfer.From_AccountNumber, ScheduledTransfer.TransferAmount))
+            else if (transactionContext.checkSenderFunds(accesscode, tfvm.From_AccountNumber, tfvm.TransferAmount))
             {
                 TempData["ErrorMessage"] = "This account has insufficient funds, please try again";
                 return RedirectToAction("ScheduledTransfer", "Dashboard");
             }
-            else if (ScheduledTransfer.TransferDate < DateTime.Now)
+            else if (tfvm.TransferDate < DateTime.Now)
             {
                 TempData["ErrorMessage"] = "This date is not valid, please try again";
                 return RedirectToAction("ScheduledTransfer", "Dashboard");
             }
-            //ViewData["TFVM"] = tfViewModel;
-            transactionContext.scheduledTransferFunds(ScheduledTransfer, accesscode);
-            return RedirectToAction("postTransferOTP", "Dashboard", ScheduledTransfer);
+            HttpContext.Session.SetString("transferdate", tfvm.TransferDate.ToString());
+            return RedirectToAction("postTransferOTP", "Dashboard", tfvm);
         }
 
         public ActionResult PostTransferOTP(TransferViewModel tfvm)
@@ -142,19 +146,6 @@ namespace ocbc_team1.Controllers
             
 
         }
-        public IActionResult Profile()
-        {
-
-            return View();
-
-        }
-
-        public IActionResult ChangeProfile(string typeotp)
-        {
-            string accesscode = HttpContext.Session.GetString("accesscode");
-            teleContext.setOTPType(accesscode, typeotp);
-            return View();
-        }
 
         [HttpPost]
         public IActionResult SubmitPostTransferOTP(PostTransferOTP_ViewModel ptfVM)
@@ -176,6 +167,22 @@ namespace ocbc_team1.Controllers
                     {
                         return RedirectToAction("TransferConnectionError", "Dashboard", ptfVM.tfvm);
                     }
+                    // SCHEDULED TRANSFER ALTERNATIVE
+                    if (ptfVM.tfvm.isScheduled == true)
+                    {
+                        string accesscode = HttpContext.Session.GetString("accesscode");
+                        ptfVM.tfvm.accesscode = accesscode;
+                        ptfVM.tfvm.TransferDate = Convert.ToDateTime(HttpContext.Session.GetString("transferdate"));
+                        transactionContext.scheduledTransferFunds(ptfVM.tfvm);
+                        if (teleContext.getTelegramChatId(accesscode) != null)
+                        {
+                            string chatid = Convert.ToString(teleContext.getTelegramChatId(accesscode));
+                            sendMessage(chatid, $"You have successfully scheduled a transfer of ${ptfVM.tfvm.TransferAmount} to {ptfVM.tfvm.To_AccountNumber}, transfer will execute on the {ptfVM.tfvm.TransferDate}");
+                        }
+                        TempData["SuccessMessage"] = $"You have successfully scheduled a transfer of ${ptfVM.tfvm.TransferAmount} to {ptfVM.tfvm.To_AccountNumber}, transfer will execute on the {ptfVM.tfvm.TransferDate}";
+                        return RedirectToAction("Index", "Dashboard");
+                    }
+                    // NORMAL TRANSFER FLOW
                     bool dCheck = transactionContext.transferFunds(ptfVM.tfvm, HttpContext.Session.GetString("accesscode"));
                     if (dCheck == true)
                     {
@@ -235,6 +242,81 @@ namespace ocbc_team1.Controllers
         {
             HttpContext.Session.Clear();
             return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult Profile()
+        {
+            string accesscode = HttpContext.Session.GetString("accesscode");
+            TempData["currentotptype"] = "";
+            TempData["UserObject"] = null;
+            LoginDAL loginContext = new LoginDAL();
+            List<User> userlist = loginContext.retrieveUserList();
+            foreach (User u in userlist)
+            {
+                if (u.AccessCode == accesscode)
+                {
+                    TempData["currentotptype"] = u.TypeOTP;
+                    TempData["UserObject"] = u;
+                }
+            }
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult SubmitUpdateUserProfileForm(UpdateUserProfileForm form)
+        {
+            string accesscode = HttpContext.Session.GetString("accesscode");
+
+            try
+            {
+                if (form.ProfilePictureFile != null)
+                {
+                    form.ProfilePic_StringIdentifier = form.ProfilePictureFile.FileName;
+                    //  Image Uploading
+                    //  Storing image file on server temporarily
+                    string savePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\TempImage\\" + form.ProfilePictureFile.FileName);
+                    using (var fileSteam = new FileStream(savePath, FileMode.Create)) { form.ProfilePictureFile.CopyTo(fileSteam); }
+                    //  Upload to cloudinary from server storage
+                    Cloudinary cloudinary = new Cloudinary(new Account { ApiKey = "493755983692144", ApiSecret = "9lJhZP0e5XiDFDmY-yCFwwpE9vA", Cloud = "ocbcteam1" });
+                    ImageUploadParams imageuploadparams = new ImageUploadParams() { File = new FileDescription(savePath), UseFilename = true, Tags = form.ProfilePic_StringIdentifier };
+                    ImageUploadResult imageuploadresult = cloudinary.Upload(imageuploadparams);
+                    string imageurl = imageuploadresult.SecureUri.AbsoluteUri;
+                    form.ProfilePic_Url = imageurl;
+
+                    //  Delete temporary Image File file on server
+                    FileInfo fileinfo = new FileInfo(savePath);
+                    if (fileinfo != null) { System.IO.File.Delete(savePath); }
+                }
+                UpdateProfileDAL updal = new UpdateProfileDAL();
+                updal.UpdateUserProfile(accesscode, form);
+                TempData["Message"] = "Profile Updated";
+                return RedirectToAction("Profile", "Dashboard");
+            }
+            catch (Exception e)
+            {
+                TempData["ErrorMessage"] = $"Failed to update profile, {e.Message}";
+                return RedirectToAction("Profile", "Dashboard");
+
+            }
+        }
+
+        public IActionResult DeleteProfilePicture(string stringidentifier)
+        {
+            string accesscode = HttpContext.Session.GetString("accesscode");
+            Cloudinary cloudinary = new Cloudinary(new Account { ApiKey = "493755983692144", ApiSecret = "9lJhZP0e5XiDFDmY-yCFwwpE9vA", Cloud = "ocbcteam1" });
+            cloudinary.DeleteResourcesByTag(stringidentifier);
+            UpdateProfileDAL updal = new UpdateProfileDAL();
+            updal.DeleteProfilePicture(accesscode);
+            TempData["Message"] = "Profile Picture Removed";
+            return RedirectToAction("Profile", "Dashboard");
+        }
+
+        public IActionResult ChangeProfile(string typeotp)
+        {
+            string accesscode = HttpContext.Session.GetString("accesscode");
+            teleContext.setOTPType(accesscode, typeotp);
+            return RedirectToAction("Profile","Dashboard");
         }
     }
 }

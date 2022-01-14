@@ -8,6 +8,8 @@ namespace ocbc_team1.Models
 {
     public class ScheduledTransfer
     {
+
+        //  MODEL NOT IN USE
         [Required]
         [MaxLength(9), MinLength(9)]
         [RegularExpression("^[0-9]{9}$", ErrorMessage = "Please enter one of your account to send from")]
