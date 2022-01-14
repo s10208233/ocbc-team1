@@ -27,13 +27,14 @@
                             if (Context.Session.GetString("login") == null)
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index"><i class="bi bi-house-fill"></i> Home</a>
                                 </li>
                                 @*<li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                                </li>*@
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    </li>*@
                             }
-                            else {
+                            else
+                            {
 
                                 <li class="nav-item text-danger">Welcome @Context.Session.GetString("fullname")</li>
                             }
@@ -43,14 +44,19 @@
                     @if (Context.Session.GetString("login") == null)
                     {
                         <ul class="nav navbar-nav navbar-right">
-                            <li><a class="nav-link text-danger font-weight-bold" asp-area="" asp-controller="Home" asp-action="Login">Login</a></li>
+                            <li><a class="nav-link text-danger font-weight-bold" asp-area="" asp-controller="Home" asp-action="Login"><i class="bi bi-box-arrow-right"></i> Login</a></li>
                         </ul>
                     }
                     @if (Context.Session.GetString("login") == "true")
                     {
-                        <ul class="nav navbar-nav navbar-right">
-                            <li><a class="nav-link text-danger font-weight-bold" asp-area="" asp-controller="Dashboard" asp-action="UserLogout">Logout</a></li>
+                        <ul class="nav navbar-nav navbar-right text-danger">
+                            <li class="text-danger"><i class="bi bi-person-fill">Profile</i></li>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item nav-item nav-link text-danger" asp-controller="Gift" asp-action="Inbox"><i class="bi bi-gear-fill"></i> Settings</a>
+                                <a class="dropdown-item nav-item nav-link text-danger" asp-controller="Dashboard" asp-action="UserLogout"><i class="bi bi-box-arrow-in-left"></i> Logout</a>
+                            </div>
                         </ul>
+                        
                     }
                 </div>
             </div>

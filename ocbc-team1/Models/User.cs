@@ -59,5 +59,7 @@ namespace ocbc_team1.Models
 
         //  ASSIGNMENT 2
         public List<Gift>? GiftList { get; set; }
+
+        public string? TypeOTP { get; set; }
     }
 }

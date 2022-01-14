@@ -50,6 +50,26 @@ namespace ocbc_team1.DAL
             }
             Console.WriteLine("setTelegramChatID failed, no existing userlist");
         }
+        public void setOTPType(string accesscode, string OTPType)
+        {
+            if (retrieveUser() != null)
+            {
+                List<User> userlist = retrieveUser();
+                for (int i = 0; i < userlist.Count; i++)
+                {
+                    if (userlist[i].AccessCode == accesscode)
+                    {
+                        userlist[i].TypeOTP = OTPType;
+                    }
+                }
+                if (ifclient != null)
+                {
+                    ifclient.Set("User/", userlist);
+                }
+            }
+            Console.WriteLine("OTPType failed, no existing userlist");
+        }
+
 
         public int? getTelegramChatId(string accesscode)
         {
@@ -75,6 +95,58 @@ namespace ocbc_team1.DAL
                 
             }
             Console.WriteLine("getTelegramChatID failed, no existing userlist");
+            return null;
+        }
+
+        public int? getPhoneNumber(string accesscode)
+        {
+            ifclient = new FireSharp.FirebaseClient(ifc);
+            if (loginContext.retrieveUserList() != null)
+            {
+                foreach (User u in loginContext.retrieveUserList())
+                {
+                    if (u.AccessCode == accesscode)
+                    {
+                        if (u.PhoneNumber != null)
+                        {
+                            return Convert.ToInt32(u.PhoneNumber);
+                        }
+                        else
+                        {
+                            Console.WriteLine(accesscode + " Phone Number does not exist");
+                            return null;
+                        }
+                    }
+
+                }
+
+            }
+            Console.WriteLine("Phone Number Get failed, no existing userlist");
+            return null;
+        }
+
+        public string? getOTPType(string accesscode)
+        {
+            ifclient = new FireSharp.FirebaseClient(ifc);
+            if (loginContext.retrieveUserList() != null)
+            {
+                foreach (User u in loginContext.retrieveUserList())
+                {
+                    if (u.AccessCode == accesscode)
+                    {
+                        if (u.TypeOTP != null)
+                        {
+                            return (u.TypeOTP);
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+
+                }
+
+            }
             return null;
         }
 

@@ -4,21 +4,21 @@
 @{
 }
 <ul class="nav justify-content-center bg-light shadow-lg d-flex justify-content-center">
-    <li><a class="nav-item nav-link text-danger" asp-controller="Dashboard" asp-action="Index">Accounts</a></li>
+    <li><a class="nav-item nav-link text-danger" asp-controller="Dashboard" asp-action="Index"><i class="bi bi-card-heading"></i> Accounts</a></li>
     @* Drop Down Payments & Transfer *@
     <li class="nav-item dropdown text-danger">
         <a class="nav-link dropdown-toggle text-danger" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Payment & Transfer
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item nav-item nav-link text-danger" asp-controller="Dashboard" asp-action="Transfer">Payment & Transfer</a>
-            <a class="dropdown-item nav-item nav-link text-danger" asp-controller="Gift" asp-action="Inbox"><i class="bi bi-gift-fill"></i>&nbsp;Gift Inbox</a>
+            <a class="dropdown-item nav-item nav-link text-danger" asp-controller="Dashboard" asp-action="Transfer"><i class="bi bi-send-fill"></i> Payment & Transfer</a>
+            <a class="dropdown-item nav-item nav-link text-danger" asp-controller="Gift" asp-action="Inbox"><i class="bi bi-gift-fill"></i> Gift Inbox</a>
             @*<div class="dropdown-divider"></div>
         <a class="dropdown-item" href="#">Something else here</a>*@
         </div>
     </li>
-    <li><a class="nav-item nav-link">Investment & Insurance</a></li>
-    <li><a class="nav-item nav-link">Customer Service</a></li>
-    <li><a class="nav-item nav-link text-danger" asp-controller="Dashboard" asp-action="NewBankAccount">Open an Account</a></li>
-    <li><a class="nav-item nav-link">Rewards</a></li>
+    @*<li><a class="nav-item nav-link">Investment & Insurance</a></li>
+    <li><a class="nav-item nav-link">Customer Service</a></li>*@
+    <li><a class="nav-item nav-link text-danger" asp-controller="Dashboard" asp-action="NewBankAccount"><i class="bi bi-pen-fill"></i> Open an Account</a></li>
+    @*<li><a class="nav-item nav-link">Rewards</a></li>*@
 </ul>

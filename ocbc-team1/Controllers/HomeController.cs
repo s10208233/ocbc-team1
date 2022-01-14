@@ -12,6 +12,8 @@ using MimeKit;
 using System.Linq;
 using System.Threading.Tasks;
 using Telegram.Bot;
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
 
 namespace ocbc_team1.Controllers
 {
@@ -21,8 +23,11 @@ namespace ocbc_team1.Controllers
         private SignupDAL signupContext = new SignupDAL();
         private LoginDAL loginContext = new LoginDAL();
         private TelegramDAL teleContext = new TelegramDAL();
+        string accountSid = "AC33d8de9089a6d0c154358213b4772ebf";
+        string authToken = "e952a11a82a024664bb13e02e058a398";
         private string text = "";
         private string accesscode = "";
+                
 
         private readonly ILogger<HomeController> _logger;
 
@@ -70,6 +75,24 @@ namespace ocbc_team1.Controllers
             return View();
         }
 
+        public IActionResult SMSOTP()
+        {
+            accesscode = "";
+            accesscode = HttpContext.Session.GetString("accesscode");
+            Random rnd = new Random();
+            string rOTP = Convert.ToString(rnd.Next(000000, 999999));
+            HttpContext.Session.SetString("otp", rOTP);
+            int phoneno = Convert.ToInt32(teleContext.getPhoneNumber(accesscode));
+            TwilioClient.Init(accountSid, authToken);
+            var message = MessageResource.Create(
+            body: "Your OTP is: " + rOTP,
+            from: new Twilio.Types.PhoneNumber("+19377779542"),
+            to: new Twilio.Types.PhoneNumber("+65" + phoneno));
+
+            return View();
+        }
+
+              
         [HttpPost]
         public IActionResult OTP(OTPViewModel otpVM)
         {
@@ -118,11 +141,23 @@ namespace ocbc_team1.Controllers
                 }
                 foreach (User user in userlist)
                 {
+
                     if (loginVM.AccessCode == user.AccessCode && loginVM.Pin == user.BankPIN)
                     {
-                        HttpContext.Session.SetString("fullname", string.Format("{0} {1}", user.FirstName, user.LastName));
-                        HttpContext.Session.SetString("accesscode", user.AccessCode);
-                        return RedirectToAction("OTP", "Home");
+                        string OTPtype = teleContext.getOTPType(loginVM.AccessCode);
+                        if (OTPtype == "SMS")
+                        {
+                            HttpContext.Session.SetString("fullname", string.Format("{0} {1}", user.FirstName, user.LastName));
+                            HttpContext.Session.SetString("accesscode", user.AccessCode);
+                            return RedirectToAction("SMSOTP", "Home");
+                        }
+                        if (OTPtype == null || OTPtype == "Telegram")
+                        {
+                            HttpContext.Session.SetString("fullname", string.Format("{0} {1}", user.FirstName, user.LastName));
+                            HttpContext.Session.SetString("accesscode", user.AccessCode);
+                            return RedirectToAction("OTP", "Home");
+                        }
+                        
                     }
                 }
                 TempData["Message"] = "Invalid Login Credentials!";

@@ -1,0 +1,48 @@
+﻿@model ocbc_team1.Models.OTPViewModel
+@{
+}
+<div style="padding-top:100px; min-height: 1000px;
+            background-image:url('/images/ocbc-bg.jpg');
+            background-position:top;
+            background-size:cover;
+            background-repeat: no-repeat;
+            ">
+    <div class="mx-auto shadow bg-white rounded" style="max-width:fit-content;">
+        <form method="post" class="p-5" asp-controller="Home" asp-action="OTP">
+            <fieldset class="FormContent">
+                <h2 class="pt-3" style="min-width:350px;"> Online Banking </h2>
+                <div class="col login-field p-0">
+                    <div class="form-group row" style="display: inline; margin-left: 0px;">
+                        <label asp-for="OTP"
+                               class="col-form-label"></label>
+                        <div>
+                            <input asp-for="OTP" class="form-control rounded-0" />
+                            <span asp-validation-for="OTP"
+                                  class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    @if (@TempData["Message"] != null)
+                    {
+                        <div class="bg-success text-white py-3 px-5 mb-4 rounded-pill shadow-lg text-center">
+                            @TempData["Message"]
+                        </div>
+                    }
+                    @if (@TempData["ErrorMessage"] != null)
+                    {
+                        <div class="mx-auto bg-danger text-white py-3 px-5 mb-4 rounded-pill shadow-lg text-center">
+                            @TempData["ErrorMessage"]
+                        </div>
+                    }
+                </div>
+                <div class="form-group row float-right">
+                    <div>
+                        <input type="submit" value="Login" class="btn text-white px-5 mr-3  rounded-0" style="background-color:red;" />
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+        <a href="@Url.Action("SMSOTP","Home")"
+           >Resend OTP</a></div>
+</div>

@@ -141,6 +141,21 @@ namespace ocbc_team1.Controllers
             
 
         }
+        public IActionResult Profile()
+        {
+
+            return View();
+
+        }
+
+        [HttpPost]
+        public IActionResult ChangeProfile(string typeotp)
+        {
+            string accesscode = HttpContext.Session.GetString("accesscode");
+            teleContext.setOTPType(accesscode, typeotp);
+            return View();
+        }
+
         [HttpPost]
         public IActionResult SubmitPostTransferOTP(PostTransferOTP_ViewModel ptfVM)
         {
