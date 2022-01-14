@@ -174,9 +174,14 @@ namespace ocbc_team1.DAL
             }
             return true;
         }
-        public bool scheduledTransferFunds(ScheduledTransfer tfVM, string accesscode)
+        public void scheduledTransferFunds(ScheduledTransfer tfVM, string accesscode)
         {
-            return true;
+            tfVM.accesscode = accesscode;
+            ifclient = new FireSharp.FirebaseClient(ifc);
+            if (ifclient != null)
+            {
+                ifclient.Set("ScheduledTransaction/", tfVM);
+            }
         }
         public bool transferFunds(TransferViewModel tfVM, string accesscode)
         {

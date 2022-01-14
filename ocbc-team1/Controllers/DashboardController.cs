@@ -114,6 +114,7 @@ namespace ocbc_team1.Controllers
                 return RedirectToAction("ScheduledTransfer", "Dashboard");
             }
             //ViewData["TFVM"] = tfViewModel;
+            transactionContext.scheduledTransferFunds(ScheduledTransfer, accesscode);
             return RedirectToAction("postTransferOTP", "Dashboard", ScheduledTransfer);
         }
 
