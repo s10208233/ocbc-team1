@@ -33,3 +33,10 @@ function clearInputs() {
     document.getElementById('ACinput').value = ''
 
 }
+
+$(document).ready(function () {
+    // Number
+    $('#ScheduledDate').datepicker({
+        minDate: -3
+    });
+});
