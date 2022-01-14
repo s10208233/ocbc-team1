@@ -1,0 +1,47 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<div style="padding-top:100px; padding-bottom:100px; min-height:1200px;
+            background-color: #9e0005;
+            background-image: linear-gradient(19deg, #9e0005 0%, #ff6367 100%);
+            background-position:top;
+            background-size:cover;
+            background-repeat: no-repeat;
+            ">
+    <div class="mx-auto shadow bg-white rounded" style="max-width:fit-content;">
+        <h2 class="pt-3" style="min-width:350px;"> Profile </h2>
+        <div class="col login-field p-0">
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-secondary active">
+                    <a asp-controller="Dashboard" asp-action="ChangeProfile" asp-route-typeotp="Telegram" type="radio" name="options" id="option1" autocomplete="off" checked> Telegram </a>
+                </label>
+                <label class="btn btn-secondary">
+                    <a asp-controller="Dashboard" asp-action="ChangeProfile" asp-route-typeotp="SMS" type="radio" name="options" id="option1" autocomplete="off"> SMS </a>
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            @if (@TempData["Message"] != null)
+            {
+                <div class="bg-success text-white py-3 px-5 mb-4 rounded-pill shadow-lg text-center">
+                    @TempData["Message"]
+                </div>
+            }
+            @if (@TempData["ErrorMessage"] != null)
+            {
+                <div class="mx-auto bg-danger text-white py-3 px-5 mb-4 rounded-pill shadow-lg text-center">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function ChangeProfile(TypeOTP) {
+        $.ajax({
+                url: '@Url.Action("ChangeProfile", "Dashboard")/',
+                data: { TypeOTP: TypeOTP }
+            }).done(function () {
+                document.location.reload(true)
+            });
+    }
+</script>
