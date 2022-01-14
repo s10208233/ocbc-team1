@@ -17,7 +17,7 @@
             ">
     <div style="max-width:800px; margin:auto;" class="p-5">
         <h2 class="pb-5">Make a new transfer</h2>
-        <form method="post" class="" id="TransferBoard" asp-controller="Dashboard" asp-action="CreateTransfer">
+        <form method="post" class="" id="TransferBoard" asp-controller="Dashboard" asp-action="CreateScheduledTransfer">
             <fieldset class="FormContent">
 
                 <div class="Main_container shadow">
@@ -91,7 +91,7 @@
                         <label asp-for="TransferDate" class="col-form-label">Schedule Transfer</label>
                     </div>
                     <div class="container_content bg-light">
-                        <input asp-for="TransferDate" class="form-control rounded-0 p-4" placeholder="5. Enter the date you want to transfer" />
+                        <input asp-for="TransferDate" id="ScheduledDate" class="form-control rounded-0 p-4" placeholder="5. Enter the date you want to transfer" />
                         <span asp-validation-for="TransferDate" class="text-danger"></span>
                     </div>
                 </div>

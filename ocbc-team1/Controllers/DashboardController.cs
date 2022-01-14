@@ -96,22 +96,22 @@ namespace ocbc_team1.Controllers
             if (transactionContext.checkScheduleRecipient(ScheduledTransfer) == false)
             {
                 TempData["ErrorMessage"] = "Recipient doesn't exist , please try again";
-                return RedirectToAction("Transfer", "Dashboard");
+                return RedirectToAction("ScheduledTransfer", "Dashboard");
             }
             else if (ScheduledTransfer.TransferAmount <= 0)
             {
                 TempData["ErrorMessage"] = "Invalid amount, please try again";
-                return RedirectToAction("Transfer", "Dashboard");
+                return RedirectToAction("ScheduledTransfer", "Dashboard");
             }
             else if (transactionContext.checkSenderFunds(accesscode, ScheduledTransfer.From_AccountNumber, ScheduledTransfer.TransferAmount))
             {
                 TempData["ErrorMessage"] = "This account has insufficient funds, please try again";
-                return RedirectToAction("Transfer", "Dashboard");
+                return RedirectToAction("ScheduledTransfer", "Dashboard");
             }
             else if (ScheduledTransfer.TransferDate < DateTime.Now)
             {
                 TempData["ErrorMessage"] = "This date is not valid, please try again";
-                return RedirectToAction("Transfer", "Dashboard");
+                return RedirectToAction("ScheduledTransfer", "Dashboard");
             }
             //ViewData["TFVM"] = tfViewModel;
             return RedirectToAction("postTransferOTP", "Dashboard", ScheduledTransfer);

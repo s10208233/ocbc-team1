@@ -32,10 +32,6 @@ namespace ocbc_team1.Models
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime TransferDate { get; set; }
 
-        //[Required]
-        //[Range(0.00, double.MaxValue, ErrorMessage = "Please enter a number larger than 0")]
-        //[RegularExpression("[+]?\\d*\\.?\\d+", ErrorMessage = "Please enter a number larger than 0")]
-        //public double TransferRepeated { get; set; }
         public string? fail { get; set; }
 
     }
