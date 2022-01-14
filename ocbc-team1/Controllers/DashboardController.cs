@@ -98,6 +98,11 @@ namespace ocbc_team1.Controllers
                 TempData["ErrorMessage"] = "Recipient doesn't exist , please try again";
                 return RedirectToAction("ScheduledTransfer", "Dashboard");
             }
+            else if (accesscode == ScheduledTransfer.From_AccountNumber)
+            {
+                TempData["ErrorMessage"] = "Unable to send to yourself , please try again";
+                return RedirectToAction("ScheduledTransfer", "Dashboard");
+            }
             else if (ScheduledTransfer.TransferAmount <= 0)
             {
                 TempData["ErrorMessage"] = "Invalid amount, please try again";
