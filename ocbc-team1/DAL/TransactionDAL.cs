@@ -237,12 +237,11 @@ namespace ocbc_team1.DAL
                             string OTPtype = teleContext.getOTPType(accesscode);
                             if (OTPtype == "SMS")
                             {
-                                int phoneno = Convert.ToInt32(teleContext.getPhoneNumber(accesscode));
                                 TwilioClient.Init(apiKey, apiSecret, accountSid);
                                 var message = MessageResource.Create(
                                 body: text,
                                 from: new Twilio.Types.PhoneNumber("+19377779542"),
-                                to: new Twilio.Types.PhoneNumber("+65" + phoneno));
+                                to: new Twilio.Types.PhoneNumber("+65" + userslist[i].PhoneNumber));
                             }
                             else if (OTPtype == null || OTPtype == "Telegram")
                             {
@@ -351,12 +350,11 @@ namespace ocbc_team1.DAL
                         string OTPtype = teleContext.getOTPType(accesscode);
                         if (OTPtype == "SMS")
                         {
-                            int phoneno = Convert.ToInt32(teleContext.getPhoneNumber(accesscode));
                             TwilioClient.Init(apiKey, apiSecret, accountSid);
                             var message = MessageResource.Create(
                             body: text,
                             from: new Twilio.Types.PhoneNumber("+19377779542"),
-                            to: new Twilio.Types.PhoneNumber("+65" + phoneno));
+                            to: new Twilio.Types.PhoneNumber("+65" + tfVM.PhoneNumber));
                         }
                         else if (OTPtype == null || OTPtype == "Telegram")
                         {
