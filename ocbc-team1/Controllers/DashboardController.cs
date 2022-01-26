@@ -261,6 +261,8 @@ namespace ocbc_team1.Controllers
                 if (u.AccessCode == accesscode)
                 {
                     TempData["currentotptype"] = u.TypeOTP;
+                    if (u.TypeOTP == null)
+                    { TempData["currentotptype"] = "Telegram (Default)"; }
                     TempData["UserObject"] = u;
                 }
             }
