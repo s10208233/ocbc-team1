@@ -13,5 +13,8 @@ namespace ocbc_team1.Models
 
         [Required]
         public double AmountRemaining { get; set; }
+
+        [MaxLength(3)]
+        public string AccountCurrency { get; set; }
     }
 }

@@ -20,6 +20,9 @@ namespace ocbc_team1.Models
         [Required]
         public DateTime TimeSent { get; set;}
 
+        [MaxLength(3)]
+        public string Currency { get; set; }
+
         [Required]
         public string? Status { get; set; }
     }

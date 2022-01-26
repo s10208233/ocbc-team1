@@ -26,6 +26,10 @@ namespace ocbc_team1.Models
         [Range(0.00, double.MaxValue, ErrorMessage = "Please enter a number larger than 0")]
         [RegularExpression("[+]?\\d*\\.?\\d+", ErrorMessage = "Please enter a number larger than 0")]
         public double TransferAmount { get; set; }
+
+        [MaxLength(3)]
+        public string TransferCurrency { get; set; }
+
         //  Scheduled Things
         public bool? isScheduled {get;set;}
         public DateTime? TransferDate { get; set; }
