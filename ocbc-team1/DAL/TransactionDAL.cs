@@ -7,6 +7,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
+
 
 namespace ocbc_team1.DAL
 {
@@ -15,6 +18,10 @@ namespace ocbc_team1.DAL
         static TelegramBotClient Bot = new TelegramBotClient("2106855009:AAEVAKqEbNj6W7GeZoOLkgmF8XgsL7ZvG2o");
         private LoginDAL loginContext = new LoginDAL();
         private string recName = "";
+        private TelegramDAL teleContext = new TelegramDAL();
+        string accountSid = "AC33d8de9089a6d0c154358213b4772ebf";
+        string apiKey = "SK754a190e66db43863ae52ebea4c88b82";
+        string apiSecret = "GESQ4q7mWcypxwHAycBg8o2CaQdr0oaZ";
 
         IFirebaseConfig ifc = new FirebaseConfig()
         {
@@ -227,7 +234,21 @@ namespace ocbc_team1.DAL
                             recName = userslist[i].FirstName + " " + userslist[i].LastName;
                             string sName = getName(accesscode);
                             string text = "You have recieved " + "$" + tfVM.TransferAmount + " from " + sName + " on " + DateTime.Now.ToString("f");
-                            sendMessage(Convert.ToString(userslist[i].TelegramChatID), text);
+                            string OTPtype = teleContext.getOTPType(accesscode);
+                            if (OTPtype == "SMS")
+                            {
+                                int phoneno = Convert.ToInt32(teleContext.getPhoneNumber(accesscode));
+                                TwilioClient.Init(apiKey, apiSecret, accountSid);
+                                var message = MessageResource.Create(
+                                body: text,
+                                from: new Twilio.Types.PhoneNumber("+19377779542"),
+                                to: new Twilio.Types.PhoneNumber("+65" + phoneno));
+                            }
+                            else if (OTPtype == null || OTPtype == "Telegram")
+                            {
+                                sendMessage(Convert.ToString(userslist[i].TelegramChatID), text);
+                            }
+                            
 
 
 
@@ -270,7 +291,20 @@ namespace ocbc_team1.DAL
                                         });
                                     }
                                     string text = "You have sent " + "$" + tfVM.TransferAmount + " to " + recName + " on " + DateTime.Now.ToString("f");
-                                    sendMessage(Convert.ToString(userslist[i].TelegramChatID), text);
+                                    string OTPtype = teleContext.getOTPType(accesscode);
+                                    if (OTPtype == "SMS")
+                                    {
+                                        int phoneno = Convert.ToInt32(teleContext.getPhoneNumber(accesscode));
+                                        TwilioClient.Init(apiKey, apiSecret, accountSid);
+                                        var message = MessageResource.Create(
+                                        body: text,
+                                        from: new Twilio.Types.PhoneNumber("+19377779542"),
+                                        to: new Twilio.Types.PhoneNumber("+65" + phoneno));
+                                    }
+                                    else if (OTPtype == null || OTPtype == "Telegram")
+                                    {
+                                        sendMessage(Convert.ToString(userslist[i].TelegramChatID), text);
+                                    }
                                 }
                             }
                         }
@@ -314,7 +348,20 @@ namespace ocbc_team1.DAL
                         recName = userslist[i].FirstName + " " + userslist[i].LastName;
                         string sName = getName(accesscode);
                         string text = "You have recieved " + "$" + tfVM.TransferAmount + " from " + sName + " on " + DateTime.Now.ToString("f");
-                        sendMessage(Convert.ToString(userslist[i].TelegramChatID), text);
+                        string OTPtype = teleContext.getOTPType(accesscode);
+                        if (OTPtype == "SMS")
+                        {
+                            int phoneno = Convert.ToInt32(teleContext.getPhoneNumber(accesscode));
+                            TwilioClient.Init(apiKey, apiSecret, accountSid);
+                            var message = MessageResource.Create(
+                            body: text,
+                            from: new Twilio.Types.PhoneNumber("+19377779542"),
+                            to: new Twilio.Types.PhoneNumber("+65" + phoneno));
+                        }
+                        else if (OTPtype == null || OTPtype == "Telegram")
+                        {
+                            sendMessage(Convert.ToString(userslist[i].TelegramChatID), text);
+                        }
 
                     }
                 }
@@ -354,7 +401,20 @@ namespace ocbc_team1.DAL
                                         });
                                     }
                                     string text = "You have sent " + "$" + tfVM.TransferAmount + " to " + recName + " on " + DateTime.Now.ToString("f");
-                                    sendMessage(Convert.ToString(userslist[i].TelegramChatID), text);
+                                    string OTPtype = teleContext.getOTPType(accesscode);
+                                    if (OTPtype == "SMS")
+                                    {
+                                        int phoneno = Convert.ToInt32(teleContext.getPhoneNumber(accesscode));
+                                        TwilioClient.Init(apiKey, apiSecret, accountSid);
+                                        var message = MessageResource.Create(
+                                        body: text,
+                                        from: new Twilio.Types.PhoneNumber("+19377779542"),
+                                        to: new Twilio.Types.PhoneNumber("+65" + phoneno));
+                                    }
+                                    else if (OTPtype == null || OTPtype == "Telegram")
+                                    {
+                                        sendMessage(Convert.ToString(userslist[i].TelegramChatID), text);
+                                    }
 
                                 }
                             }

@@ -10,6 +10,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Telegram.Bot;
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
 
 namespace ocbc_team1.Controllers
 {
@@ -19,6 +21,9 @@ namespace ocbc_team1.Controllers
         private TransactionDAL transactionContext = new TransactionDAL();
         private NewBankAccountDAL newaccountContext = new NewBankAccountDAL();
         private TelegramDAL teleContext = new TelegramDAL();
+        string accountSid = "AC33d8de9089a6d0c154358213b4772ebf";
+        string apiKey = "SK754a190e66db43863ae52ebea4c88b82";
+        string apiSecret = "GESQ4q7mWcypxwHAycBg8o2CaQdr0oaZ";
         public IActionResult Index()
         {
             string accesscode = HttpContext.Session.GetString("accesscode");
@@ -137,11 +142,25 @@ namespace ocbc_team1.Controllers
                 string rOTP = Convert.ToString(rnd.Next(000000, 999999));
                 HttpContext.Session.SetString("otp", rOTP);
                 string text = "Your OTP is: " + rOTP;
-                if (teleContext.getTelegramChatId(accesscode) != null)
+                string OTPtype = teleContext.getOTPType(accesscode);
+                if (OTPtype == "SMS")
                 {
-                    string chatid = Convert.ToString(teleContext.getTelegramChatId(accesscode));
-                    sendMessage(chatid, text);
+                    int phoneno = Convert.ToInt32(teleContext.getPhoneNumber(accesscode));
+                    TwilioClient.Init(apiKey, apiSecret, accountSid);
+                    var message = MessageResource.Create(
+                    body: "Your OTP is: " + rOTP,
+                    from: new Twilio.Types.PhoneNumber("+19377779542"),
+                    to: new Twilio.Types.PhoneNumber("+65" + phoneno));
                 }
+                else if (OTPtype == null || OTPtype == "Telegram")
+                {
+                    if (teleContext.getTelegramChatId(accesscode) != null)
+                    {
+                        string chatid = Convert.ToString(teleContext.getTelegramChatId(accesscode));
+                        sendMessage(chatid, text);
+                    }
+                }
+                        
                 return View(new PostTransferOTP_ViewModel { tfvm = tfvm, OTP = null });
             }
             else
