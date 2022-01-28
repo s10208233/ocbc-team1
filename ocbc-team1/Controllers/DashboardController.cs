@@ -207,13 +207,17 @@ namespace ocbc_team1.Controllers
                         return RedirectToAction("Index", "Dashboard");
                     }
                     // NORMAL TRANSFER FLOW
-                    bool dCheck = transactionContext.transferFunds(ptfVM.tfvm, HttpContext.Session.GetString("accesscode"));
-                    if (dCheck == true)
+                    string dCheck = transactionContext.transferFunds(ptfVM.tfvm, HttpContext.Session.GetString("accesscode"));
+                    if (dCheck == "true")
                     {
                         TempData["SuccessMessage"] = "You have sucessfully transferred $" + ptfVM.tfvm.TransferAmount + " to " + ptfVM.tfvm.PhoneNumber + ptfVM.tfvm.To_AccountNumber;
                         return RedirectToAction("Index", "Dashboard");
                     }
-                    else
+                    else if (dCheck == "tfail")
+                    {
+                        return RedirectToAction("TransferConnectionError", "Dashboard", ptfVM.tfvm);
+                    }
+                    else if (dCheck == "ufail")
                     {
                         return RedirectToAction("TransferConnectionError", "Dashboard", ptfVM.tfvm);
                     }
