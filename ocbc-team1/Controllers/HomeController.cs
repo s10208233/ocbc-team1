@@ -22,9 +22,10 @@ namespace ocbc_team1.Controllers
         static TelegramBotClient Bot = new TelegramBotClient("2106855009:AAEVAKqEbNj6W7GeZoOLkgmF8XgsL7ZvG2o");
         private SignupDAL signupContext = new SignupDAL();
         private LoginDAL loginContext = new LoginDAL();
-        private TelegramDAL teleContext = new TelegramDAL();
+        private TelegramDAL teleContext = new TelegramDAL(); 
         string accountSid = "AC33d8de9089a6d0c154358213b4772ebf";
-        string authToken = "e952a11a82a024664bb13e02e058a398";
+        string apiKey = "SK754a190e66db43863ae52ebea4c88b82";
+        string apiSecret = "GESQ4q7mWcypxwHAycBg8o2CaQdr0oaZ";
         private string text = "";
         private string accesscode = "";
                 
@@ -83,7 +84,7 @@ namespace ocbc_team1.Controllers
             string rOTP = Convert.ToString(rnd.Next(000000, 999999));
             HttpContext.Session.SetString("otp", rOTP);
             int phoneno = Convert.ToInt32(teleContext.getPhoneNumber(accesscode));
-            TwilioClient.Init(accountSid, authToken);
+            TwilioClient.Init(apiKey, apiSecret, accountSid);
             var message = MessageResource.Create(
             body: "Your OTP is: " + rOTP,
             from: new Twilio.Types.PhoneNumber("+19377779542"),

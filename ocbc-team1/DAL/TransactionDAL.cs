@@ -7,6 +7,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
+
 
 namespace ocbc_team1.DAL
 {
@@ -15,6 +18,10 @@ namespace ocbc_team1.DAL
         static TelegramBotClient Bot = new TelegramBotClient("2106855009:AAEVAKqEbNj6W7GeZoOLkgmF8XgsL7ZvG2o");
         private LoginDAL loginContext = new LoginDAL();
         private string recName = "";
+        private TelegramDAL teleContext = new TelegramDAL();
+        string accountSid = "AC33d8de9089a6d0c154358213b4772ebf";
+        string apiKey = "SK754a190e66db43863ae52ebea4c88b82";
+        string apiSecret = "GESQ4q7mWcypxwHAycBg8o2CaQdr0oaZ";
 
         IFirebaseConfig ifc = new FirebaseConfig()
         {
@@ -182,13 +189,13 @@ namespace ocbc_team1.DAL
                 ifclient.Set("ScheduledTransaction/", tfVM);
             }
         }
-        public bool transferFunds(TransferViewModel tfVM, string accesscode)
+        public string transferFunds(TransferViewModel tfVM, string accesscode)
         {
             tfVM.TransferAmount = Math.Round(tfVM.TransferAmount, 2);
             //if (tfVM.To_AccountNumber != null && tfVM.PhoneNumber != null) { Console.WriteLine("Two transfer type has been input, transfer canceled"); return; }
             Thread.Sleep(5000);
             List<User> userslist = loginContext.retrieveUserList();
-            if (userslist == null) { Console.WriteLine("uselist null, transfer failed"); return false; }
+            if (userslist == null) { Console.WriteLine("uselist null, transfer failed"); return "ufail"; }
             //  By Bank Number
             if (tfVM.To_AccountNumber != null && tfVM.PhoneNumber == null)
             {
@@ -199,8 +206,43 @@ namespace ocbc_team1.DAL
                     {
                         if (Convert.ToString(userslist[i].AccountsList[j].AccountNumber) == tfVM.To_AccountNumber)
                         {
+                            double Btransfer = userslist[i].AccountsList[j].AmountAvaliable;
+                            double BtransferR = userslist[i].AccountsList[j].AmountRemaining;
                             userslist[i].AccountsList[j].AmountAvaliable += tfVM.TransferAmount;
                             userslist[i].AccountsList[j].AmountRemaining += tfVM.TransferAmount;
+                            updateDB(userslist);
+                            List<User> checklist = loginContext.retrieveUserList();
+                            if (checklist == null) { Console.WriteLine("checklist null, transfer failed"); return "ufail"; }
+                            for (int k = 0; k < checklist.Count; k++)
+                            {
+                                for (int l = 0; l < checklist[l].AccountsList.Count; l++)
+                                {
+                                    if (Convert.ToString(checklist[k].AccountsList[l].AccountNumber) == tfVM.To_AccountNumber)
+                                    {
+                                        if (checklist[k].AccountsList[l].AmountAvaliable == Btransfer + tfVM.TransferAmount)
+                                        {
+                                            if (checklist[k].AccountsList[l].AmountRemaining == BtransferR + tfVM.TransferAmount)
+                                            {
+                                                continue;
+                                            }
+                                            else
+                                            {
+                                                userslist[i].AccountsList[j].AmountAvaliable = Btransfer;
+                                                userslist[i].AccountsList[j].AmountRemaining = BtransferR;
+                                                updateDB(userslist);
+                                                return "tfail";
+                                            }  
+                                        }
+                                        else
+                                        {
+                                            userslist[i].AccountsList[j].AmountAvaliable = Btransfer;
+                                            userslist[i].AccountsList[j].AmountRemaining = BtransferR;
+                                            updateDB(userslist);
+                                            return "tfail";
+                                        }
+                                    }
+                                }
+                            }                                        
                             if (userslist[i].TransactionList == null)
                             {
                                 List<Transaction> transactionlist = new List<Transaction>();
@@ -227,7 +269,20 @@ namespace ocbc_team1.DAL
                             recName = userslist[i].FirstName + " " + userslist[i].LastName;
                             string sName = getName(accesscode);
                             string text = "You have recieved " + "$" + tfVM.TransferAmount + " from " + sName + " on " + DateTime.Now.ToString("f");
-                            sendMessage(Convert.ToString(userslist[i].TelegramChatID), text);
+                            string OTPtype = teleContext.getOTPType(accesscode);
+                            if (OTPtype == "SMS")
+                            {
+                                TwilioClient.Init(apiKey, apiSecret, accountSid);
+                                var message = MessageResource.Create(
+                                body: text,
+                                from: new Twilio.Types.PhoneNumber("+19377779542"),
+                                to: new Twilio.Types.PhoneNumber("+65" + userslist[i].PhoneNumber));
+                            }
+                            else if (OTPtype == null || OTPtype == "Telegram")
+                            {
+                                sendMessage(Convert.ToString(userslist[i].TelegramChatID), text);
+                            }
+                            
 
 
 
@@ -237,6 +292,8 @@ namespace ocbc_team1.DAL
                 // Sender
                 for (int i = 0; i < userslist.Count; i++)
                 {
+                    int pC = 0;
+                    int oC = 0;
                     if (userslist[i].AccessCode == accesscode)
                     {
                         for (int j = 0; j < userslist[i].AccountsList.Count; j++)
@@ -245,8 +302,57 @@ namespace ocbc_team1.DAL
                             {
                                 if (userslist[i].AccountsList[j].AmountAvaliable > tfVM.TransferAmount && userslist[i].AccountsList[j].AmountRemaining > tfVM.TransferAmount)
                                 {
+                                    for (int p = 0; p < userslist.Count; p++)
+                                    {
+                                        for (int o = 0; o < userslist[p].AccountsList.Count; o++)
+                                        {
+                                            if (Convert.ToString(userslist[p].AccountsList[o].AccountNumber) == tfVM.To_AccountNumber)
+                                            {
+                                                pC = p;
+                                                oC = o;
+                                            }
+                                        }
+                                    }
+                                    double BtransferS = userslist[i].AccountsList[j].AmountAvaliable;
+                                    double BtransferRS = userslist[i].AccountsList[j].AmountRemaining;
                                     userslist[i].AccountsList[j].AmountAvaliable -= tfVM.TransferAmount;
                                     userslist[i].AccountsList[j].AmountRemaining -= tfVM.TransferAmount;
+                                    updateDB(userslist);
+                                    List<User> checklist = loginContext.retrieveUserList();
+                                    for (int k = 0; k < checklist.Count; k++)
+                                    {
+                                        for (int l = 0; l < checklist[l].AccountsList.Count; l++)
+                                        {
+                                            if (Convert.ToString(checklist[k].AccountsList[l].AccountNumber) == tfVM.From_AccountNumber)
+                                            {
+                                                if (checklist[k].AccountsList[l].AmountAvaliable == BtransferS - tfVM.TransferAmount)
+                                                {
+                                                    if (checklist[k].AccountsList[l].AmountRemaining == BtransferRS - tfVM.TransferAmount)
+                                                    {
+                                                        continue;
+                                                    }
+                                                    else
+                                                    {
+                                                        userslist[pC].AccountsList[oC].AmountAvaliable = userslist[pC].AccountsList[oC].AmountAvaliable - tfVM.TransferAmount;
+                                                        userslist[pC].AccountsList[oC].AmountRemaining = userslist[pC].AccountsList[oC].AmountRemaining - tfVM.TransferAmount;
+                                                        userslist[i].AccountsList[j].AmountAvaliable = BtransferS;
+                                                        userslist[i].AccountsList[j].AmountRemaining = BtransferRS;
+                                                        updateDB(userslist);
+                                                        return "tfail";
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    userslist[pC].AccountsList[oC].AmountAvaliable = userslist[pC].AccountsList[oC].AmountAvaliable - tfVM.TransferAmount;
+                                                    userslist[pC].AccountsList[oC].AmountRemaining = userslist[pC].AccountsList[oC].AmountRemaining - tfVM.TransferAmount;
+                                                    userslist[i].AccountsList[j].AmountAvaliable = BtransferS;
+                                                    userslist[i].AccountsList[j].AmountRemaining = BtransferRS;
+                                                    updateDB(userslist);
+                                                    return "tfail";
+                                                }
+                                            }
+                                        }
+                                    }
                                     if (userslist[i].TransactionList == null)
                                     {
                                         List<Transaction> transactionlist = new List<Transaction>();
@@ -270,7 +376,20 @@ namespace ocbc_team1.DAL
                                         });
                                     }
                                     string text = "You have sent " + "$" + tfVM.TransferAmount + " to " + recName + " on " + DateTime.Now.ToString("f");
-                                    sendMessage(Convert.ToString(userslist[i].TelegramChatID), text);
+                                    string OTPtype = teleContext.getOTPType(accesscode);
+                                    if (OTPtype == "SMS")
+                                    {
+                                        int phoneno = Convert.ToInt32(teleContext.getPhoneNumber(accesscode));
+                                        TwilioClient.Init(apiKey, apiSecret, accountSid);
+                                        var message = MessageResource.Create(
+                                        body: text,
+                                        from: new Twilio.Types.PhoneNumber("+19377779542"),
+                                        to: new Twilio.Types.PhoneNumber("+65" + phoneno));
+                                    }
+                                    else if (OTPtype == null || OTPtype == "Telegram")
+                                    {
+                                        sendMessage(Convert.ToString(userslist[i].TelegramChatID), text);
+                                    }
                                 }
                             }
                         }
@@ -285,9 +404,41 @@ namespace ocbc_team1.DAL
                 {
                     if (userslist[i].PhoneNumber == tfVM.PhoneNumber)
                     {
-
+                        double BPtransfer = userslist[i].AccountsList[0].AmountAvaliable;
+                        double BPtransferR = userslist[i].AccountsList[0].AmountRemaining;
                         userslist[i].AccountsList[0].AmountAvaliable += tfVM.TransferAmount;
                         userslist[i].AccountsList[0].AmountRemaining += tfVM.TransferAmount;
+                        updateDB(userslist);
+                        List<User> checklist = loginContext.retrieveUserList();
+                        for (int k = 0; k < checklist.Count; k++)
+                        {                        
+                           
+                            if (checklist[k].PhoneNumber == tfVM.PhoneNumber)
+                            {
+                                if (checklist[k].AccountsList[0].AmountAvaliable == BPtransfer + tfVM.TransferAmount)
+                                {
+                                    if (checklist[k].AccountsList[0].AmountAvaliable == BPtransferR + tfVM.TransferAmount)
+                                    {
+                                        continue;
+                                    }
+                                    else
+                                    {
+                                        userslist[i].AccountsList[0].AmountAvaliable = BPtransfer;
+                                        userslist[i].AccountsList[0].AmountRemaining = BPtransferR;
+                                        updateDB(userslist);
+                                        return "tfail";
+                                    }
+                                }
+                                else
+                                {
+                                    userslist[i].AccountsList[0].AmountAvaliable = BPtransfer;
+                                    userslist[i].AccountsList[0].AmountRemaining = BPtransferR;
+                                    updateDB(userslist);
+                                    return "tfail";
+                                }
+                            }
+                            
+                        }
                         if (userslist[i].TransactionList == null)
                         {
                             List<Transaction> transactionlist = new List<Transaction>();
@@ -314,12 +465,25 @@ namespace ocbc_team1.DAL
                         recName = userslist[i].FirstName + " " + userslist[i].LastName;
                         string sName = getName(accesscode);
                         string text = "You have recieved " + "$" + tfVM.TransferAmount + " from " + sName + " on " + DateTime.Now.ToString("f");
-                        sendMessage(Convert.ToString(userslist[i].TelegramChatID), text);
+                        string OTPtype = teleContext.getOTPType(accesscode);
+                        if (OTPtype == "SMS")
+                        {
+                            TwilioClient.Init(apiKey, apiSecret, accountSid);
+                            var message = MessageResource.Create(
+                            body: text,
+                            from: new Twilio.Types.PhoneNumber("+19377779542"),
+                            to: new Twilio.Types.PhoneNumber("+65" + tfVM.PhoneNumber));
+                        }
+                        else if (OTPtype == null || OTPtype == "Telegram")
+                        {
+                            sendMessage(Convert.ToString(userslist[i].TelegramChatID), text);
+                        }
 
                     }
                 }
                 for (int i = 0; i < userslist.Count; i++)
                 {
+                    int ppC = 0;
                     if (userslist[i].AccessCode == accesscode)
                     {
                         for (int j = 0; j < userslist[i].AccountsList.Count; j++)
@@ -328,8 +492,53 @@ namespace ocbc_team1.DAL
                             {
                                 if (userslist[i].AccountsList[j].AmountAvaliable > tfVM.TransferAmount && userslist[i].AccountsList[j].AmountRemaining > tfVM.TransferAmount)
                                 {
+                                    for (int p = 0; p < userslist.Count; p++)
+                                    {
+                                        if (userslist[p].PhoneNumber == tfVM.PhoneNumber)
+                                        {
+                                            ppC = p;                                                                                        
+                                        }
+                                    }
+                                    double BPtransferS = userslist[i].AccountsList[j].AmountAvaliable;
+                                    double BPtransferRS = userslist[i].AccountsList[j].AmountRemaining;
                                     userslist[i].AccountsList[j].AmountAvaliable -= tfVM.TransferAmount;
                                     userslist[i].AccountsList[j].AmountRemaining -= tfVM.TransferAmount;
+                                    updateDB(userslist);
+                                    List<User> checklist = loginContext.retrieveUserList();
+                                    for (int k = 0; k < checklist.Count; k++)
+                                    {
+                                        for (int l = 0; l < checklist[l].AccountsList.Count; l++)
+                                        {
+                                            if (Convert.ToString(checklist[k].AccountsList[l].AccountNumber) == tfVM.From_AccountNumber)
+                                            {
+                                                if (checklist[k].AccountsList[l].AmountAvaliable == BPtransferS - tfVM.TransferAmount)
+                                                {
+                                                    if (checklist[k].AccountsList[l].AmountRemaining == BPtransferRS - tfVM.TransferAmount)
+                                                    {
+                                                        continue;
+                                                    }
+                                                    else
+                                                    {
+                                                        userslist[ppC].AccountsList[0].AmountAvaliable = userslist[ppC].AccountsList[0].AmountAvaliable - tfVM.TransferAmount;
+                                                        userslist[ppC].AccountsList[0].AmountRemaining = userslist[ppC].AccountsList[0].AmountRemaining - tfVM.TransferAmount;
+                                                        userslist[i].AccountsList[j].AmountAvaliable = BPtransferS;
+                                                        userslist[i].AccountsList[j].AmountRemaining = BPtransferRS;
+                                                        updateDB(userslist);
+                                                        return "tfail";
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    userslist[ppC].AccountsList[0].AmountAvaliable = userslist[ppC].AccountsList[0].AmountAvaliable - tfVM.TransferAmount;
+                                                    userslist[ppC].AccountsList[0].AmountRemaining = userslist[ppC].AccountsList[0].AmountRemaining - tfVM.TransferAmount;
+                                                    userslist[i].AccountsList[j].AmountAvaliable = BPtransferS;
+                                                    userslist[i].AccountsList[j].AmountRemaining = BPtransferRS;
+                                                    updateDB(userslist);
+                                                    return "tfail";
+                                                }
+                                            }
+                                        }
+                                    }
                                     int to_user = Get_ToAccount(Convert.ToInt32(tfVM.PhoneNumber));
                                     if (userslist[i].TransactionList == null)
                                     {
@@ -354,7 +563,20 @@ namespace ocbc_team1.DAL
                                         });
                                     }
                                     string text = "You have sent " + "$" + tfVM.TransferAmount + " to " + recName + " on " + DateTime.Now.ToString("f");
-                                    sendMessage(Convert.ToString(userslist[i].TelegramChatID), text);
+                                    string OTPtype = teleContext.getOTPType(accesscode);
+                                    if (OTPtype == "SMS")
+                                    {
+                                        int phoneno = Convert.ToInt32(teleContext.getPhoneNumber(accesscode));
+                                        TwilioClient.Init(apiKey, apiSecret, accountSid);
+                                        var message = MessageResource.Create(
+                                        body: text,
+                                        from: new Twilio.Types.PhoneNumber("+19377779542"),
+                                        to: new Twilio.Types.PhoneNumber("+65" + phoneno));
+                                    }
+                                    else if (OTPtype == null || OTPtype == "Telegram")
+                                    {
+                                        sendMessage(Convert.ToString(userslist[i].TelegramChatID), text);
+                                    }
 
                                 }
                             }
@@ -363,15 +585,8 @@ namespace ocbc_team1.DAL
                 }
 
             }
-            
 
-            // update firebase
-            ifclient = new FireSharp.FirebaseClient(ifc);
-            if (ifclient != null)
-            {
-                ifclient.Set("User/", userslist);
-            }
-            return true;
+            return "true";
         }
         public int Get_ToAccount(int phNo)
         {
@@ -384,6 +599,15 @@ namespace ocbc_team1.DAL
                 }
             }
             return 0;
+        }
+        public bool updateDB(List<User> userlist)
+        {
+            ifclient = new FireSharp.FirebaseClient(ifc);
+            if (ifclient != null)
+            {
+                ifclient.Set("User/", userlist);
+            }
+            return true;
         }
     }
 }
