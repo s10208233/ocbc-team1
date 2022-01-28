@@ -2,14 +2,14 @@
 @{
     ViewData["Title"] = "Dashboard";
 }
-<div style="padding-top:100px; padding-bottom:100px; min-height:1200px;
+<div style="padding-top:100px; padding-bottom:100px;
             background-color: #9e0005;
             background-image: linear-gradient(19deg, #9e0005 0%, #ff6367 100%);
             background-position:top;
             background-size:cover;
             background-repeat: no-repeat;
-            " class="p-3 p-md-5">
-    <div class="p-5 bg-white shadow mx-auto container">
+            ">
+    <div class="p-5 bg-white shadow mx-auto container  col-md-10 col-lg-6">
         <h2 class="pb-5">Your Accounts</h2>
         @{
             int counter = 0;
@@ -20,17 +20,17 @@
                 <div class="bg-success text-white py-3 px-5 mb-4 rounded-pill shadow-lg text-center">
                     @TempData["SuccessMessage"]
                 </div>
-            }    
+            }
 
             @foreach (var item in Model)
             {
-                <a style="color:inherit;text-decoration:none;" class="clickToHistory" asp-action="TransferHistory" asp-controller="Dashboard" asp-route-AccountNumber="@item.AccountNumber">
-                    <div class="container mx-auto shadow text-white rounded-lg p-5 mb-3" style="background-color: #7c0001; background-image: linear-gradient(43deg, #7c0001 0%, #f70000 46%, #be040b 100%); ">
-                        <h4>@item.AccountType Account</h4>
-                        <h2>@item.AccountNumber</h2>
+                <a style="color:inherit;text-decoration:none;" class="clickToHistory bankaccount-card" asp-action="TransferHistory" asp-controller="Dashboard" asp-route-AccountNumber="@item.AccountNumber">
+                    <div class="container mx-auto shadow text-white rounded-lg p-5 mb-3" style="background-color: #7a1c1c; background-image: linear-gradient(62deg, #7a1c1c 0%, #a30000 100%); ">
+                        <h5>@item.AccountType Account</h5>
+                        <h5>@item.AccountNumber</h5>
                         <div class="mp-4 row justify-content-end">
-                            <h3 class="col-4">Account Balance<br /> $@item.AmountAvaliable</h3>
-                            <h3 class="col-4">Total Balance<br /> $@item.AmountRemaining</h3>
+                            <h6 class="col-4"><span class="text-white-50">Account Balance</span><br /> $@item.AmountAvaliable.ToString("0.00")</h6>
+                            <h6 class="col-4"><span class="text-white-50">Total Balance</span><br /> $@item.AmountRemaining.ToString("0.00")</h6>
                         </div>
                     </div>
                 </a>
