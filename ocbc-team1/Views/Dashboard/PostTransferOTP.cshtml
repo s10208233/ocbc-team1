@@ -49,7 +49,7 @@
                         }
                     </p>
                     <h4>Amount</h4>
-                    <p>$ @Model.tfvm.TransferAmount</p>
+                    <p>$ @Model.tfvm.TransferAmount.ToString("0.00")</p>
                     @{
                         if (Model.tfvm.isScheduled == true)
                         {

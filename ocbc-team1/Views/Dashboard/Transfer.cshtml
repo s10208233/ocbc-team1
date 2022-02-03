@@ -9,68 +9,51 @@
     <link rel="stylesheet" href="~/css/Transfer.css">
 </head>
 
-<div style="padding-top:100px; padding-bottom:100px; min-height:1200px;
+<div style="padding-top:100px; padding-bottom:100px;
             background-color: #9e0005;
             background-image: linear-gradient(19deg, #9e0005 0%, #ff6367 100%);
             background-position:top;
             background-size:cover;
             background-repeat: no-repeat;
             ">
-    <div style="max-width:800px; margin:auto;" class="p-5">
-        <h2 class="pb-5">Make a new transfer</h2>
-        <form method="post" class="" id="TransferBoard" asp-controller="Dashboard" asp-action="CreateTransfer">
+        <form method="post" class="p-5 bg-white shadow col-md-8 col-lg-6 mx-auto" id="TransferBoard" asp-controller="Dashboard" asp-action="CreateTransfer">
             <fieldset class="FormContent">
+                <h2 class="pb-5">Make a new transfer</h2>
 
-                <div class="Main_container shadow">
-                    <div class="container_header">1. Transfer Type</div>
-                    <div class="container_content bg-light">
-                        <div class="form-check form-check-inline">
-                            <div class="ml-3 p-3">
-                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="0" onclick="changingOptions()" checked>
-                                <label class="form-check-label" for="inlineRadio1">Using OCBC Acount Number</label>
-                            </div>
-                            <div class="ml-3 p-3">
-                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="0" onclick="changingOptions2()">
-                                <label class="form-check-label" for="inlineRadio1">Using Phone Number</label>
-                            </div>
+                <div class="form-group">
+                    <label class="col-form-label">Transfer Type</label>
+                    <div class="form-check form-check-inline">
+                        <div class="ml-3 p-3">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="0" onclick="changingOptions()" checked>
+                            <label class="form-check-label" for="inlineRadio1">Using OCBC Acount Number</label>
+                        </div>
+                        <div class="ml-3 p-3">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="0" onclick="changingOptions2()">
+                            <label class="form-check-label" for="inlineRadio1">Using Phone Number</label>
                         </div>
                     </div>
-
-                    @*<div class="radio_buttons">
-                @foreach (var item in ViewData["TransferType"] as List<String>)
-                {
-                    <input type="radio" value="@item" class="form-check-input" />
-                    <span style="font-weight:normal;padding-right:20px">@item</span>
-                }
-            </div>*@
                 </div>
 
-                <div class="Main_container shadow">
-                    <div class="container_header">
-                        <label asp-for="From_AccountNumber" class="col-form-label">2. Select an account number to transfer from</label>
-                    </div>
-                    <div class="container_content bg-light">
-                        <select class="form-select text-left p-3" style="width:100%; border-style:none;" aria-label="Default select example" asp-for="From_AccountNumber"
-                                asp-items="@(new SelectList(ViewData["UserOwnAccountList"] as List<BankAccount>, "AccountNumber", "AccountNumber"))">
-                            @*<option selected>Select an account</option>*@
-                        </select>
-                    </div>
+                <div class="form-group">
+                    <label asp-for="From_AccountNumber" class="col-form-label">Fund Source</label>
+                    <select class="form-select text-left p-3" style="width:100%; border-style:none;" aria-label="Default select example" asp-for="From_AccountNumber"
+                            asp-items="@(new SelectList(ViewData["UserOwnAccountList"] as List<BankAccount>, "AccountNumber", "AccountNumber"))">
+                    </select>
                 </div>
+                <hr />
 
                 @* BY ACCOUNT NUMBER *@
-                <div class="Main_container shadow" id="AccountNumberDiv">
-                    <div class="container_header"><label asp-for="To_AccountNumber" class="col-form-label">3.Transfer by Bank Account Number</label></div>
-                    <div class="container_content bg-light">
-                        <div>
-                            <input asp-for="To_AccountNumber" class="form-control rounded-0 p-4" id="ACinput" placeholder="Enter recipient bank account number to transfer" />
-                            <span asp-validation-for="To_AccountNumber" class="text-danger"></span>
-                        </div>
+                <div class="form-group" id="AccountNumberDiv">
+                    <label asp-for="To_AccountNumber" class="col-form-label">Transfer by Bank Account Number</label>
+                    <div>
+                        <input asp-for="To_AccountNumber" class="form-control rounded-0 p-4" id="ACinput" placeholder="Enter recipient bank account number to transfer" />
+                        <span asp-validation-for="To_AccountNumber" class="text-danger"></span>
                     </div>
                 </div>
 
                 @* BY PHONE NUMBER *@
-                <div class="Main_container shadow" id="PhoneNumberDiv" style="display:none">
-                    <div class="container_header"><label asp-for="PhoneNumber" class="col-form-label">3.Transfer by Phone Number</label></div>
+                <div class="form-group" id="PhoneNumberDiv" style="display:none">
+                    <label asp-for="PhoneNumber" class="col-form-label">Transfer by Phone Number</label>
                     <div class="container_content ">
                         <div>
                             <input asp-for="PhoneNumber" class="form-control rounded-0 p-4" id="PHinput" placeholder="Enter recipient phone number to transfer" />
@@ -94,8 +77,8 @@
                     </div>
                 </div>
                 @*TransferAmount*@
-                <div class="Main_container shadow">
-                    <div class="container_header"><label asp-for="TransferAmount" class="col-form-label">5.Transfer amount</label></div>
+                <div class="form-group">
+                    <label asp-for="TransferAmount" class="col-form-label">Transfer Amount</label>
                     <div class="container_content">
                         <div>
                             <div class="input-group mb-3">
@@ -108,6 +91,7 @@
                         </div>
                     </div>
                 </div>
+
                 @if (@TempData["ErrorMessage"] != null)
                 {
                     <div class="mx-auto bg-danger text-white py-3 px-5 mb-4 rounded-pill shadow-lg text-center">
@@ -122,7 +106,7 @@
                 }
 
                 @*<span class="text-danger">@TempData["ErrorMessage"]</span>
-                <span class="text-success">@TempData["SuccessMessage"]</span>*@
+        <span class="text-success">@TempData["SuccessMessage"]</span>*@
                 <div class="mt-5" style="float:right">
                     <input type="submit" value="Next" class="btn text-white px-5 rounded-0 shadow" style="background-color:red; margin:0px" />
                 </div>

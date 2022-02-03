@@ -1,0 +1,85 @@
+﻿@{
+    //Gift newgift = JsonConvert.DeserializeObject<Gift>(TempData["GiftObj"] as string);
+    ViewData["Title"] = "Authenticate Gift Creation";
+}
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/css/Transfer.css">
+    <style>
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<div style="padding-top:100px; padding-bottom:100px;
+            background-color: #9e0005;
+            background-image: linear-gradient(19deg, #9e0005 0%, #ff6367 100%);
+            background-position:top;
+            background-size:cover;
+            background-repeat: no-repeat;
+            ">
+    <form id="GiftForm" method="post" class="p-5 bg-white shadow col-md-6 col-lg-4 mx-auto" asp-controller="Gift" asp-action="SubmitAuthenticateOTP">
+        <h2 class="pb-3">Authenticate Gift Creation</h2>
+        <fieldset class="FormContent">
+
+            @* Sticker selection display *@
+            <div class="form-group">
+                <label class="col-form-label text-black-50">Selected Sticker</label>
+                <div class="col-6 col-md-4 mx-auto" id="StickerChoiceDisplay">
+                    @{
+                        if (TempData["newgift_sticker"] != null || TempData["newgift_sticker"] != "")
+                        {
+                            <lottie-player src="@TempData["newgift_sticker"]" background="transparent" speed="1" class="p-2 mx-auto" loop autoplay></lottie-player>
+                        }
+                        else
+                        {
+                            <p class="font-italic text-danger">No sticker was selected</p>
+                        }
+                    }
+                </div>
+            </div>
+
+            @* Display Receipient Name *@
+            <div class="form-group">
+                <label class="col-form-label text-black-50">Sending Gift To</label>
+                <h5>@TempData["newgift_receipient"]</h5>
+            </div>
+            @*  *@
+            <div class="form-group">
+                <label class="col-form-label text-black-50">Amount</label>
+                <h5>@TempData["newgift_amount"]</h5>
+            </div>
+
+
+            @* Message to Receipient *@
+            <div class="form-group">
+                <label class="col-form-label text-black-50">Message to Receipient</label>
+                <h5>@TempData["newgift_message"]</h5>
+            </div>
+
+            <div class="form-group">
+                <label class="col-form-label">Authenticate with OTP</label>
+                <input class="form-control rounded-0" name="otpinput" type="number" placeholder="Enter OTP" />
+            </div>
+            @* Tempdata message *@
+            <div class="row mx-auto">
+                @if (@TempData["Message"] != null)
+                {
+                    <div class="col-12 bg-danger text-white py-3 px-5 mb-4 rounded-pill shadow-lg text-center">
+                        @TempData["Message"]
+                    </div>
+                }
+            </div>
+            @* Submit Btn *@
+            <div class="form-group">
+                <input type="submit" value="Confirm" class="btn btn-success text-white col-12 mx-auto p-3 mb-3" />
+                <a asp-controller="Gift" asp-action="Inbox" class="text-center text-black-50 s col-12 mx-auto"><u>Discard & Cancel Gift Creation</u></a>
+            </div>
+        </fieldset>
+    </form>
+</div>
