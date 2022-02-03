@@ -78,9 +78,24 @@
                         </div>
                     </div>
                 </div>
+                @*TransferCurrency*@
+                <div>
+                    <div class="container_header"><label asp-for="TransferCurrency" class="col-form-label">4.Transfer currency</label></div>
+                    <div class="container_content">
+                        <div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text p-3">$</span>
+                                </div>
+                                <input asp-for="TransferCurrency" class="form-control rounded-0" style="height:auto;" placeholder="Enter Currency" />
+                                <span asp-validation-for="TransferCurrency" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 @*TransferAmount*@
                 <div class="Main_container shadow">
-                    <div class="container_header"><label asp-for="TransferAmount" class="col-form-label">4.Transfer amount</label></div>
+                    <div class="container_header"><label asp-for="TransferAmount" class="col-form-label">5.Transfer amount</label></div>
                     <div class="container_content">
                         <div>
                             <div class="input-group mb-3">

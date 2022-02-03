@@ -102,6 +102,17 @@
                     <label asp-for="Message"></label>
                     <textarea asp-for="Message" class="form-control col-12" rows="6" placeholder="Enter a message"></textarea>
                 </div>
+                @* Gift Currency *@
+                <div class="form-group">
+                    <label asp-for="GiftCurrency" class="col-form-label">Gift Currency</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text p-3">$</span>
+                        </div>
+                        <input asp-for="GiftCurrency" class="form-control rounded-0" style="height:auto;" placeholder="Gift Currency" />
+                    </div>
+                    <span asp-validation-for="GiftCurrency" class="text-danger"></span>
+                </div>
                 @* GIFT AMOUNT *@
                 <div class="form-group">
                     <label asp-for="Amount" class="col-form-label">Receipient Phone Number</label>
@@ -123,10 +134,10 @@
                     }
                 </div>
                 @* Submit Btn *@
-            <div class="form-group row">
-                <input type="submit" value="Send Gift" class="btn btn-success text-white col-12 mx-auto p-3 mb-3"/>
-                <a asp-controller="Gift" asp-action="Inbox" class="text-center text-black-50 s col-12 mx-auto"><u>Back to Gift Inbox</u></a>
-            </div>
+                <div class="form-group row">
+                    <input type="submit" value="Send Gift" class="btn btn-success text-white col-12 mx-auto p-3 mb-3" />
+                    <a asp-controller="Gift" asp-action="Inbox" class="text-center text-black-50 s col-12 mx-auto"><u>Back to Gift Inbox</u></a>
+                </div>
             </fieldset>
     </form>
 </div>

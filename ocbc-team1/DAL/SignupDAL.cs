@@ -96,6 +96,7 @@ namespace ocbc_team1.DAL
                     AccountType = "Savings",
                     AmountAvaliable = randombal,
                     AmountRemaining = randombal,
+                    AccountCurrency = "SGD",
                     CreationDate = DateTime.Today
                 });
                 List<Transaction> transactionlist = new List<Transaction>();
