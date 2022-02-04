@@ -22,7 +22,8 @@ namespace ocbc_team1.Controllers
         static TelegramBotClient Bot = new TelegramBotClient("2106855009:AAEVAKqEbNj6W7GeZoOLkgmF8XgsL7ZvG2o");
         private SignupDAL signupContext = new SignupDAL();
         private LoginDAL loginContext = new LoginDAL();
-        private TelegramDAL teleContext = new TelegramDAL(); 
+        private TelegramDAL teleContext = new TelegramDAL();
+        private TransactionDAL transactionContext = new TransactionDAL();
         string accountSid = "AC33d8de9089a6d0c154358213b4772ebf";
         string apiKey = "SK754a190e66db43863ae52ebea4c88b82";
         string apiSecret = "GESQ4q7mWcypxwHAycBg8o2CaQdr0oaZ";
@@ -39,7 +40,6 @@ namespace ocbc_team1.Controllers
 
         public IActionResult Index()
         {
-
             return View();
         }
         public IActionResult Login()
