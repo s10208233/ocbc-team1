@@ -23,6 +23,7 @@ namespace ocbc_team1.Controllers
         private SignupDAL signupContext = new SignupDAL();
         private LoginDAL loginContext = new LoginDAL();
         private TelegramDAL teleContext = new TelegramDAL();
+        private TransactionDAL transactionContext = new TransactionDAL();
         string accountSid = "AC33d8de9089a6d0c154358213b4772ebf";
         string authToken = "e952a11a82a024664bb13e02e058a398";
         private string text = "";
@@ -38,7 +39,6 @@ namespace ocbc_team1.Controllers
 
         public IActionResult Index()
         {
-
             return View();
         }
         public IActionResult Login()
