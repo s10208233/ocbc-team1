@@ -556,16 +556,16 @@ namespace ocbc_team1.DAL
                                     }
                                     else
                                     {
-                                        userslist[i].AccountsList[0].AmountAvaliable = Btransfer;
-                                        userslist[i].AccountsList[0].AmountRemaining = BtransferR;
+                                        userslist[i].AccountsList[0].AmountAvaliable = BPtransfer;
+                                        userslist[i].AccountsList[0].AmountRemaining = BPtransferR;
                                         updateDB(userslist);
                                         return "tfail";
                                     }
                                 }
                                 else
                                 {
-                                    userslist[i].AccountsList[0].AmountAvaliable = Btransfer;
-                                    userslist[i].AccountsList[0].AmountRemaining = BtransferR;
+                                    userslist[i].AccountsList[0].AmountAvaliable = BPtransfer;
+                                    userslist[i].AccountsList[0].AmountRemaining = BPtransferR;
                                     updateDB(userslist);
                                     return "tfail";
                                 }
