@@ -24,7 +24,6 @@ namespace ocbc_team1.Controllers
         private LoginDAL loginContext = new LoginDAL();
         private TelegramDAL teleContext = new TelegramDAL();
         private TransactionDAL transactionContext = new TransactionDAL();
-        private TelegramDAL teleContext = new TelegramDAL(); 
         string accountSid = "AC33d8de9089a6d0c154358213b4772ebf";
         string apiKey = "SK754a190e66db43863ae52ebea4c88b82";
         string apiSecret = "GESQ4q7mWcypxwHAycBg8o2CaQdr0oaZ";

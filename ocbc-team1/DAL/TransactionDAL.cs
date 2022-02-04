@@ -1,5 +1,6 @@
 ﻿using FireSharp.Config;
 using FireSharp.Interfaces;
+using FireSharp.Response;
 using ocbc_team1.Models;
 using System;
 using System.Collections.Generic;
@@ -285,14 +286,14 @@ namespace ocbc_team1.DAL
             }
             return true;
         }
-        public void scheduledTransferFunds(TransferViewModel tfVM)
-        {
-            ifclient = new FireSharp.FirebaseClient(ifc);
-            if (ifclient != null)
-            {
-                ifclient.Set("ScheduledTransaction/", tfVM);
-            }
-        }
+        //public void scheduledTransferFunds(TransferViewModel tfVM)
+        //{
+        //    ifclient = new FireSharp.FirebaseClient(ifc);
+        //    if (ifclient != null)
+        //    {
+        //        ifclient.Set("ScheduledTransaction/", tfVM);
+        //    }
+        //}
         public string transferFunds(TransferViewModel tfVM, string accesscode)
         {
             tfVM.TransferAmount = Math.Round(tfVM.TransferAmount, 2);
