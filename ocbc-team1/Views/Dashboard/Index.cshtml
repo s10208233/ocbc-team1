@@ -29,8 +29,8 @@
                         <h5>@item.AccountType Account</h5>
                         <h5>@item.AccountNumber</h5>
                         <div class="mp-4 row justify-content-end">
-                            <h6 class="col-4"><span class="text-white-50">Account Balance</span><br /> $@item.AmountAvaliable.ToString("0.00")</h6>
-                            <h6 class="col-4"><span class="text-white-50">Total Balance</span><br /> $@item.AmountRemaining.ToString("0.00")</h6>
+                            <h6 class="col-4"><span class="text-white-50">Account Balance</span><br /> @item.AccountCurrency @item.AmountAvaliable.ToString("0.00")</h6>
+                            <h6 class="col-4"><span class="text-white-50">Total Balance</span><br /> @item.AccountCurrency @item.AmountRemaining.ToString("0.00")</h6>
                         </div>
                     </div>
                 </a>

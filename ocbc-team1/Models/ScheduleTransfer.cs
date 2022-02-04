@@ -29,6 +29,9 @@ namespace ocbc_team1.Models
         [RegularExpression("[+]?\\d*\\.?\\d+", ErrorMessage = "Please enter a number larger than 0")]
         public double TransferAmount { get; set; }
 
+        [MaxLength(3)]
+        public string TransferCurrency { get; set; }
+
         [Required]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]

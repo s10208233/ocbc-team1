@@ -12,17 +12,17 @@
             background-size:cover;
             background-repeat: no-repeat;
             " class="p-3 p-md-5">
-    <div class="p-5 bg-white shadow mx-auto container col-12 col-md-8 col-lg-6 mx-3 my-5">
+    <div class="p-5 bg-white shadow mx-auto container col-12 col-md-10 col-lg-6 mx-3 my-5">
         <div class="row">
             @if (@TempData["Message"] != null)
             {
-                <div class="bg-success text-white py-3 px-5 mb-4 rounded-pill shadow-lg text-center">
+                <div class="bg-success text-white py-3 px-5 mx-auto rounded-pill shadow-lg text-center">
                     @TempData["Message"]
                 </div>
             }
             @if (@TempData["ErrorMessage"] != null)
             {
-                <div class="mx-auto bg-danger text-white py-3 px-5 mb-4 rounded-pill shadow-lg text-center">
+                <div class="mx-auto bg-danger text-white py-3 px-5 mx-auto rounded-pill shadow-lg text-center">
                     @TempData["ErrorMessage"]
                 </div>
             }
@@ -30,8 +30,8 @@
 
         @* UPDATE FORM *@
         <div class="row mb-3">
-            <h2 class="mb-3">Update Profile</h2>
-            <form method="post" enctype="multipart/form-data" asp-action="SubmitUpdateUserProfileForm" class="mt-3">
+            <h2 class="mb-3 col-12">Update Profile</h2>
+            <form method="post" enctype="multipart/form-data" asp-action="SubmitUpdateUserProfileForm" class="mt-3 col-12">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 @* IMAGE FORM GROUP *@
                 <div class="form-group">
@@ -39,12 +39,12 @@
                     <div class="m-3">
                         @if (u.ProfilePicURL == null || u.ProfilePicURL == "")
                         {
-                            <img class="col-10 col-md-6 d-block mx-auto rounded" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png" id="selectedimagedisplay" />
+                            <img class="col-10 col-md-6 d-block mx-auto rounded-circle" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png" id="selectedimagedisplay" />
                         }
                         else
                         {
-                            <img class="col-10 col-md-6 d-block mx-auto rounded" src="@u.ProfilePicURL" id="selectedimagedisplay" /><br />
-                            <a asp-controller="Dashboard" asp-action="DeleteProfilePicture" asp-route-stringidentifier="@u.ProfilePicStrIdentifier" class="btn btn-secondary">Remove Profile Picture</a>
+                            <img class="col-10 col-md-6 d-block mx-auto rounded-circle" src="@u.ProfilePicURL" id="selectedimagedisplay" /><br />
+                            <a asp-controller="Dashboard" asp-action="DeleteProfilePicture" asp-route-stringidentifier="@u.ProfilePicStrIdentifier" class="btn btn-secondary d-block col-6">Remove Profile Picture</a>
                         }
                     </div>
                     <div class="custom-file">

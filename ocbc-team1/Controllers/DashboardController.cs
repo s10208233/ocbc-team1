@@ -21,6 +21,7 @@ namespace ocbc_team1.Controllers
         private TransactionDAL transactionContext = new TransactionDAL();
         private NewBankAccountDAL newaccountContext = new NewBankAccountDAL();
         private TelegramDAL teleContext = new TelegramDAL();
+        private CurrencyDAL currContext = new CurrencyDAL();
         string accountSid = "AC33d8de9089a6d0c154358213b4772ebf";
         string apiKey = "SK754a190e66db43863ae52ebea4c88b82";
         string apiSecret = "GESQ4q7mWcypxwHAycBg8o2CaQdr0oaZ";
@@ -28,6 +29,7 @@ namespace ocbc_team1.Controllers
         {
             string accesscode = HttpContext.Session.GetString("accesscode");
             List<BankAccount> bankAccountList = transactionContext.getBankAccountList(accesscode);
+            transactionContext.CheckScheduledTransferList();
             return View(bankAccountList);
         }
         
@@ -37,6 +39,17 @@ namespace ocbc_team1.Controllers
             ViewData["AccountNo"] = accNo;
             string accesscode = HttpContext.Session.GetString("accesscode");
             List<Transaction> transactionList = transactionContext.getTransactionList(accesscode);
+            transactionContext.CheckScheduledTransferList();
+            return View(transactionList);
+        }
+
+        public IActionResult ScheduledTransferHistory(int AccountNumber)
+        {
+            int accNo = AccountNumber;
+            ViewData["AccountNo"] = accNo;
+            string accesscode = HttpContext.Session.GetString("accesscode");
+            List<TransferViewModel> transactionList = transactionContext.GetScheduledTransferList();
+            transactionContext.CheckScheduledTransferList();
             return View(transactionList);
         }
 
@@ -88,7 +101,13 @@ namespace ocbc_team1.Controllers
             {
                 TempData["ErrorMessage"] = "Invalid amount, please try again";
                 return RedirectToAction("Transfer", "Dashboard");
-            } else if (transactionContext.checkSenderFunds(accesscode, tfViewModel.From_AccountNumber, tfViewModel.TransferAmount))
+            }
+            else if (currContext.verifyCurrency(tfViewModel.TransferCurrency) == false)
+            {
+                TempData["ErrorMessage"] = "Invalid currency, please try again";
+                return RedirectToAction("Transfer", "Dashboard");
+            }
+            else if (transactionContext.checkSenderFunds(accesscode, tfViewModel.From_AccountNumber, tfViewModel.TransferAmount, tfViewModel.TransferCurrency))
             {
                 TempData["ErrorMessage"] = "This account has insufficient funds, please try again";
                 return RedirectToAction("Transfer", "Dashboard");
@@ -118,7 +137,12 @@ namespace ocbc_team1.Controllers
                 TempData["ErrorMessage"] = "Invalid amount, please try again";
                 return RedirectToAction("ScheduledTransfer", "Dashboard");
             }
-            else if (transactionContext.checkSenderFunds(accesscode, tfvm.From_AccountNumber, tfvm.TransferAmount))
+            else if (currContext.verifyCurrency(tfvm.TransferCurrency) == false)
+            {
+                TempData["ErrorMessage"] = "Invalid currency, please try again";
+                return RedirectToAction("ScheduledTransfer", "Dashboard");
+            }
+            else if (transactionContext.checkSenderFunds(accesscode, tfvm.From_AccountNumber, tfvm.TransferAmount, tfvm.TransferCurrency))
             {
                 TempData["ErrorMessage"] = "This account has insufficient funds, please try again";
                 return RedirectToAction("ScheduledTransfer", "Dashboard");
@@ -167,8 +191,6 @@ namespace ocbc_team1.Controllers
             {
                 return RedirectToAction("TransferConnectionError", "Dashboard", tfvm);
             }
-            
-
         }
 
         [HttpPost]
@@ -263,6 +285,9 @@ namespace ocbc_team1.Controllers
             } else if (nbaViewModel.AmountRemaining > 1000000)
             {
                 TempData["ErrorMessage"] = "Choose between 0 and 1000000 in Balance";
+                return RedirectToAction("NewBankAccount", "Dashboard");
+            } else if (currContext.verifyCurrency(nbaViewModel.AccountCurrency) == false){
+                TempData["ErrorMessage"] = "Choose a valid currency (like SGD)";
                 return RedirectToAction("NewBankAccount", "Dashboard");
             }
             nbaViewModel.AmountRemaining = Math.Round(nbaViewModel.AmountRemaining, 2);

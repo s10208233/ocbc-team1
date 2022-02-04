@@ -18,6 +18,7 @@ namespace ocbc_team1.Controllers
         private LoginDAL loginContext = new LoginDAL();
         private GiftDAL giftContext = new GiftDAL();
         private TelegramDAL teleContext = new TelegramDAL();
+        private CurrencyDAL currContext = new CurrencyDAL();
         private static TelegramBotClient Bot = new TelegramBotClient("2106855009:AAEVAKqEbNj6W7GeZoOLkgmF8XgsL7ZvG2o");
 
         // Assignment 2: GIFT
@@ -134,6 +135,7 @@ namespace ocbc_team1.Controllers
                 gifttransaction = new Transaction()
                 {
                     Amount = Math.Round(form.Amount, 2),
+                    Currency = form.GiftCurrency,
                     From_AccountNumber = Convert.ToInt32(form.From_AccountNumber),
                     TimeSent = DateTime.Now,
                     To_AccountNumber = receipient.AccountsList[0].AccountNumber
@@ -144,6 +146,7 @@ namespace ocbc_team1.Controllers
                 gifttransaction = new Transaction()
                 {
                     Amount = Math.Round(form.Amount, 2),
+                    Currency = form.GiftCurrency,
                     From_AccountNumber = Convert.ToInt32(form.From_AccountNumber),
                     TimeSent = DateTime.Now,
                     To_AccountNumber = Convert.ToInt32(form.To_AccountNumber)
@@ -169,7 +172,12 @@ namespace ocbc_team1.Controllers
             {
                 if (ba.AccountNumber == Convert.ToInt32(form.From_AccountNumber))
                 {
-                    if (form.Amount > ba.AmountAvaliable)
+                    if (currContext.verifyCurrency(form.GiftCurrency) == false)
+                    {
+                        TempData["ErrorMessage"] = "Choose a valid currency (like SGD)";
+                        return RedirectToAction("CreateGift", "Gift");
+                    }
+                    else if (currContext.convertCurrency(form.Amount, form.GiftCurrency, ba.AccountCurrency) > ba.AmountAvaliable)
                     {
                         TempData["Message"] = $"Unable to send gift, the bank account {form.From_AccountNumber} has insufficient fund";
                         return RedirectToAction("CreateGift", "Gift");

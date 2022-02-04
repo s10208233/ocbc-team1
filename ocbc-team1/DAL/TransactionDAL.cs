@@ -20,6 +20,7 @@ namespace ocbc_team1.DAL
         private LoginDAL loginContext = new LoginDAL();
         private string recName = "";
         private TelegramDAL teleContext = new TelegramDAL();
+        private CurrencyDAL currContext = new CurrencyDAL();
         string accountSid = "AC33d8de9089a6d0c154358213b4772ebf";
         string apiKey = "SK754a190e66db43863ae52ebea4c88b82";
         string apiSecret = "GESQ4q7mWcypxwHAycBg8o2CaQdr0oaZ";
@@ -30,7 +31,9 @@ namespace ocbc_team1.DAL
             BasePath = "https://failsafefundtransfer-default-rtdb.asia-southeast1.firebasedatabase.app/"
         };
         IFirebaseClient ifclient;
-        public List<BankAccount> getBankAccountList(string accesscode)
+        private object client;
+
+        public List<BankAccount> getBankAccountList(string accesscode) 
         {
             List<User> userlist = loginContext.retrieveUserList();
             foreach (User u in userlist)
@@ -64,6 +67,110 @@ namespace ocbc_team1.DAL
                 }
             }
             return null;
+        }
+
+        public List<TransferViewModel> GetScheduledTransferList()
+        {
+                List<TransferViewModel> ScheduledTransferList = new List<TransferViewModel>();
+                ifclient = new FireSharp.FirebaseClient(ifc);
+                if (ifclient != null)
+                {
+                    FirebaseResponse firebaseresponse = ifclient.Get("ScheduledTransfer");
+                    ScheduledTransferList = firebaseresponse.ResultAs<List<TransferViewModel>>();
+                }
+
+                return ScheduledTransferList;
+        }
+
+        public void CheckScheduledTransferList()
+        {
+            List<TransferViewModel> NewScheduledTransferList = new List<TransferViewModel>();
+            NewScheduledTransferList = GetScheduledTransferList();
+            int counter = 0;
+            if (NewScheduledTransferList != null)
+            {
+                foreach (var items in NewScheduledTransferList)
+                {
+                    counter++;
+                    if (items != null)
+                    {
+                        if (items.TransferDate <= DateTime.Now)
+                        {
+                            string ScheduledAccess = items.accesscode;
+                            List<User> userlist = loginContext.retrieveUserList();
+                            foreach (User u in userlist)
+                            {
+                                if (u.AccessCode == ScheduledAccess)
+                                {
+                                    foreach (var accounts in u.AccountsList)
+                                    {
+                                        if (accounts.AccountNumber == Convert.ToInt32(items.From_AccountNumber))
+                                        {
+                                            if (accounts.AmountAvaliable > items.TransferAmount)
+                                            {
+                                                transferFunds(items, items.accesscode);
+                                                FirebaseResponse deletionReponse = ifclient.Delete("ScheduledTransfer/" + (counter - 1));
+                                            }
+                                            else
+                                            {
+                                                if (ifclient != null)
+                                                {
+                                                    ifclient.Set("ScheduledTransfer/" + (counter - 1) + "/fail", "Failed");
+                                                }
+                                                items.fail = "Failed";
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+
+        public bool scheduledTransferFunds(TransferViewModel tfVM)
+        {
+            List<TransferViewModel> ScheduledtransferList = GetScheduledTransferList();
+
+                if (ScheduledtransferList == null)
+                {
+                    List<TransferViewModel> NewScheduledtransactionlist = new List<TransferViewModel>();
+                    NewScheduledtransactionlist.Add(new TransferViewModel
+                    {
+                        To_AccountNumber =(tfVM.To_AccountNumber),
+                        From_AccountNumber = (tfVM.From_AccountNumber),
+                        TransferCurrency = tfVM.TransferCurrency,
+                        TransferAmount = tfVM.TransferAmount,
+                        TransferDate = tfVM.TransferDate,
+                        accesscode= tfVM.accesscode,
+                        fail= tfVM.fail,
+                        isScheduled = tfVM.isScheduled,
+                    }) ;
+                    ScheduledtransferList = NewScheduledtransactionlist;
+
+                }
+                else
+                {
+                    ScheduledtransferList.Add(new TransferViewModel
+                    {
+                        To_AccountNumber =tfVM.To_AccountNumber,
+                        From_AccountNumber = tfVM.From_AccountNumber,
+                        TransferCurrency = tfVM.TransferCurrency,
+                        TransferAmount = tfVM.TransferAmount,
+                        TransferDate = tfVM.TransferDate,
+                        accesscode = tfVM.accesscode,
+                        fail = tfVM.fail,
+                        isScheduled = tfVM.isScheduled,
+                    });
+                }
+            ifclient = new FireSharp.FirebaseClient(ifc);
+            if (ifclient != null)
+            {
+                ifclient.Set("ScheduledTransfer/", ScheduledtransferList);
+            }
+            return true;
         }
 
         public bool checkRecipient(TransferViewModel tfVM)
@@ -159,7 +266,7 @@ namespace ocbc_team1.DAL
 
         }
 
-        public bool checkSenderFunds(string accesscode, string AccountNumber, double TransferAmount)
+        public bool checkSenderFunds(string accesscode, string AccountNumber, double TransferAmount, string TransferCurrency)
         {
             // returns true if insufficient
             List<User> userslist = loginContext.retrieveUserList();
@@ -172,9 +279,20 @@ namespace ocbc_team1.DAL
                     {
                         if (Convert.ToString(userslist[i].AccountsList[j].AccountNumber) == AccountNumber)
                         {
-                            if (userslist[i].AccountsList[j].AmountAvaliable > TransferAmount && userslist[i].AccountsList[j].AmountRemaining > TransferAmount)
+                            if (userslist[i].AccountsList[j].AccountCurrency == TransferCurrency)
                             {
-                                return false;
+                                if (userslist[i].AccountsList[j].AmountAvaliable > TransferAmount && userslist[i].AccountsList[j].AmountRemaining > TransferAmount)
+                                {
+                                    return false;
+                                }
+                            }
+                            else
+                            {
+                                double convertedAmount = currContext.convertCurrency(TransferAmount, TransferCurrency, userslist[i].AccountsList[j].AccountCurrency);
+                                if (userslist[i].AccountsList[j].AmountAvaliable > convertedAmount && userslist[i].AccountsList[j].AmountRemaining > convertedAmount)
+                                {
+                                    return false;
+                                }
                             }
                         }
                     }
@@ -182,14 +300,14 @@ namespace ocbc_team1.DAL
             }
             return true;
         }
-        public void scheduledTransferFunds(TransferViewModel tfVM)
-        {
-            ifclient = new FireSharp.FirebaseClient(ifc);
-            if (ifclient != null)
-            {
-                ifclient.Set("ScheduledTransaction/", tfVM);
-            }
-        }
+        //public void scheduledTransferFunds(TransferViewModel tfVM)
+        //{
+        //    ifclient = new FireSharp.FirebaseClient(ifc);
+        //    if (ifclient != null)
+        //    {
+        //        ifclient.Set("ScheduledTransaction/", tfVM);
+        //    }
+        //}
         public string transferFunds(TransferViewModel tfVM, string accesscode)
         {
             tfVM.TransferAmount = Math.Round(tfVM.TransferAmount, 2);
@@ -207,10 +325,11 @@ namespace ocbc_team1.DAL
                     {
                         if (Convert.ToString(userslist[i].AccountsList[j].AccountNumber) == tfVM.To_AccountNumber)
                         {
+                            double convertedAmount = currContext.convertCurrency(tfVM.TransferAmount, tfVM.TransferCurrency, userslist[i].AccountsList[j].AccountCurrency);
                             double Btransfer = userslist[i].AccountsList[j].AmountAvaliable;
                             double BtransferR = userslist[i].AccountsList[j].AmountRemaining;
-                            userslist[i].AccountsList[j].AmountAvaliable += tfVM.TransferAmount;
-                            //userslist[i].AccountsList[j].AmountRemaining += tfVM.TransferAmount;
+                            userslist[i].AccountsList[j].AmountAvaliable += convertedAmount;
+                            userslist[i].AccountsList[j].AmountRemaining += convertedAmount;
                             updateDB(userslist);
                             List<User> checklist = loginContext.retrieveUserList();
                             if (checklist == null) { Console.WriteLine("checklist null, transfer failed"); return "ufail"; }
@@ -220,9 +339,9 @@ namespace ocbc_team1.DAL
                                 {
                                     if (Convert.ToString(checklist[k].AccountsList[l].AccountNumber) == tfVM.To_AccountNumber)
                                     {
-                                        if (checklist[k].AccountsList[l].AmountAvaliable == Btransfer + tfVM.TransferAmount)
+                                        if (checklist[k].AccountsList[l].AmountAvaliable == Btransfer + convertedAmount)
                                         {
-                                            if (checklist[k].AccountsList[l].AmountRemaining == BtransferR + tfVM.TransferAmount)
+                                            if (checklist[k].AccountsList[l].AmountRemaining == BtransferR + convertedAmount)
                                             {
                                                 continue;
                                             }
@@ -272,7 +391,7 @@ namespace ocbc_team1.DAL
                             recName = "";
                             recName = userslist[i].FirstName + " " + userslist[i].LastName;
                             string sName = getName(accesscode);
-                            string text = "You have recieved " + "$" + tfVM.TransferAmount + " from " + sName + " on " + DateTime.Now.ToString("f");
+                            string text = "You have recieved " + tfVM.TransferCurrency + " " + tfVM.TransferAmount + " from " + sName + " on " + DateTime.Now.ToString("f");
                             string OTPtype = teleContext.getOTPType(accesscode);
                             if (OTPtype == "SMS")
                             {
@@ -320,10 +439,11 @@ namespace ocbc_team1.DAL
                                             }
                                         }
                                     }
+                                    double convertedAmount = currContext.convertCurrency(tfVM.TransferAmount, tfVM.TransferCurrency, userslist[i].AccountsList[j].AccountCurrency);
                                     double BtransferS = userslist[i].AccountsList[j].AmountAvaliable;
                                     double BtransferRS = userslist[i].AccountsList[j].AmountRemaining;
-                                    userslist[i].AccountsList[j].AmountAvaliable -= tfVM.TransferAmount;
-                                    userslist[i].AccountsList[j].AmountRemaining -= tfVM.TransferAmount;
+                                    userslist[i].AccountsList[j].AmountAvaliable -= convertedAmount;
+                                    userslist[i].AccountsList[j].AmountRemaining -= convertedAmount;
                                     updateDB(userslist);
                                     List<User> checklist = loginContext.retrieveUserList();
                                     for (int k = 0; k < checklist.Count; k++)
@@ -332,16 +452,16 @@ namespace ocbc_team1.DAL
                                         {
                                             if (Convert.ToString(checklist[k].AccountsList[l].AccountNumber) == tfVM.From_AccountNumber)
                                             {
-                                                if (checklist[k].AccountsList[l].AmountAvaliable == BtransferS - tfVM.TransferAmount)
+                                                if (checklist[k].AccountsList[l].AmountAvaliable == BtransferS - convertedAmount)
                                                 {
-                                                    if (checklist[k].AccountsList[l].AmountRemaining == BtransferRS - tfVM.TransferAmount)
+                                                    if (checklist[k].AccountsList[l].AmountRemaining == BtransferRS - convertedAmount)
                                                     {
                                                         continue;
                                                     }
                                                     else
                                                     {
-                                                        userslist[pC].AccountsList[oC].AmountAvaliable = userslist[pC].AccountsList[oC].AmountAvaliable - tfVM.TransferAmount;
-                                                        userslist[pC].AccountsList[oC].AmountRemaining = userslist[pC].AccountsList[oC].AmountRemaining - tfVM.TransferAmount;
+                                                        userslist[pC].AccountsList[oC].AmountAvaliable = userslist[pC].AccountsList[oC].AmountAvaliable - convertedAmount;
+                                                        userslist[pC].AccountsList[oC].AmountRemaining = userslist[pC].AccountsList[oC].AmountRemaining - convertedAmount;
                                                         userslist[i].AccountsList[j].AmountAvaliable = BtransferS;
                                                         userslist[i].AccountsList[j].AmountRemaining = BtransferRS;
                                                         updateDB(userslist);
@@ -350,8 +470,8 @@ namespace ocbc_team1.DAL
                                                 }
                                                 else
                                                 {
-                                                    userslist[pC].AccountsList[oC].AmountAvaliable = userslist[pC].AccountsList[oC].AmountAvaliable - tfVM.TransferAmount;
-                                                    userslist[pC].AccountsList[oC].AmountRemaining = userslist[pC].AccountsList[oC].AmountRemaining - tfVM.TransferAmount;
+                                                    userslist[pC].AccountsList[oC].AmountAvaliable = userslist[pC].AccountsList[oC].AmountAvaliable - convertedAmount;
+                                                    userslist[pC].AccountsList[oC].AmountRemaining = userslist[pC].AccountsList[oC].AmountRemaining - convertedAmount;
                                                     userslist[i].AccountsList[j].AmountAvaliable = BtransferS;
                                                     userslist[i].AccountsList[j].AmountRemaining = BtransferRS;
                                                     updateDB(userslist);
@@ -368,7 +488,7 @@ namespace ocbc_team1.DAL
                                             To_AccountNumber = Convert.ToInt32(tfVM.To_AccountNumber),
                                             From_AccountNumber = Convert.ToInt32(tfVM.From_AccountNumber),
                                             Amount = tfVM.TransferAmount,
-                                            Currency = "SGD",
+                                            Currency = tfVM.TransferCurrency,
                                             TimeSent = DateTime.Now,
                                         });
                                         userslist[i].TransactionList = transactionlist;
@@ -380,12 +500,12 @@ namespace ocbc_team1.DAL
                                             To_AccountNumber = Convert.ToInt32(tfVM.To_AccountNumber),
                                             From_AccountNumber = Convert.ToInt32(tfVM.From_AccountNumber),
                                             Amount = tfVM.TransferAmount,
-                                            Currency = "SGD",
+                                            Currency = tfVM.TransferCurrency,
                                             TimeSent = DateTime.Now,
                                         });
                                     }
                                     updateDB(userslist);                                    
-                                    string text = "You have sent " + "$" + tfVM.TransferAmount + " to " + recName + " on " + DateTime.Now.ToString("f");
+                                    string text = "You have sent " + tfVM.TransferCurrency + " " + tfVM.TransferAmount + " to " + recName + " on " + DateTime.Now.ToString("f");
                                     string OTPtype = teleContext.getOTPType(accesscode);
                                     if (OTPtype == "SMS")
                                     {
@@ -416,10 +536,11 @@ namespace ocbc_team1.DAL
                 {
                     if (userslist[i].PhoneNumber == tfVM.PhoneNumber)
                     {
-                        double Btransfer = userslist[i].AccountsList[0].AmountAvaliable;
-                        double BtransferR = userslist[i].AccountsList[0].AmountRemaining;
-                        userslist[i].AccountsList[0].AmountAvaliable += tfVM.TransferAmount;
-                        userslist[i].AccountsList[0].AmountRemaining += tfVM.TransferAmount;
+                        double convertedAmount = currContext.convertCurrency(tfVM.TransferAmount, tfVM.TransferCurrency, userslist[i].AccountsList[0].AccountCurrency);
+                        double BPtransfer = userslist[i].AccountsList[0].AmountAvaliable;
+                        double BPtransferR = userslist[i].AccountsList[0].AmountRemaining;
+                        userslist[i].AccountsList[0].AmountAvaliable += convertedAmount;
+                        userslist[i].AccountsList[0].AmountRemaining += convertedAmount;
                         updateDB(userslist);
                         List<User> checklist = loginContext.retrieveUserList();
                         for (int k = 0; k < checklist.Count; k++)
@@ -427,9 +548,9 @@ namespace ocbc_team1.DAL
 
                             if (checklist[k].PhoneNumber == tfVM.PhoneNumber)
                             {
-                                if (checklist[k].AccountsList[0].AmountAvaliable == Btransfer + tfVM.TransferAmount)
+                                if (checklist[k].AccountsList[0].AmountAvaliable == BPtransfer + convertedAmount)
                                 {
-                                    if (checklist[k].AccountsList[0].AmountAvaliable == BtransferR + tfVM.TransferAmount)
+                                    if (checklist[k].AccountsList[0].AmountAvaliable == BPtransferR + convertedAmount)
                                     {
                                         continue;
                                     }
@@ -459,7 +580,7 @@ namespace ocbc_team1.DAL
                                 To_AccountNumber = Convert.ToInt32(userslist[i].AccountsList[0].AccountNumber),
                                 From_AccountNumber = Convert.ToInt32(tfVM.From_AccountNumber),
                                 Amount = tfVM.TransferAmount,
-                                Currency = "SGD",
+                                Currency = tfVM.TransferCurrency,
                                 TimeSent = DateTime.Now,
                             });
                             userslist[i].TransactionList = transactionlist;
@@ -471,7 +592,7 @@ namespace ocbc_team1.DAL
                                 To_AccountNumber = Convert.ToInt32(userslist[i].AccountsList[0].AccountNumber),
                                 From_AccountNumber = Convert.ToInt32(tfVM.From_AccountNumber),
                                 Amount = tfVM.TransferAmount,
-                                Currency = "SGD",
+                                Currency = tfVM.TransferCurrency,
                                 TimeSent = DateTime.Now,
                             });
                         }
@@ -479,7 +600,7 @@ namespace ocbc_team1.DAL
                         recName = "";
                         recName = userslist[i].FirstName + " " + userslist[i].LastName;
                         string sName = getName(accesscode);
-                        string text = "You have recieved " + "$" + tfVM.TransferAmount + " from " + sName + " on " + DateTime.Now.ToString("f");
+                        string text = "You have recieved " + tfVM.TransferCurrency + " " + tfVM.TransferAmount + " from " + sName + " on " + DateTime.Now.ToString("f");
                         string OTPtype = teleContext.getOTPType(accesscode);
                         if (OTPtype == "SMS")
                         {
@@ -516,10 +637,11 @@ namespace ocbc_team1.DAL
                                             ppC = p;
                                         }
                                     }
-                                    double BtransferS = userslist[i].AccountsList[j].AmountAvaliable;
-                                    double BtransferRS = userslist[i].AccountsList[j].AmountRemaining;
-                                    userslist[i].AccountsList[j].AmountAvaliable -= tfVM.TransferAmount;
-                                    userslist[i].AccountsList[j].AmountRemaining -= tfVM.TransferAmount;
+                                    double convertedAmount = currContext.convertCurrency(tfVM.TransferAmount, tfVM.TransferCurrency, userslist[i].AccountsList[j].AccountCurrency);
+                                    double BPtransferS = userslist[i].AccountsList[j].AmountAvaliable;
+                                    double BPtransferRS = userslist[i].AccountsList[j].AmountRemaining;
+                                    userslist[i].AccountsList[j].AmountAvaliable -= convertedAmount;
+                                    userslist[i].AccountsList[j].AmountRemaining -= convertedAmount;
                                     updateDB(userslist);
                                     List<User> checklist = loginContext.retrieveUserList();
                                     for (int k = 0; k < checklist.Count; k++)
@@ -528,28 +650,28 @@ namespace ocbc_team1.DAL
                                         {
                                             if (Convert.ToString(checklist[k].AccountsList[l].AccountNumber) == tfVM.From_AccountNumber)
                                             {
-                                                if (checklist[k].AccountsList[l].AmountAvaliable == BtransferS - tfVM.TransferAmount)
+                                                if (checklist[k].AccountsList[l].AmountAvaliable == BPtransferS - convertedAmount)
                                                 {
-                                                    if (checklist[k].AccountsList[l].AmountRemaining == BtransferRS - tfVM.TransferAmount)
+                                                    if (checklist[k].AccountsList[l].AmountRemaining == BPtransferRS - convertedAmount)
                                                     {
                                                         continue;
                                                     }
                                                     else
                                                     {
-                                                        userslist[ppC].AccountsList[0].AmountAvaliable = userslist[ppC].AccountsList[0].AmountAvaliable - tfVM.TransferAmount;
-                                                        userslist[ppC].AccountsList[0].AmountRemaining = userslist[ppC].AccountsList[0].AmountRemaining - tfVM.TransferAmount;
-                                                        userslist[i].AccountsList[j].AmountAvaliable = BtransferS;
-                                                        userslist[i].AccountsList[j].AmountRemaining = BtransferRS;
+                                                        userslist[ppC].AccountsList[0].AmountAvaliable = userslist[ppC].AccountsList[0].AmountAvaliable - convertedAmount;
+                                                        userslist[ppC].AccountsList[0].AmountRemaining = userslist[ppC].AccountsList[0].AmountRemaining - convertedAmount;
+                                                        userslist[i].AccountsList[j].AmountAvaliable = BPtransferS;
+                                                        userslist[i].AccountsList[j].AmountRemaining = BPtransferRS;
                                                         updateDB(userslist);
                                                         return "tfail";
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    userslist[ppC].AccountsList[0].AmountAvaliable = userslist[ppC].AccountsList[0].AmountAvaliable - tfVM.TransferAmount;
-                                                    userslist[ppC].AccountsList[0].AmountRemaining = userslist[ppC].AccountsList[0].AmountRemaining - tfVM.TransferAmount;
-                                                    userslist[i].AccountsList[j].AmountAvaliable = BtransferS;
-                                                    userslist[i].AccountsList[j].AmountRemaining = BtransferRS;
+                                                    userslist[ppC].AccountsList[0].AmountAvaliable = userslist[ppC].AccountsList[0].AmountAvaliable - convertedAmount;
+                                                    userslist[ppC].AccountsList[0].AmountRemaining = userslist[ppC].AccountsList[0].AmountRemaining - convertedAmount;
+                                                    userslist[i].AccountsList[j].AmountAvaliable = BPtransferS;
+                                                    userslist[i].AccountsList[j].AmountRemaining = BPtransferRS;
                                                     updateDB(userslist);
                                                     return "tfail";
                                                 }
@@ -565,7 +687,7 @@ namespace ocbc_team1.DAL
                                             To_AccountNumber = Convert.ToInt32(userslist[to_user].AccountsList[0].AccountNumber),
                                             From_AccountNumber = Convert.ToInt32(tfVM.From_AccountNumber),
                                             Amount = tfVM.TransferAmount,
-                                            Currency = "SGD",
+                                            Currency = tfVM.TransferCurrency,
                                             TimeSent = DateTime.Now,
                                         });
                                         userslist[i].TransactionList = transactionlist;
@@ -577,12 +699,12 @@ namespace ocbc_team1.DAL
                                             To_AccountNumber = Convert.ToInt32(userslist[to_user].AccountsList[0].AccountNumber),
                                             From_AccountNumber = Convert.ToInt32(tfVM.From_AccountNumber),
                                             Amount = tfVM.TransferAmount,
-                                            Currency = "SGD",
+                                            Currency = tfVM.TransferCurrency,
                                             TimeSent = DateTime.Now,
                                         });
                                     }
                                     updateDB(userslist);                                   
-                                    string text = "You have sent " + "$" + tfVM.TransferAmount + " to " + recName + " on " + DateTime.Now.ToString("f");
+                                    string text = "You have sent " + tfVM.TransferCurrency + " " + tfVM.TransferAmount + " to " + recName + " on " + DateTime.Now.ToString("f");
                                     string OTPtype = teleContext.getOTPType(accesscode);
                                     if (OTPtype == "SMS")
                                     {

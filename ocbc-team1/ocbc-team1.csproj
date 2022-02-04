@@ -5,6 +5,10 @@
     <RootNamespace>ocbc_team1</RootNamespace>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <WarningLevel>5</WarningLevel>
+  </PropertyGroup>
+
   <ItemGroup>
     <Folder Include="Views\Transfer\" />
     <Compile Remove="Views\Dashbaord\**" />
@@ -16,6 +20,10 @@
     <Folder Include="wwwroot\TempImage\" />
     <None Remove="Views\Dashbaord\**" />
     <None Remove="Views\Transfer\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Models\Transfer.cs" />
   </ItemGroup>
 
   <ItemGroup>
