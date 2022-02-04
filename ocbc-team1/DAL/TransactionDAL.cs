@@ -495,6 +495,7 @@ namespace ocbc_team1.DAL
                                     }
                                     else
                                     {
+                                        Console.WriteLine(tfVM.TransferCurrency);
                                         userslist[i].TransactionList.Add(new Transaction
                                         {
                                             To_AccountNumber = Convert.ToInt32(tfVM.To_AccountNumber),
@@ -781,6 +782,7 @@ namespace ocbc_team1.DAL
         public bool detectFailsafe(string accesscode, List<User> checkerlist, string faccn, List<User> userlist)
         {
             double amt = 0;
+            string cur = "";
             string tacc = "";
             double BSTransfer = 0;
             double BSTransferR = 0;
@@ -801,6 +803,7 @@ namespace ocbc_team1.DAL
                         if (Convert.ToString(userlist[i].TransactionList[tcc].From_AccountNumber) == faccn)
                         {
                             amt = userlist[i].TransactionList[tcc].Amount;
+                            cur = userlist[i].TransactionList[tcc].Currency;
                             tacc = Convert.ToString(userlist[i].TransactionList[tcc].To_AccountNumber);
                         }
                     }
@@ -857,9 +860,9 @@ namespace ocbc_team1.DAL
                     {
                         if (Convert.ToString(userlist[i].AccountsList[j].AccountNumber) == faccn)
                         {
-                            if (userlist[i].AccountsList[j].AmountAvaliable == BSTransfer - amt)
+                            if (userlist[i].AccountsList[j].AmountAvaliable == BSTransfer - currContext.convertCurrency(amt, cur, userlist[i].AccountsList[j].AccountCurrency))
                             {
-                                if (userlist[i].AccountsList[j].AmountRemaining == BSTransferR - amt)
+                                if (userlist[i].AccountsList[j].AmountRemaining == BSTransferR - currContext.convertCurrency(amt, cur, userlist[i].AccountsList[j].AccountCurrency))
                                 {
                                     continue;
                                 }
@@ -893,7 +896,7 @@ namespace ocbc_team1.DAL
                                             if (Convert.ToString(userlist[ii].AccountsList[jj].AccountNumber) == tacc)
                                             {
                                                 string sName = getName(accesscode);
-                                                string text = "Your previous transfer of " + "$" + amt + " recieved from " + sName + " on " + DateTime.Now.ToString("f") + " has been reverted due to an error";
+                                                string text = "Your previous transfer of " + cur + " " + amt + " recieved from " + sName + " on " + DateTime.Now.ToString("f") + " has been reverted due to an error";
                                                 string OTPtype = teleContext.getOTPType(accesscode);
                                                 if (OTPtype == "SMS")
                                                 {
@@ -917,7 +920,7 @@ namespace ocbc_team1.DAL
                                             if (Convert.ToString(userlist[ii].AccountsList[jj].AccountNumber) == faccn)
                                             {
                                                 string sName = getName(accesscode);
-                                                string text = "Your previous transfer of " + "$" + amt + " on " + DateTime.Now.ToString("f") + " has been reverted due to an error";
+                                                string text = "Your previous transfer of " + cur + " " + amt + " on " + DateTime.Now.ToString("f") + " has been reverted due to an error";
                                                 string OTPtype = teleContext.getOTPType(accesscode);
                                                 if (OTPtype == "SMS")
                                                 {
@@ -967,7 +970,7 @@ namespace ocbc_team1.DAL
                                         if (Convert.ToString(userlist[ii].AccountsList[jj].AccountNumber) == tacc)
                                         {
                                             string sName = getName(accesscode);
-                                            string text = "Your previous transfer of " + "$" + amt + " recieved from " + sName + " on " + DateTime.Now.ToString("f") + " has been reverted due to an error";
+                                            string text = "Your previous transfer of " + cur + " " + amt + " recieved from " + sName + " on " + DateTime.Now.ToString("f") + " has been reverted due to an error";
                                             string OTPtype = teleContext.getOTPType(accesscode);
                                             if (OTPtype == "SMS")
                                             {
@@ -991,7 +994,7 @@ namespace ocbc_team1.DAL
                                         if (Convert.ToString(userlist[ii].AccountsList[jj].AccountNumber) == faccn)
                                         {
                                             string sName = getName(accesscode);
-                                            string text = "Your previous transfer of " + "$" + amt + " on " + DateTime.Now.ToString("f") + " has been reverted due to an error";
+                                            string text = "Your previous transfer of " + cur + " " + amt + " on " + DateTime.Now.ToString("f") + " has been reverted due to an error";
                                             string OTPtype = teleContext.getOTPType(accesscode);
                                             if (OTPtype == "SMS")
                                             {
@@ -1020,9 +1023,9 @@ namespace ocbc_team1.DAL
                 {
                     if (Convert.ToString(userlist[i].AccountsList[j].AccountNumber) == tacc)
                     {
-                        if (userlist[i].AccountsList[j].AmountAvaliable == BRTransfer + amt)
+                        if (userlist[i].AccountsList[j].AmountAvaliable == BRTransfer + currContext.convertCurrency(amt, cur, userlist[i].AccountsList[j].AccountCurrency))
                         {
-                            if (userlist[i].AccountsList[j].AmountRemaining == BRTransferR + amt)
+                            if (userlist[i].AccountsList[j].AmountRemaining == BRTransferR + currContext.convertCurrency(amt, cur, userlist[i].AccountsList[j].AccountCurrency))
                             {
                                 continue;
                             }
@@ -1056,7 +1059,7 @@ namespace ocbc_team1.DAL
                                         if (Convert.ToString(userlist[ii].AccountsList[jj].AccountNumber) == tacc)
                                         {
                                             string sName = getName(accesscode);
-                                            string text = "Your previous transfer of " + "$" + amt + " recieved from " + sName + " on " + DateTime.Now.ToString("f") + " has been reverted due to an error";
+                                            string text = "Your previous transfer of " + cur + " " + amt + " recieved from " + sName + " on " + DateTime.Now.ToString("f") + " has been reverted due to an error";
                                             string OTPtype = teleContext.getOTPType(accesscode);
                                             if (OTPtype == "SMS")
                                             {
@@ -1080,7 +1083,7 @@ namespace ocbc_team1.DAL
                                         if (Convert.ToString(userlist[ii].AccountsList[jj].AccountNumber) == faccn)
                                         {
                                             string sName = getName(accesscode);
-                                            string text = "Your previous transfer of " + "$" + amt + " on " + DateTime.Now.ToString("f") + " has been reverted due to an error";
+                                            string text = "Your previous transfer of " + cur + " " + amt + " on " + DateTime.Now.ToString("f") + " has been reverted due to an error";
                                             string OTPtype = teleContext.getOTPType(accesscode);
                                             if (OTPtype == "SMS")
                                             {
@@ -1130,7 +1133,7 @@ namespace ocbc_team1.DAL
                                     if (Convert.ToString(userlist[ii].AccountsList[jj].AccountNumber) == tacc)
                                     {
                                         string sName = getName(accesscode);
-                                        string text = "Your previous transfer of " + "$" + amt + " recieved from " + sName + " on " + DateTime.Now.ToString("f") + " has been reverted due to an error";
+                                        string text = "Your previous transfer of " + cur + " " + amt + " recieved from " + sName + " on " + DateTime.Now.ToString("f") + " has been reverted due to an error";
                                         string OTPtype = teleContext.getOTPType(accesscode);
                                         if (OTPtype == "SMS")
                                         {
@@ -1154,7 +1157,7 @@ namespace ocbc_team1.DAL
                                     if (Convert.ToString(userlist[ii].AccountsList[jj].AccountNumber) == faccn)
                                     {
                                         string sName = getName(accesscode);
-                                        string text = "Your previous transfer of " + "$" + amt + " on " + DateTime.Now.ToString("f") + " has been reverted due to an error";
+                                        string text = "Your previous transfer of " + cur + " " + amt + " on " + DateTime.Now.ToString("f") + " has been reverted due to an error";
                                         string OTPtype = teleContext.getOTPType(accesscode);
                                         if (OTPtype == "SMS")
                                         {

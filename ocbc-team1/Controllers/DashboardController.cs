@@ -223,9 +223,9 @@ namespace ocbc_team1.Controllers
                         if (teleContext.getTelegramChatId(accesscode) != null)
                         {
                             string chatid = Convert.ToString(teleContext.getTelegramChatId(accesscode));
-                            sendMessage(chatid, $"You have successfully scheduled a transfer of ${ptfVM.tfvm.TransferAmount} to {ptfVM.tfvm.To_AccountNumber}, transfer will execute on the {ptfVM.tfvm.TransferDate}");
+                            sendMessage(chatid, $"You have successfully scheduled a transfer of {ptfVM.tfvm.TransferCurrency} {ptfVM.tfvm.TransferAmount} to {ptfVM.tfvm.To_AccountNumber}, transfer will execute on the {ptfVM.tfvm.TransferDate}");
                         }
-                        TempData["SuccessMessage"] = $"You have successfully scheduled a transfer of ${ptfVM.tfvm.TransferAmount} to {ptfVM.tfvm.To_AccountNumber}, transfer will execute on the {ptfVM.tfvm.TransferDate}";
+                        TempData["SuccessMessage"] = $"You have successfully scheduled a transfer of {ptfVM.tfvm.TransferCurrency} {ptfVM.tfvm.TransferAmount} to {ptfVM.tfvm.To_AccountNumber}, transfer will execute on the {ptfVM.tfvm.TransferDate}";
                         return RedirectToAction("Index", "Dashboard");
                     }
                     // NORMAL TRANSFER FLOW
