@@ -17,6 +17,7 @@ namespace ocbc_team1.DAL
     {
         static TelegramBotClient Bot = new TelegramBotClient("2106855009:AAEVAKqEbNj6W7GeZoOLkgmF8XgsL7ZvG2o");
         private LoginDAL loginContext = new LoginDAL();
+        private CurrencyDAL currContext = new CurrencyDAL();
         private string recName = "";
         private TelegramDAL teleContext = new TelegramDAL();
         string accountSid = "AC33d8de9089a6d0c154358213b4772ebf";
@@ -158,7 +159,7 @@ namespace ocbc_team1.DAL
             
         }
 
-        public bool checkSenderFunds(string accesscode, string AccountNumber, double TransferAmount)
+        public bool checkSenderFunds(string accesscode, string AccountNumber, double TransferAmount, string TransferCurrency)
         {
             // returns true if insufficient
             List<User> userslist = loginContext.retrieveUserList();
@@ -171,9 +172,20 @@ namespace ocbc_team1.DAL
                     {
                         if (Convert.ToString(userslist[i].AccountsList[j].AccountNumber) == AccountNumber)
                         {
-                            if (userslist[i].AccountsList[j].AmountAvaliable > TransferAmount && userslist[i].AccountsList[j].AmountRemaining > TransferAmount)
+                            if (userslist[i].AccountsList[j].AccountCurrency == TransferCurrency)
                             {
-                                return false;
+                                if (userslist[i].AccountsList[j].AmountAvaliable > TransferAmount && userslist[i].AccountsList[j].AmountRemaining > TransferAmount)
+                                {
+                                    return false;
+                                }
+                            }
+                            else
+                            {
+                                double convertedAmount = currContext.convertCurrency(TransferAmount, TransferCurrency, userslist[i].AccountsList[j].AccountCurrency);
+                                if (userslist[i].AccountsList[j].AmountAvaliable > convertedAmount && userslist[i].AccountsList[j].AmountRemaining > convertedAmount)
+                                {
+                                    return false;
+                                }
                             }
                         }
                     }

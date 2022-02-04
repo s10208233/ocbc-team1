@@ -19,6 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\Transfer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CloudinaryDotNet" Version="1.16.0" />
     <PackageReference Include="FireSharp" Version="2.0.4" />
     <PackageReference Include="MailKit" Version="2.15.0" />
