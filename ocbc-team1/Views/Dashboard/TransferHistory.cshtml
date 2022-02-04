@@ -10,20 +10,24 @@
     <!-- MDBootstrap Datatables  -->
     <link href="~/css/addons/datatables.min.css" rel="stylesheet">
 </head>
-<div style="padding-top:100px; padding-bottom:100px; min-height:1200px;
+@{ 
+    int accountNumber = (int)ViewData["AccountNo"];
+}
+    <div style="padding-top:100px; padding-bottom:100px; min-height:1200px;
             background-color: #9e0005;
             background-image: linear-gradient(19deg, #9e0005 0%, #ff6367 100%);
             background-position:top;
             background-size:cover;
             background-repeat: no-repeat;
             ">
-    <div style="max-width:1000px; margin:auto;" class="p-3">
-        <h2 class="pb-5">Transfer History</h2>
+        <div style="max-width:1000px; margin:auto;" class="p-3">
+            <h2 class="pb-5">Transfer History</h2>
 
-        @{
-            int accountNo = (int)ViewData["AccountNo"];
-        }
+            @{
+                int accountNo = (int)ViewData["AccountNo"];
+            }
         <div class="bg-light p-5 shadow-lg">
+            <a style="color:red;text-decoration:none;" class="clickToHistory" asp-action="ScheduledTransferHistory" asp-controller="Dashboard" asp-route-AccountNumber="@accountNumber">Scheduled Transfer History</a>
             <table id="dtBasicExample" class="table table-striped table-bordered table-sm shadow" cellspacing="0" width="100%">
                 <thead>
                     <tr class="shadow text-white">
@@ -63,6 +67,6 @@
                 </tbody>
             </table>
         </div>
+        </div>
     </div>
-</div>
     <script src="~/js/Table.js" asp-append-version="true"></script>
