@@ -14,6 +14,7 @@ namespace ocbc_team1.DAL
         private SignupDAL singupContext = new SignupDAL();
         private LoginDAL loginContext = new LoginDAL();
         private TransactionDAL transactionContext = new TransactionDAL();
+        private CurrencyDAL currContext = new CurrencyDAL();
 
         IFirebaseConfig ifc = new FirebaseConfig()
         {
@@ -80,8 +81,9 @@ namespace ocbc_team1.DAL
                         {
                             if (userlist[u].AccountsList[ba].AccountNumber == giftdictionary[key].transaction.To_AccountNumber)
                             {
-                                userlist[u].AccountsList[ba].AmountAvaliable += giftdictionary[key].transaction.Amount;
-                                userlist[u].AccountsList[ba].AmountRemaining += giftdictionary[key].transaction.Amount;
+                                double convertedAmount = currContext.convertCurrency(giftdictionary[key].transaction.Amount, giftdictionary[key].transaction.Currency, userlist[u].AccountsList[ba].AccountCurrency);
+                                userlist[u].AccountsList[ba].AmountAvaliable += convertedAmount;
+                                userlist[u].AccountsList[ba].AmountRemaining += convertedAmount;
                                 giftdictionary[key].transaction.Amount = Math.Round(giftdictionary[key].transaction.Amount, 2);
                                 if (userlist[u].TransactionList == null)
                                 {
@@ -101,8 +103,8 @@ namespace ocbc_team1.DAL
                 //  Update bool Gift.Received 
                 giftdictionary[key].Received = true;
                 //  Send Telegram Notification
-                await transactionContext.sendMessage(Convert.ToString(giftdictionary[key].Receipient.TelegramChatID), $"You have opened a gift from {giftdictionary[key].Sender.FirstName +" "+ giftdictionary[key].Sender.LastName}, ${giftdictionary[key].transaction.Amount} has been transferred to your account {giftdictionary[key].transaction.To_AccountNumber}");
-                await transactionContext.sendMessage(Convert.ToString(giftdictionary[key].Sender.TelegramChatID), $"{giftdictionary[key].Receipient.FirstName +" "+ giftdictionary[key].Receipient.LastName} has opened and received your gift of ${giftdictionary[key].transaction.Amount} has been transferred to their account.");
+                await transactionContext.sendMessage(Convert.ToString(giftdictionary[key].Receipient.TelegramChatID), $"You have opened a gift from {giftdictionary[key].Sender.FirstName +" "+ giftdictionary[key].Sender.LastName}, {giftdictionary[key].transaction.Currency} {giftdictionary[key].transaction.Amount} has been transferred to your account {giftdictionary[key].transaction.To_AccountNumber}");
+                await transactionContext.sendMessage(Convert.ToString(giftdictionary[key].Sender.TelegramChatID), $"{giftdictionary[key].Receipient.FirstName +" "+ giftdictionary[key].Receipient.LastName} has opened and received your gift of {giftdictionary[key].transaction.Currency} {giftdictionary[key].transaction.Amount} has been transferred to their account.");
                 //  Update FireBase
                 ifclient = new FireSharp.FirebaseClient(ifc);
                 if (ifclient != null)
@@ -132,8 +134,9 @@ namespace ocbc_team1.DAL
                         {
                             if (userlist[u].AccountsList[ba].AccountNumber == gift.transaction.From_AccountNumber)
                             {
-                                userlist[u].AccountsList[ba].AmountAvaliable -= gift.transaction.Amount;
-                                userlist[u].AccountsList[ba].AmountRemaining -= gift.transaction.Amount;
+                                double convertedAmount = currContext.convertCurrency(gift.transaction.Amount, gift.transaction.Currency, userlist[u].AccountsList[ba].AccountCurrency);
+                                userlist[u].AccountsList[ba].AmountAvaliable -= convertedAmount;
+                                userlist[u].AccountsList[ba].AmountRemaining -= convertedAmount;
                                 gift.transaction.Amount = Math.Round(gift.transaction.Amount, 2);
                                 if (userlist[u].TransactionList == null)
                                 {
@@ -150,8 +153,8 @@ namespace ocbc_team1.DAL
                     }
                 }
                 //  Send Telegram Notification
-                await transactionContext.sendMessage(Convert.ToString(gift.Sender.TelegramChatID), $"You have sent a gift ${gift.transaction.Amount} from {gift.transaction.From_AccountNumber} to {gift.Receipient.FirstName +" "+ gift.Receipient.LastName}");
-                await transactionContext.sendMessage(Convert.ToString(gift.Receipient.TelegramChatID), $"{gift.Sender.FirstName +" "+ gift.Sender.LastName} has sent ${gift.transaction.Amount} to you, check your gift inbox to claim this amount.");
+                await transactionContext.sendMessage(Convert.ToString(gift.Sender.TelegramChatID), $"You have sent a gift {gift.transaction.Currency} {gift.transaction.Amount} from {gift.transaction.From_AccountNumber} to {gift.Receipient.FirstName +" "+ gift.Receipient.LastName}");
+                await transactionContext.sendMessage(Convert.ToString(gift.Receipient.TelegramChatID), $"{gift.Sender.FirstName +" "+ gift.Sender.LastName} has sent {gift.transaction.Currency} {gift.transaction.Amount} to you, check your gift inbox to claim this amount.");
                 //  Update FireBase
                 ifclient = new FireSharp.FirebaseClient(ifc);
                 if (ifclient != null)
