@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,6 +12,8 @@ namespace ocbc_team1.Models
         public User Receipient { get; set; }
         public Transaction transaction { get; set; }
         public string? sticker_src { get; set; }
+        [MaxLength(3)]
+        public string GiftCurrency { get; set; }
         public bool Received { get; set; }
         public string? Message { get; set; }
     }

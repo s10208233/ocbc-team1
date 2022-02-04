@@ -20,6 +20,9 @@ namespace ocbc_team1.Models
 
         public string? sticker_src { get; set; }
 
+        [MaxLength(3)]
+        public string GiftCurrency { get; set; }
+
         public double Amount { get; set; }
 
         public string? fail { get; set; }

@@ -251,6 +251,7 @@ namespace ocbc_team1.DAL
                                     To_AccountNumber = Convert.ToInt32(tfVM.To_AccountNumber),
                                     From_AccountNumber = Convert.ToInt32(tfVM.From_AccountNumber),
                                     Amount = tfVM.TransferAmount,
+                                    Currency = "SGD",
                                     TimeSent = DateTime.Now,
                                 });
                                 userslist[i].TransactionList = transactionlist;
@@ -262,6 +263,7 @@ namespace ocbc_team1.DAL
                                     To_AccountNumber = Convert.ToInt32(tfVM.To_AccountNumber),
                                     From_AccountNumber = Convert.ToInt32(tfVM.From_AccountNumber),
                                     Amount = tfVM.TransferAmount,
+                                    Currency = "SGD",
                                     TimeSent = DateTime.Now,
                                 });
                             }
@@ -361,6 +363,7 @@ namespace ocbc_team1.DAL
                                             To_AccountNumber = Convert.ToInt32(tfVM.To_AccountNumber),
                                             From_AccountNumber = Convert.ToInt32(tfVM.From_AccountNumber),
                                             Amount = tfVM.TransferAmount,
+                                            Currency = "SGD",
                                             TimeSent = DateTime.Now,
                                         });
                                         userslist[i].TransactionList = transactionlist;
@@ -372,6 +375,7 @@ namespace ocbc_team1.DAL
                                             To_AccountNumber = Convert.ToInt32(tfVM.To_AccountNumber),
                                             From_AccountNumber = Convert.ToInt32(tfVM.From_AccountNumber),
                                             Amount = tfVM.TransferAmount,
+                                            Currency = "SGD",
                                             TimeSent = DateTime.Now,
                                         });
                                     }
@@ -447,6 +451,7 @@ namespace ocbc_team1.DAL
                                 To_AccountNumber = Convert.ToInt32(userslist[i].AccountsList[0].AccountNumber),
                                 From_AccountNumber = Convert.ToInt32(tfVM.From_AccountNumber),
                                 Amount = tfVM.TransferAmount,
+                                Currency = "SGD",
                                 TimeSent = DateTime.Now,
                             });
                             userslist[i].TransactionList = transactionlist;
@@ -458,6 +463,7 @@ namespace ocbc_team1.DAL
                                 To_AccountNumber = Convert.ToInt32(userslist[i].AccountsList[0].AccountNumber),
                                 From_AccountNumber = Convert.ToInt32(tfVM.From_AccountNumber),
                                 Amount = tfVM.TransferAmount,
+                                Currency = "SGD",
                                 TimeSent = DateTime.Now,
                             });
                         }
@@ -548,6 +554,7 @@ namespace ocbc_team1.DAL
                                             To_AccountNumber = Convert.ToInt32(userslist[to_user].AccountsList[0].AccountNumber),
                                             From_AccountNumber = Convert.ToInt32(tfVM.From_AccountNumber),
                                             Amount = tfVM.TransferAmount,
+                                            Currency = "SGD",
                                             TimeSent = DateTime.Now,
                                         });
                                         userslist[i].TransactionList = transactionlist;
@@ -559,6 +566,7 @@ namespace ocbc_team1.DAL
                                             To_AccountNumber = Convert.ToInt32(userslist[to_user].AccountsList[0].AccountNumber),
                                             From_AccountNumber = Convert.ToInt32(tfVM.From_AccountNumber),
                                             Amount = tfVM.TransferAmount,
+                                            Currency = "SGD",
                                             TimeSent = DateTime.Now,
                                         });
                                     }
