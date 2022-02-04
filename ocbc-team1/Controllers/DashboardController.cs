@@ -213,6 +213,10 @@ namespace ocbc_team1.Controllers
                         TempData["SuccessMessage"] = "You have sucessfully transferred $" + ptfVM.tfvm.TransferAmount + " to " + ptfVM.tfvm.PhoneNumber + ptfVM.tfvm.To_AccountNumber;
                         return RedirectToAction("Index", "Dashboard");
                     }
+                    else if (dCheck == "false")
+                    {
+                        return RedirectToAction("TransferConnectionError", "Dashboard", ptfVM.tfvm);
+                    }
                     else if (dCheck == "tfail")
                     {
                         return RedirectToAction("TransferConnectionError", "Dashboard", ptfVM.tfvm);
