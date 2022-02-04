@@ -113,7 +113,7 @@ namespace ocbc_team1.Controllers
                 return RedirectToAction("Transfer", "Dashboard");
             }
             //ViewData["TFVM"] = tfViewModel;
-            return RedirectToAction("postTransferOTP", "Dashboard", tfViewModel);
+            return RedirectToAction("PostTransferOTP", "Dashboard", tfViewModel);
         }
 
         [HttpPost]
@@ -153,7 +153,7 @@ namespace ocbc_team1.Controllers
                 return RedirectToAction("ScheduledTransfer", "Dashboard");
             }
             HttpContext.Session.SetString("transferdate", tfvm.TransferDate.ToString());
-            return RedirectToAction("postTransferOTP", "Dashboard", tfvm);
+            return RedirectToAction("PostTransferOTP", "Dashboard", tfvm);
         }
 
         public ActionResult PostTransferOTP(TransferViewModel tfvm)
@@ -232,7 +232,7 @@ namespace ocbc_team1.Controllers
                     string dCheck = transactionContext.transferFunds(ptfVM.tfvm, HttpContext.Session.GetString("accesscode"));
                     if (dCheck == "true")
                     {
-                        TempData["SuccessMessage"] = "You have sucessfully transferred $" + ptfVM.tfvm.TransferAmount + " to " + ptfVM.tfvm.PhoneNumber + ptfVM.tfvm.To_AccountNumber;
+                        TempData["SuccessMessage"] = "You have sucessfully transferred " + ptfVM.tfvm.TransferCurrency + " " + ptfVM.tfvm.TransferAmount + " to " + ptfVM.tfvm.PhoneNumber + ptfVM.tfvm.To_AccountNumber;
                         return RedirectToAction("Index", "Dashboard");
                     }
                     else if (dCheck == "false")
@@ -266,7 +266,7 @@ namespace ocbc_team1.Controllers
         public ActionResult RetryTransferConnectionError(TransferViewModel tfvm)
         {
 
-            return RedirectToAction("postTransferOTP", "Dashboard", tfvm);
+            return RedirectToAction("PostTransferOTP", "Dashboard", tfvm);
         }
 
         public IActionResult NewBankAccount()
