@@ -9,30 +9,26 @@
     <link rel="stylesheet" href="~/css/Transfer.css">
 </head>
 
-<div style="padding-top:100px; padding-bottom:100px; min-height:1200px;
+<div style="padding-top:100px; padding-bottom:100px;
             background-color: #9e0005;
             background-image: linear-gradient(19deg, #9e0005 0%, #ff6367 100%);
             background-position:top;
             background-size:cover;
             background-repeat: no-repeat;
             ">
-    <div style="max-width:800px; margin:auto;" class="p-5">
-        <h2 class="pb-5">Open a New Bank Account</h2>
-        <form method="post" class="" id="TransferBoard" asp-controller="Dashboard" asp-action="AddAccount">
+        <form method="post" class="p-5 bg-white shadow  col-md-10 col-lg-6 mx-auto" id="TransferBoard" asp-controller="Dashboard" asp-action="AddAccount">
+            <h2 class="pb-5">Open a New Bank Account</h2>
             <fieldset class="FormContent">
 
-                <div class="Main_container">
-                    <div class="container_header"><label asp-for="AccountType" class="col-form-label">1. New Account Type</label></div>
-                    <div class="container_content bg-light">
-                        <select class="form-select text-left p-3" style="width:100%; border-style:none;" aria-label="Default select example" asp-for="AccountType">
-                            <option value="Savings">Savings</option>
-                            <option value="Current">Current</option>
-                        </select>
-                    </div>
+                <div class="form-group">
+                    <label asp-for="AccountType" class="col-form-label">Select New Account Type</label>
+                    <select class="form-select text-left p-3" style="width:100%; border-style:none;" aria-label="Default select example" asp-for="AccountType">
+                        <option value="Savings">Savings</option>
+                        <option value="Current">Current</option>
+                    </select>
                 </div>
-                <span class="Main_container shadow">
-                    <div class="container_header"><label asp-for="AmountRemaining" class="col-form-label">2. Account balance</label></div>
-                    <div class="container_content">
+                <span class="form-group">
+                    <label asp-for="AmountRemaining" class="col-form-label">Set Initial Account balance</label>
                         <div>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
@@ -41,7 +37,6 @@
                                 <input asp-for="AmountRemaining" class="form-control rounded-0" placeholder="Enter New Account Balance" />
                                 <span asp-validation-for="AmountRemaining" class="text-danger"></span>
                             </div>
-                        </div>
                     </div>
                     @if (@TempData["ErrorMessage"] != null)
                     {
@@ -60,7 +55,7 @@
                     <div class="mt-5" style="float:right">
                         <input type="submit" value="Create Account" class="btn text-white px-5 rounded-0" style="background-color:red; margin:0px" />
                     </div>
-</fieldset>
+            </fieldset>
         </form>
     </div>
 </div>

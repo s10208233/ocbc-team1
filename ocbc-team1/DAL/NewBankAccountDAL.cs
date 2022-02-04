@@ -45,6 +45,7 @@ namespace ocbc_team1.DAL
                         AccountType = nbaVM.AccountType,
                         AmountAvaliable = nbaVM.AmountRemaining,
                         AmountRemaining = nbaVM.AmountRemaining,
+                        AccountCurrency = "SGD",
                         CreationDate = DateTime.Today
                     });
                 }

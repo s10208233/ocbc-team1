@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using ocbc_team1.DAL;
 using ocbc_team1.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Telegram.Bot;
+
 
 namespace ocbc_team1.Controllers
 {
@@ -14,10 +17,14 @@ namespace ocbc_team1.Controllers
         private TransactionDAL transactionContext = new TransactionDAL();
         private LoginDAL loginContext = new LoginDAL();
         private GiftDAL giftContext = new GiftDAL();
+        private TelegramDAL teleContext = new TelegramDAL();
+        private static TelegramBotClient Bot = new TelegramBotClient("2106855009:AAEVAKqEbNj6W7GeZoOLkgmF8XgsL7ZvG2o");
 
         // Assignment 2: GIFT
         public ActionResult Inbox()
         {
+            HttpContext.Session.Remove("newgift");
+            HttpContext.Session.Remove("otp");
             string accesscode = HttpContext.Session.GetString("accesscode");
             Dictionary<string, Gift> giftdictionary = giftContext.RetrieveGiftDictionary();
             Dictionary<string, Gift> unopened_giftdictionary = new Dictionary<string, Gift>();
@@ -169,11 +176,59 @@ namespace ocbc_team1.Controllers
                     }
                 }
             }
-            giftContext.SendGift(newgift);
-            TempData["Message"] = $"Gift of ${form.Amount} successfully sent to {receipient.FirstName + receipient.LastName}!";
-            TempData["TabString"] = "SentGifts";
-            return RedirectToAction("Inbox", "Gift");
 
+            // CHECK OTP
+            //giftContext.SendGift(newgift);
+            //TempData["Message"] = $"Gift of ${form.Amount} successfully sent to {receipient.FirstName + receipient.LastName}!";
+            //return RedirectToAction("Inbox", "Gift");
+
+            HttpContext.Session.SetString("newgift", JsonConvert.SerializeObject(newgift));
+            TempData["newgift_receipient"] = $"{newgift.Receipient.FirstName} {newgift.Receipient.LastName}";
+            TempData["newgift_amount"] = $"${newgift.transaction.Amount.ToString("0.00")}";
+            TempData["newgift_message"] = $"{newgift.Message}";
+            TempData["newgift_sticker"] = $"{newgift.sticker_src}";
+            return RedirectToAction("AuthenticateGiftOTP", "Gift");
+        }
+
+        public ActionResult AuthenticateGiftOTP() {
+            Gift newgift = JsonConvert.DeserializeObject<Gift>(HttpContext.Session.GetString("newgift"));
+            Random rnd = new Random();
+            string generatedOTP = Convert.ToString(rnd.Next(000000, 999999));
+            HttpContext.Session.SetString("otp", generatedOTP);
+            string text = $"Your are trying to create a gift for {newgift.Receipient.FirstName + " " + newgift.Receipient.LastName} with an amount of ${newgift.transaction.Amount.ToString("0.00")}. Use the OTP {generatedOTP} to continue with this action.";
+            string chatid = Convert.ToString(teleContext.getTelegramChatId(HttpContext.Session.GetString("accesscode")));
+            sendMessage(chatid, text);
+            async Task sendMessage(string destID, string text)
+            {
+                await Bot.SendTextMessageAsync(destID, text);
+            }
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SubmitAuthenticateOTP(string otpinput) {
+            Gift newgift = JsonConvert.DeserializeObject<Gift>(HttpContext.Session.GetString("newgift"));
+            if (otpinput != HttpContext.Session.GetString("otp"))
+            {
+                TempData["newgift_receipient"] = $"{newgift.Receipient.FirstName} {newgift.Receipient.LastName}";
+                TempData["newgift_amount"] = $"${newgift.transaction.Amount.ToString("0.00")}";
+                TempData["newgift_message"] = $"{newgift.Message}";
+                TempData["newgift_sticker"] = $"{newgift.sticker_src}";
+                TempData["Message"] = "Invalid OTP, please try again.";
+                return RedirectToAction("AuthenticateGiftOTP","Gift");
+            }
+            else
+            {
+                giftContext.SendGift(newgift);
+                TempData["Message"] = $"Gift of ${newgift.transaction.Amount.ToString("0.00")} successfully sent to {newgift.Receipient.FirstName + newgift.Receipient.LastName}!";
+
+                HttpContext.Session.Remove("newgift");
+                HttpContext.Session.Remove("otp");
+                TempData["TabString"] = "SentGifts";
+                return RedirectToAction("Inbox", "Gift");
+            }
+   
         }
 
     }
