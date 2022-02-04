@@ -23,6 +23,7 @@ namespace ocbc_team1.Controllers
         {
             string accesscode = HttpContext.Session.GetString("accesscode");
             List<BankAccount> bankAccountList = transactionContext.getBankAccountList(accesscode);
+            transactionContext.CheckScheduledTransferList();
             return View(bankAccountList);
         }
         
@@ -32,6 +33,17 @@ namespace ocbc_team1.Controllers
             ViewData["AccountNo"] = accNo;
             string accesscode = HttpContext.Session.GetString("accesscode");
             List<Transaction> transactionList = transactionContext.getTransactionList(accesscode);
+            transactionContext.CheckScheduledTransferList();
+            return View(transactionList);
+        }
+
+        public IActionResult ScheduledTransferHistory(int AccountNumber)
+        {
+            int accNo = AccountNumber;
+            ViewData["AccountNo"] = accNo;
+            string accesscode = HttpContext.Session.GetString("accesscode");
+            List<TransferViewModel> transactionList = transactionContext.GetScheduledTransferList();
+            transactionContext.CheckScheduledTransferList();
             return View(transactionList);
         }
 
@@ -148,8 +160,6 @@ namespace ocbc_team1.Controllers
             {
                 return RedirectToAction("TransferConnectionError", "Dashboard", tfvm);
             }
-            
-
         }
 
         [HttpPost]

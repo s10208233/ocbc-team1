@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
+using FireSharp.Response;
 
 namespace ocbc_team1.DAL
 {
@@ -22,6 +23,8 @@ namespace ocbc_team1.DAL
             BasePath = "https://failsafefundtransfer-default-rtdb.asia-southeast1.firebasedatabase.app/"
         };
         IFirebaseClient ifclient;
+        private object client;
+
         public List<BankAccount> getBankAccountList(string accesscode) 
         {
             List<User> userlist = loginContext.retrieveUserList() ;
@@ -56,6 +59,108 @@ namespace ocbc_team1.DAL
                 }
             }
             return null;
+        }
+
+        public List<TransferViewModel> GetScheduledTransferList()
+        {
+                List<TransferViewModel> ScheduledTransferList = new List<TransferViewModel>();
+                ifclient = new FireSharp.FirebaseClient(ifc);
+                if (ifclient != null)
+                {
+                    FirebaseResponse firebaseresponse = ifclient.Get("ScheduledTransfer");
+                    ScheduledTransferList = firebaseresponse.ResultAs<List<TransferViewModel>>();
+                }
+
+                return ScheduledTransferList;
+        }
+
+        public void CheckScheduledTransferList()
+        {
+            List<TransferViewModel> NewScheduledTransferList = new List<TransferViewModel>();
+            NewScheduledTransferList = GetScheduledTransferList();
+            int counter = 0;
+            if (NewScheduledTransferList != null)
+            {
+                foreach (var items in NewScheduledTransferList)
+                {
+                    counter++;
+                    if (items != null)
+                    {
+                        if (items.TransferDate <= DateTime.Now)
+                        {
+                            string ScheduledAccess = items.accesscode;
+                            List<User> userlist = loginContext.retrieveUserList();
+                            foreach (User u in userlist)
+                            {
+                                if (u.AccessCode == ScheduledAccess)
+                                {
+                                    foreach (var accounts in u.AccountsList)
+                                    {
+                                        if (accounts.AccountNumber == Convert.ToInt32(items.From_AccountNumber))
+                                        {
+                                            if (accounts.AmountAvaliable > items.TransferAmount)
+                                            {
+                                                transferFunds(items, items.accesscode);
+                                                FirebaseResponse deletionReponse = ifclient.Delete("ScheduledTransfer/" + (counter - 1));
+                                            }
+                                            else
+                                            {
+                                                if (ifclient != null)
+                                                {
+                                                    ifclient.Set("ScheduledTransfer/" + (counter - 1) + "/fail", "Failed");
+                                                }
+                                                items.fail = "Failed";
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+
+        public bool scheduledTransferFunds(TransferViewModel tfVM)
+        {
+            List<TransferViewModel> ScheduledtransferList = GetScheduledTransferList();
+
+                if (ScheduledtransferList == null)
+                {
+                    List<TransferViewModel> NewScheduledtransactionlist = new List<TransferViewModel>();
+                    NewScheduledtransactionlist.Add(new TransferViewModel
+                    {
+                        To_AccountNumber =(tfVM.To_AccountNumber),
+                        From_AccountNumber = (tfVM.From_AccountNumber),
+                        TransferAmount = tfVM.TransferAmount,
+                        TransferDate = tfVM.TransferDate,
+                        accesscode= tfVM.accesscode,
+                        fail= tfVM.fail,
+                        isScheduled = tfVM.isScheduled,
+                    }) ;
+                    ScheduledtransferList = NewScheduledtransactionlist;
+
+                }
+                else
+                {
+                    ScheduledtransferList.Add(new TransferViewModel
+                    {
+                        To_AccountNumber =tfVM.To_AccountNumber,
+                        From_AccountNumber = tfVM.From_AccountNumber,
+                        TransferAmount = tfVM.TransferAmount,
+                        TransferDate = tfVM.TransferDate,
+                        accesscode = tfVM.accesscode,
+                        fail = tfVM.fail,
+                        isScheduled = tfVM.isScheduled,
+                    });
+                }
+            ifclient = new FireSharp.FirebaseClient(ifc);
+            if (ifclient != null)
+            {
+                ifclient.Set("ScheduledTransfer/", ScheduledtransferList);
+            }
+            return true;
         }
 
         public bool checkRecipient(TransferViewModel tfVM)
@@ -174,14 +279,7 @@ namespace ocbc_team1.DAL
             }
             return true;
         }
-        public void scheduledTransferFunds(TransferViewModel tfVM)
-        {
-            ifclient = new FireSharp.FirebaseClient(ifc);
-            if (ifclient != null)
-            {
-                ifclient.Set("ScheduledTransaction/", tfVM);
-            }
-        }
+   
         public bool transferFunds(TransferViewModel tfVM, string accesscode)
         {
             tfVM.TransferAmount = Math.Round(tfVM.TransferAmount, 2);
